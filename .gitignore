@@ -38,6 +38,14 @@
 *.pidb
 *.svclog
 *.scc
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
 
 # CMake #
 #########
