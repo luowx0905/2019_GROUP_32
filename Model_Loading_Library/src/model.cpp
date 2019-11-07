@@ -1,6 +1,12 @@
 #include "model.h"
 #include <fstream>
+#include <sstream>
 Model::Model(String filePath):sourceFilePath(filePath){}
+void Model::loadModel
+{
+    getNumberOfVectors();
+    populateVectorList();
+}
 int Model::getNumberOfVectors()
 {
     ifstream fileStream;
@@ -44,7 +50,17 @@ void Model::populateVectorList()
         {
             if(line.at(0) == 'v')
             {
-               
+                istringstream linestream(line);
+                int id;
+                float xcoord;
+                float ycoord;
+                float zcoord;
+                linestream.ignore(1); //ignore the object identifier
+                linestream >> id;
+                linestream >> xcoord;
+                linestream >> ycoord;
+                linestream >> zcoord;
+                listOfVectors[id] = Vector(param1,param2,param3);
             }
         }
     }

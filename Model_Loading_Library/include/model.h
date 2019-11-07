@@ -19,6 +19,9 @@ class Model
     Material* listOfMaterials;
     int getNumberOfVectors(); //scan the file to find how large to make vector list
     void populateVectorList();
-    string sourceFilePath
+    string sourceFilePath;
+    ifstream fileStream;
 };
 #endif // MODEL_H_INCLUDED
+
+//TODO ensure file only opens once - file opening code in loadModel function?
