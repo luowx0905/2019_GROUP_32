@@ -1,8 +1,9 @@
 #ifndef MODEL_H_INCLUDED
 #define MODEL_H_INCLUDED
-
+#include <vector>
 #include <iostream>
 #include <fstream>
+#include "vector.h"
 using namespace std;
 //For now, class only used to load a model, not create new.
 class Model
@@ -16,7 +17,7 @@ class Model
     void loadModel();
 
     private:
-    Vector* listOfVectors;
+    vector<Vector> listOfVectors;
     Cell* listOfCells;
     Material* listOfMaterials;
     int getNumberOfVectors(); //scan the file to find how large to make vector list
@@ -27,4 +28,3 @@ class Model
 #endif // MODEL_H_INCLUDED
 
 //TODO ensure file only opens once - file opening code in loadModel function?
-//TODO use vector container so can resize list -> no need to scan file
