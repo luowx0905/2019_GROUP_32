@@ -27,4 +27,4 @@ class Model
 #endif // MODEL_H_INCLUDED
 
 //TODO ensure file only opens once - file opening code in loadModel function?
-//TODO use vector container so can resize list -> no need to scan file first.
+//TODO use vector container so can resize list -> no need to scan file
