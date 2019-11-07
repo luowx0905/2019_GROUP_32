@@ -2,6 +2,8 @@
 #define MODEL_H_INCLUDED
 
 #include <iostream>
+#include <fstream>
+using namespace std;
 //For now, class only used to load a model, not create new.
 class Model
 {

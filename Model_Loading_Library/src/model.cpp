@@ -3,7 +3,7 @@
 #include <sstream>
 Model::Model(String filePath):sourceFilePath(filePath){}
 Model::~Model(){}
-void Model::loadModel
+void Model::loadModel()
 {
     getNumberOfVectors();
     populateVectorList();
@@ -13,7 +13,7 @@ int Model::getNumberOfVectors()
     ifstream fileStream;
     string line;
     int numberOfVectors = 0;
-    fileStream.open(this->sourceFilePath);
+    fileStream.open(this->sourceFilePath.c_str());
     if (!fileStream)
     {
         cerr << "Unable to open model file";
@@ -38,7 +38,7 @@ void Model::populateVectorList()
     this->listOfVectors = new Vector [getNumberOfVectors];
     ifstream fileStream;
     string line;
-    fileStream.open(this->sourceFilePath);
+    fileStream.open(this->sourceFilePath.c_str());
     if (!fileStream)
     {
         cerr << "Unable to open model file";
