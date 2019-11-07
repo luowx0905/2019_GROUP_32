@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 Model::Model(String filePath):sourceFilePath(filePath){}
+Model::~Model(){}
 void Model::loadModel
 {
     getNumberOfVectors();
