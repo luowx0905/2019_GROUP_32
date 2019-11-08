@@ -19,8 +19,8 @@ class Model
     vector<Vector> listOfVectors; //currently in public just for testing - must return to private
 
     private:
-    //vector<Cell> listOfCells;
-    //vector<Material> listOfMaterials;
+    vector<Cell> listOfCells;
+    vector<Material> listOfMaterials;
     void readVector(string line);
     void readCell(string line);
     void readMaterial(string line);
@@ -28,5 +28,3 @@ class Model
     ifstream fileStream;
 };
 #endif // MODEL_H_INCLUDED
-
-//TODO ensure file only opens once - file opening code in loadModel function?
