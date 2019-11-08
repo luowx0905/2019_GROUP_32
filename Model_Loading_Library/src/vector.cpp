@@ -12,12 +12,9 @@ Vector::Vector()
     j=0;
     k=0;
     mag=0;
-    direction_i=0;
-    direction_j=0;
-    direction_k=0;
 }
 
-Vector::Vector(float _mag,float _direction_i,float _direction_j,float _direction_k)
+/*Vector::Vector(float _mag,float _direction_i,float _direction_j,float _direction_k)
 {
     mag=_mag; //fill variables with given values.
     direction_i=_direction_i;
@@ -26,18 +23,25 @@ Vector::Vector(float _mag,float _direction_i,float _direction_j,float _direction
 
     //calculate i,j,k using the magnitude and direction (completes the vector class).
     calc_Vector(mag,direction_i,direction_j,direction_k);
-}
+}*/
 
 Vector::Vector(float _i,float _j,float _k)
 {
     i=_i;
     j=_j;
-    k=_k;
+    k=_k;//antony pres at ours at 8
 
-    calc_Vector(i, j, k);
+    //calc_Vector(i, j, k);
+    calc_mag(_i,_j,_k);
 }
 //end of constructors
 //-------------------------------------------------------------------------------------------------
+
+void Vector::calc_mag(float _i,float _j,float _k) //calculates the magnitude of the vector to store in the class
+{
+    mag=sqrt((_i*_i)+(_j*_j)+(_k*_k));
+}
+
 
 Vector::Vector(const Vector& _Vector) //copy
 {
@@ -45,9 +49,6 @@ Vector::Vector(const Vector& _Vector) //copy
     j=_Vector.j;
     k=_Vector.k;
     mag=_Vector.mag;
-    direction_i=_Vector.direction_i;
-    direction_j=_Vector.direction_j;
-    direction_k=_Vector.direction_k;
 }
 
 //operators
@@ -58,13 +59,9 @@ Vector Vector::operator=(const Vector& _Vector) //= (copies a Vector)
     j=_Vector.j;
     k=_Vector.k;
     mag=_Vector.mag;
-    direction_i=_Vector.direction_i;
-    direction_j=_Vector.direction_j;
-    direction_k=_Vector.direction_k;
 
     return(*this);
 }
-
 
 Vector Vector::operator+(const Vector& _Vector) //+ (adds two vectors)
 {
@@ -72,11 +69,10 @@ Vector Vector::operator+(const Vector& _Vector) //+ (adds two vectors)
     j+=_Vector.j;
     k+=_Vector.k;
 
-    calc_Vector(i,j,k);
+    calc_mag(i,j,k);
 
     return(*this);
 }
-
 
 Vector Vector::operator+=(const Vector& _Vector) //+= (adds two vectors)
 {
@@ -84,11 +80,10 @@ Vector Vector::operator+=(const Vector& _Vector) //+= (adds two vectors)
     j+=_Vector.j;
     k+=_Vector.k;
 
-    calc_Vector(i,j,k);
+    calc_mag(i,j,k);
 
     return(*this);
 }
-
 
 Vector Vector::operator-=(const Vector& _Vector) //- (subtracts two vectors)
 {
@@ -96,11 +91,10 @@ Vector Vector::operator-=(const Vector& _Vector) //- (subtracts two vectors)
     j-=_Vector.j;
     k-=_Vector.k;
 
-    calc_Vector(i,j,k);
+    calc_mag(i,j,k);
 
     return(*this);
 }
-
 
 Vector Vector::operator-(const Vector& _Vector) //-= (subtracts two vectors)
 {
@@ -108,92 +102,46 @@ Vector Vector::operator-(const Vector& _Vector) //-= (subtracts two vectors)
     j-=_Vector.j;
     k-=_Vector.k;
 
-    calc_Vector(i,j,k);
+    calc_mag(i,j,k);
 
     return(*this);
 }
 
-
-Vector Vector::operator*(const float ScalingFactor) //* (scales the vector using scalar product)
+Vector Vector::operator*(const float& ScalingFactor) //* (scales the vector using scalar product)
 {
     i*=ScalingFactor;
     j*=ScalingFactor;
     k*=ScalingFactor;
-
-    calc_Vector(i,j,k);
+    mag*=ScalingFactor;
 
     return(*this);
 }
-
 //end of operators
 //-------------------------------------------------------------------------------------------------
 
 
 //set functions
 //-------------------------------------------------------------------------------------------------
-void Vector::set_i(float value) //set functions, changes variable to value, then recalculates class. Nothing returned.
+void Vector::set_i(const float& value) //set functions, changes variable to value, then recalculates class. Nothing returned.
 {
     i=value;
 
-    calc_Vector(i,j,k);
+    calc_mag(i,j,k);
 }
-void Vector::set_j(float value)
+
+void Vector::set_j(const float& value)
 {
     j=value;
 
-    calc_Vector(i,j,k);
-
+    calc_mag(i,j,k);
 }
 
-
-void Vector::set_k(float value)
+void Vector::set_k(const float& value)
 {
     k=value;
 
-    calc_Vector(i,j,k);
-
-    return;
+    calc_mag(i,j,k);
 }
-
-
-void Vector::set_mag(float value)
-{
-    mag=value;
-
-    calc_Vector(mag, direction_i, direction_j, direction_k);
-
-    return;
-}
-
-
-void Vector::set_direction_i(float value)
-{
-    direction_i=value;
-
-    calc_Vector(mag, direction_i, direction_j, direction_k);
-    return;
-}
-
-
-void Vector::set_direction_j(float value)
-{
-    direction_j=value;
-
-    calc_Vector(mag, direction_i, direction_j, direction_k);
-
-    return;
-}
-
-
-void Vector::set_direction_k(float value)
-{
-    direction_k=value;
-
-    calc_Vector(mag, direction_i, direction_j, direction_k);
-
-    return;
-}
-
 //end of set functions
 //-------------------------------------------------------------------------------------------------
 
@@ -219,52 +167,23 @@ float Vector::get_mag()
 {
     return(mag);
 }
-
-float Vector::get_direction_i()
-{
-    return(direction_i);
-}
-
-float Vector::get_direction_j()
-{
-    return(direction_j);
-}
-
-float Vector::get_direction_k()
-{
-    return(direction_k);
-}
-
 //end of get functions.
-//-------------------------------------------------------------------------------------------------
-
-//completes the vector class by calculating missing variables.
-//-------------------------------------------------------------------------------------------------
-void Vector::calc_Vector(float mag, float direction_i,float direction_j,float direction_k)
-{
-    i=cos(direction_i);
-    return;
-}
-
-
-void Vector::calc_Vector(float i,float j,float k)
-{
-    direction_i=acos(i);
-    direction_j=acos(j);
-    direction_k=acos(k);
-
-    mag= sqrt((i*i)+(j*j)+(k*k));
-
-    return;
-}
 //-------------------------------------------------------------------------------------------------
 
 
 //calculate dot product.
 //-------------------------------------------------------------------------------------------------
-float Vector::get_dot_p(const Vector& a, const Vector& b)
+static float get_dot_p(Vector& _Vector1,Vector& _Vector2) //not functioning
 {
-    return(0);
+    float dot_p;
+    dot_p=acos(((_Vector1.get_i()*_Vector2.get_i())+(_Vector1.get_j()*_Vector2.get_j())+(_Vector1.get_k()*_Vector2.get_k()))/(_Vector1.get_mag()*_Vector2.get_mag()));
+    return(dot_p);
 }
 //-------------------------------------------------------------------------------------------------
 
+
+ostream& operator<<(ostream& out,const Vector& _Vector)
+{
+    out<<"\ni = "<<_Vector.i<<"\nj = "<<_Vector.j<<"\nk = "<<_Vector.k<<"\nMagnitude = "<<_Vector.mag;
+    return(out);
+}
