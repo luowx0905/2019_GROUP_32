@@ -3,6 +3,7 @@
 using namespace std;
 int main()
 {
+    cout << "hey" << endl;
     Model myModel("C:/Users/Ewan/Documents/.University/Computing Project/Group32/Model_Loading_Library/ExampleModel1.mod");
     myModel.loadModel();
     cout << "hello" << endl;

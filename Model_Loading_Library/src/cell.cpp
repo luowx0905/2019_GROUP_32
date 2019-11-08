@@ -56,7 +56,6 @@ Cell::Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Vector& v4, Vector& v
 	setWeight();
 	setGravityCenter();
 }
-
 Cell& Cell::operator=(const Cell& c)
 {
 	if (this != &c)
