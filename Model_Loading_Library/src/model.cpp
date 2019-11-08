@@ -1,7 +1,7 @@
 #include "model.h"
 #include <fstream>
 #include <sstream>
-Model::Model(String filePath):sourceFilePath(filePath){}
+Model::Model(string filePath):sourceFilePath(filePath){}
 Model::~Model(){}
 void Model::loadModel()
 {
@@ -10,6 +10,7 @@ void Model::loadModel()
 
 void Model::populateVectorList()
 {
+    int vectorListLength = 0;
     ifstream fileStream;
     string line;
     fileStream.open(this->sourceFilePath.c_str());
@@ -25,7 +26,9 @@ void Model::populateVectorList()
         {
             if(line.at(0) == 'v')
             {
+                vectorListLength++;
                 istringstream linestream(line);
+                listOfVectors.resize(vectorListLength);
                 int id;
                 float xcoord;
                 float ycoord;
@@ -35,7 +38,7 @@ void Model::populateVectorList()
                 linestream >> xcoord;
                 linestream >> ycoord;
                 linestream >> zcoord;
-                listOfVectors[id] = Vector(param1,param2,param3);
+                listOfVectors.at(id) = Vector(xcoord,ycoord,zcoord);
             }
         }
     }

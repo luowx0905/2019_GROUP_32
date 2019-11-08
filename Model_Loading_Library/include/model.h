@@ -15,11 +15,11 @@ class Model
     void displayCells();
     Vector getModelCentre();
     void loadModel();
+    vector<Vector> listOfVectors;
 
     private:
-    vector<Vector> listOfVectors;
-    vector<Cell> listOfCells;
-    vector<Material> listOfMaterials;
+    //vector<Cell> listOfCells;
+    //vector<Material> listOfMaterials;
     void populateVectorList();
     void populateCellList();
     void populateMateriallist();
