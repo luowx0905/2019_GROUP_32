@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "vector.h"
 using namespace std;
 //For now, class only used to load a model, not create new.
@@ -15,17 +16,15 @@ class Model
     void displayCells();
     Vector getModelCentre();
     void loadModel();
+    vector<Vector> listOfVectors; //currently in public just for testing - must return to private
 
     private:
-    vector<Vector> listOfVectors;
     vector<Cell> listOfCells;
     vector<Material> listOfMaterials;
-    void populateVectorList();
-    void populateCellList();
-    void populateMateriallist();
+    void readVector(string line);
+    void readCell(string line);
+    void readMaterial(string line);
     string sourceFilePath;
     ifstream fileStream;
 };
 #endif // MODEL_H_INCLUDED
-
-//TODO ensure file only opens once - file opening code in loadModel function?
