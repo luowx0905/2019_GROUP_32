@@ -262,7 +262,7 @@ void Vector::calc_Vector(float i,float j,float k)
 
 //calculate dot product.
 //-------------------------------------------------------------------------------------------------
-float Vector::get_dot_p(const Vector& a, const Vector& b)
+static float Vector::get_dot_p(const Vector& a, const Vector& b)
 {
     return(0);
 }

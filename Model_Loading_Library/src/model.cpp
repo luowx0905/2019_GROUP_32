@@ -43,7 +43,7 @@ void Model::loadModel()
                 }
                 else
                 {
-                    cerr << "Error in reading line - Object Identifier not recognised"
+                    cerr << "Error in reading line - Object Identifier not recognised";
                     exit(1);
                 }
                 
@@ -104,7 +104,7 @@ void Model::readCell(string line)
     }
     else
     {
-        cerr << "Error in reading cell - shapeType not found"
+        cerr << "Error in reading cell - shapeType not found";
         exit(1);
     }
     //Storing the cell in the list at the ID of its index may cause issues in future if any are added or removed or simply if the IDs are not consecutive and starting from 0.

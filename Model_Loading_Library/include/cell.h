@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "vector.h"
+#include "material.h"
 
 class Cell
 {

@@ -51,9 +51,9 @@ using namespace std;
         void calc_Vector(float _mag, float _direction_i,float _direction_j,float _direction_k); //completes the vector class by calculating missing variables.
         void calc_Vector(float _i,float _j,float _k);
 
-        float get_dot_p(const Vector& a, const Vector& b);
+        static float get_dot_p(const Vector& a, const Vector& b);
 
-        Vector get_cross_p(const Vector& _Vector1, const Vector& _Vector2);
+        static Vector get_cross_p(const Vector& _Vector1, const Vector& _Vector2);
 
 
         //output stream operator for testing
