@@ -5,7 +5,6 @@ Model::Model(String filePath):sourceFilePath(filePath){}
 Model::~Model(){}
 void Model::loadModel()
 {
-    getNumberOfVectors();
     populateVectorList();
 }
 

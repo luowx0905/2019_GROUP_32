@@ -18,10 +18,11 @@ class Model
 
     private:
     vector<Vector> listOfVectors;
-    Cell* listOfCells;
-    Material* listOfMaterials;
-    int getNumberOfVectors(); //scan the file to find how large to make vector list
+    vector<Cell> listOfCells;
+    vector<Material> listOfMaterials;
     void populateVectorList();
+    void populateCellList();
+    void populateMateriallist();
     string sourceFilePath;
     ifstream fileStream;
 };
