@@ -4,10 +4,10 @@
 //Create Material Deault Value
 Material::Material()
 {
-  this->density
-  this->colour
-  this->name
-  this->id
+  this->density = 0;
+  this->colour = 0;
+  this->name = unknow;
+  this->id = unknow;
 }
 
 //Create Material by Overload Constructure
