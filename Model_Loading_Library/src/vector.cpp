@@ -38,7 +38,7 @@ Vector::Vector(float _i,float _j,float _k)
 }
 //end of constructors
 //-------------------------------------------------------------------------------------------------
-
+Vector::~Vector(){}
 Vector::Vector(const Vector& _Vector) //copy
 {
     i=_Vector.i;
@@ -202,17 +202,17 @@ void Vector::set_direction_k(float value)
 //-------------------------------------------------------------------------------------------------
 float Vector::get_i()  //gets the value of variables
 {
-    return(i);
+    return(this->i);
 }
 
 float Vector::get_j()
 {
-    return(j);
+    return(this->j);
 }
 
 float Vector::get_k()
 {
-    return(k);
+    return(this->k);
 }
 
 float Vector::get_mag()
@@ -262,9 +262,13 @@ void Vector::calc_Vector(float i,float j,float k)
 
 //calculate dot product.
 //-------------------------------------------------------------------------------------------------
-static float Vector::get_dot_p(const Vector& a, const Vector& b)
+float Vector::get_dot_p(const Vector& a, const Vector& b)
 {
     return(0);
 }
 //-------------------------------------------------------------------------------------------------
 
+Vector Vector::get_cross_p(const Vector& _Vector1, const Vector& _Vector2)
+{
+    return(Vector()); //temporarily made so can compile
+}

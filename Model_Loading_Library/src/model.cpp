@@ -100,7 +100,7 @@ void Model::readCell(string line)
     {
         listOfCells.at(cellID) = Cell(listOfVectors[vectors[0]],listOfVectors[vectors[1]],listOfVectors[vectors[2]],
                                       listOfVectors[vectors[3]],listOfMaterials[materialID]);
-        return
+        return;
     }
     else
     {
@@ -122,7 +122,7 @@ void Model::readMaterial(string line)
     linestream >> density;
     linestream >> colour;
     linestream >> name;
-    materialList.at(materialID) = Material(); //TODO finish using Material constructor
+    listOfMaterials.at(materialID) = Material(); //TODO finish using Material constructor
     return;
 }
 //update functions in header

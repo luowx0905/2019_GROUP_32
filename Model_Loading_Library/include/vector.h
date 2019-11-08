@@ -12,7 +12,7 @@ using namespace std;
         Vector(float _mag, float _direction_i, float _direction_j, float _direction_k);
         Vector(float i, float j, float k);
 
-        //~Vector(); //destruct //not needed
+        ~Vector(); //destruct //not needed
 
         Vector(const Vector& _Vector); //copy
 
