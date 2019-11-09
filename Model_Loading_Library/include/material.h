@@ -28,10 +28,10 @@ public:
   n = name
   i = id*/
   void setMaterial( double d, string c, string n, double i);
-  double getdensity();//return density
-  string getcolour();//return colour
-  string getname();//return name
-  double getid();//return id
+  double getDensity();//return density
+  string getColour();//return colour
+  string getName();//return name
+  double getID();//return id
   };
 
  #endif // End of material.h

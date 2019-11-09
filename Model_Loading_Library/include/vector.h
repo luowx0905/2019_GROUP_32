@@ -12,6 +12,9 @@ using namespace std;
         Vector(); //constructor
         Vector(float i, float j, float k);
 
+
+        ~Vector(); //destruct //not needed
+
         Vector(const Vector& _Vector); //copy
 
         Vector operator=(const Vector& _Vector); //= (copies a Vector) //operators
@@ -32,9 +35,11 @@ using namespace std;
 
         void calc_mag(float _i,float _j,float _k); //calculates the magnitude of the vector to store in the class
 
+
         static float get_dot_p(Vector& _Vector1,Vector& _Vector2); //not functioning
 
-        Vector get_cross_p(const Vector& _Vector1, const Vector& _Vector2);
+
+        static Vector get_cross_p(const Vector& _Vector1, const Vector& _Vector2);
 
         //output stream operator for testing
         friend ostream& operator<<(ostream& out,const Vector& _Vector);

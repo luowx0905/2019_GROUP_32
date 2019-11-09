@@ -5,6 +5,8 @@
 #include <fstream>
 #include <sstream>
 #include "vector.h"
+#include "cell.h"
+#include "material.h"
 using namespace std;
 //For now, class only used to load a model, not create new.
 class Model

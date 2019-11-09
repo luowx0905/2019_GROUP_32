@@ -37,11 +37,14 @@ Vector::Vector(float _i,float _j,float _k)
 //end of constructors
 //-------------------------------------------------------------------------------------------------
 
+
 void Vector::calc_mag(float _i,float _j,float _k) //calculates the magnitude of the vector to store in the class
 {
     mag=sqrt((_i*_i)+(_j*_j)+(_k*_k));
 }
 
+
+Vector::~Vector(){}
 
 Vector::Vector(const Vector& _Vector) //copy
 {
@@ -150,17 +153,17 @@ void Vector::set_k(const float& value)
 //-------------------------------------------------------------------------------------------------
 float Vector::get_i()  //gets the value of variables
 {
-    return(i);
+    return(this->i);
 }
 
 float Vector::get_j()
 {
-    return(j);
+    return(this->j);
 }
 
 float Vector::get_k()
 {
-    return(k);
+    return(this->k);
 }
 
 float Vector::get_mag()
@@ -186,4 +189,11 @@ ostream& operator<<(ostream& out,const Vector& _Vector)
 {
     out<<"\ni = "<<_Vector.i<<"\nj = "<<_Vector.j<<"\nk = "<<_Vector.k<<"\nMagnitude = "<<_Vector.mag;
     return(out);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+Vector Vector::get_cross_p(const Vector& _Vector1, const Vector& _Vector2)
+{
+    return(Vector()); //temporarily made so can compile
 }

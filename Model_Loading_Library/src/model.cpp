@@ -43,7 +43,7 @@ void Model::loadModel()
                 }
                 else
                 {
-                    cerr << "Error in reading line - Object Identifier not recognised"
+                    cerr << "Error in reading line - Object Identifier not recognised";
                     exit(1);
                 }
                 
@@ -100,11 +100,11 @@ void Model::readCell(string line)
     {
         listOfCells.at(cellID) = Cell(listOfVectors[vectors[0]],listOfVectors[vectors[1]],listOfVectors[vectors[2]],
                                       listOfVectors[vectors[3]],listOfMaterials[materialID]);
-        return
+        return;
     }
     else
     {
-        cerr << "Error in reading cell - shapeType not found"
+        cerr << "Error in reading cell - shapeType not found";
         exit(1);
     }
     //Storing the cell in the list at the ID of its index may cause issues in future if any are added or removed or simply if the IDs are not consecutive and starting from 0.
@@ -122,7 +122,7 @@ void Model::readMaterial(string line)
     linestream >> density;
     linestream >> colour;
     linestream >> name;
-    materialList.at(materialID) = Material(); //TODO finish using Material constructor
+    listOfMaterials.at(materialID) = Material(); //TODO finish using Material constructor
     return;
 }
 //update functions in header
