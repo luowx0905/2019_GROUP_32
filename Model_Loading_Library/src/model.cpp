@@ -85,9 +85,9 @@ void Model::readCell(string line)
         linestream >> vectors[i]; //reads the rest of the line into an array.
     if(shapeType == 'h')
     {
-        listOfCells.at(cellID) = Cell(listOfVectors[vectors[0]], listOfVectors[vectors[1]], listOfVectors[vectors[2]], 
-                                      listOfVectors[vectors[3]], listOfVectors[vectors[4]], listOfVectors[vectors[5]], 
-                                      listOfVectors[vectors[6]], listOfVectors[vectors[7]], listOfMaterials[materialID]);
+        listOfCells.at(cellID) = Cell(listOfVectors.at(vectors[0]), listOfVectors.at(vectors[1]), listOfVectors.at(vectors[2]),
+                                      listOfVectors.at(vectors[3]), listOfVectors.at(vectors[4]), listOfVectors.at(vectors[5]),
+                                      listOfVectors.at(vectors[6]), listOfVectors.at(vectors[7]), listOfMaterials.at(materialID));
         return;
     }
     else if(shapeType == 'p')
@@ -125,4 +125,6 @@ void Model::readMaterial(string line)
     listOfMaterials.at(materialID) = Material(); //TODO finish using Material constructor
     return;
 }
-//update functions in header
+//TODO -> Ensure that vectors are read before cell or make change to ensure cells can be generated without need for full initialisation of all vectors in 'listOfVectors'
+// -> solution populate a list  with the ID of vectors that each cell contains and then generate using constructors after entire file has been read.
+// 2D array 
