@@ -23,6 +23,14 @@ class Model
     private:
     vector<Cell> listOfCells;
     vector<Material> listOfMaterials;
+    //vector<vector<int>> uninitCellList(10,vector<int>(1,0)); //initialises a 2D vector list with 10 Rows and 0 columns
+    vector<vector<int>> uninitCellList; 
+    /*
+    Row Index: 0    1     2    3    4   5   6   7   8   9   
+    Data:     type  v1   v2   v3  v4  v5  v6  v7  v8  material
+    */
+    //each column pertains to a new cellID
+    void generateCellList(int cellListLength); //function populates a 2D vector with all the vectors each cell should contain. Will then be used to generate list containing actual Cell objects once the entire file has been read
     void readVector(string line);
     void readCell(string line);
     void readMaterial(string line);

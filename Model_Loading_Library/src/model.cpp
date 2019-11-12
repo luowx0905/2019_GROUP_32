@@ -8,7 +8,7 @@ void Model::loadModel()
     int vectorListLength = 0;
     int cellListLength = 0;
     int materialListLength = 0;
-
+    uninitCellList.resize(10); //makes the 10 rows
     this->fileStream.open(this->sourceFilePath.c_str()); //opens file
     if (!this->fileStream) //checks to see if file was opened succesfully
     {
@@ -32,7 +32,10 @@ void Model::loadModel()
                 else if(line.at(0) == 'c')
                 {
                     cellListLength++;
-                    listOfCells.resize(cellListLength);
+                    for(int i = 0; i < 11; i++)//iterates through each of the 11 rows of the 2D list
+                    {
+                        uninitCellList[i].resize(cellListLength);
+                    }
                     readCell(line);
                 }
                 else if(line.at(0) == 'm')
@@ -50,6 +53,7 @@ void Model::loadModel()
             }
         }
     }
+    generateCellList(cellListLength);
     this->fileStream.close();
     return;
 }
@@ -85,21 +89,26 @@ void Model::readCell(string line)
         linestream >> vectors[i]; //reads the rest of the line into an array.
     if(shapeType == 'h')
     {
-        listOfCells.at(cellID) = Cell(listOfVectors.at(vectors[0]), listOfVectors.at(vectors[1]), listOfVectors.at(vectors[2]),
-                                      listOfVectors.at(vectors[3]), listOfVectors.at(vectors[4]), listOfVectors.at(vectors[5]),
-                                      listOfVectors.at(vectors[6]), listOfVectors.at(vectors[7]), listOfMaterials.at(materialID));
+        uninitCellList[0][cellID] = 72; //ASCII for 'H'
+        for(int i = 0; i < 8; i++)
+            uninitCellList[i+1][cellID] = vectors[i];
+        uninitCellList[9][cellID] = materialID;
         return;
     }
     else if(shapeType == 'p')
     {
-        listOfCells.at(cellID) = Cell(listOfVectors[vectors[0]], listOfVectors[vectors[1]], listOfVectors[vectors[2]],
-                                      listOfVectors[vectors[3]], listOfVectors[vectors[4]], listOfMaterials[materialID]);
+        uninitCellList[0][cellID] = 80; //ASCII for 'P'
+        for(int i = 0; i < 5; i++)
+            uninitCellList[i+1][cellID] = vectors[i];
+        uninitCellList[9][cellID] = materialID;
         return;
     }
     else if(shapeType == 't')
     {
-        listOfCells.at(cellID) = Cell(listOfVectors[vectors[0]],listOfVectors[vectors[1]],listOfVectors[vectors[2]],
-                                      listOfVectors[vectors[3]],listOfMaterials[materialID]);
+        uninitCellList[0][cellID] = 84; //ASCII for 'T'
+        for(int i = 0; i < 4; i++)
+            uninitCellList[i+1][cellID] = vectors[i];
+        uninitCellList[9][cellID] = materialID;
         return;
     }
     else
@@ -125,6 +134,27 @@ void Model::readMaterial(string line)
     listOfMaterials.at(materialID) = Material(); //TODO finish using Material constructor
     return;
 }
-//TODO -> Ensure that vectors are read before cell or make change to ensure cells can be generated without need for full initialisation of all vectors in 'listOfVectors'
-// -> solution populate a list  with the ID of vectors that each cell contains and then generate using constructors after entire file has been read.
-// 2D array 
+void Model::generateCellList(int cellListLength)
+{
+    listOfCells.resize(cellListLength);
+    for(int i = 0; i < cellListLength; i++)
+    {
+        if(uninitCellList[0][i] == 72)
+        {
+            listOfCells[i] = Cell(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+                                  listOfVectors[uninitCellList[4][i]], listOfVectors[uninitCellList[5][i]], listOfVectors[uninitCellList[6][i]],
+                                  listOfVectors[uninitCellList[7][i]], listOfVectors[uninitCellList[8][i]], listOfMaterials[uninitCellList[9][i]]);
+        }
+        else if (uninitCellList[0][i] == 80)
+        {
+            listOfCells[i] = Cell(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+                                  listOfVectors[uninitCellList[4][i]], listOfVectors[uninitCellList[5][i]], listOfMaterials[uninitCellList[9][i]]);
+        }
+        else if (uninitCellList[0][i] == 84)
+        {
+            listOfCells[i] = Cell(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+                                  listOfVectors[uninitCellList[4][i]], listOfMaterials[uninitCellList[9][i]]);
+        }
+    }
+    return;
+}
