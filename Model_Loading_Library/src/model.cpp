@@ -32,7 +32,7 @@ void Model::loadModel()
                 else if(line.at(0) == 'c')
                 {
                     cellListLength++;
-                    for(int i = 0; i < 11; i++)//iterates through each of the 11 rows of the 2D list
+                    for(int i = 0; i < 10; i++)//iterates through each of the 11 rows of the 2D list
                     {
                         uninitCellList[i].resize(cellListLength);
                     }

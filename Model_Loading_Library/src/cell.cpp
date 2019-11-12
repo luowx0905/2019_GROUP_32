@@ -61,7 +61,7 @@ Cell& Cell::operator=(const Cell& c)
 	if (this != &c)
 	{
 		cellType = c.cellType;
-
+		data.resize(c.data.size()); //Initialises container to be large enough to store all data ~Ewan
 		vector<Vector>::const_iterator citor;
 		vector<Vector>::iterator itor;
 		for (citor = c.data.begin(), itor = data.begin(); citor != c.data.end(); citor++, itor++)

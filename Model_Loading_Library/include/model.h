@@ -23,7 +23,6 @@ class Model
     private:
     vector<Cell> listOfCells;
     vector<Material> listOfMaterials;
-    //vector<vector<int>> uninitCellList(10,vector<int>(1,0)); //initialises a 2D vector list with 10 Rows and 0 columns
     vector<vector<int>> uninitCellList; 
     /*
     Row Index: 0    1     2    3    4   5   6   7   8   9   
