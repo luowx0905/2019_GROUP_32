@@ -176,9 +176,9 @@ float Vector::get_mag()
 
 //calculate dot product.
 //-------------------------------------------------------------------------------------------------
-static float get_dot_p(Vector& _Vector1,Vector& _Vector2) //not functioning
+double Vector::get_dot_p(Vector& _Vector1,Vector& _Vector2) //not functioning //~Ewan changed to double for debugging with cell class
 {
-    float dot_p;
+    double dot_p;
     dot_p=acos(((_Vector1.get_i()*_Vector2.get_i())+(_Vector1.get_j()*_Vector2.get_j())+(_Vector1.get_k()*_Vector2.get_k()))/(_Vector1.get_mag()*_Vector2.get_mag()));
     return(dot_p);
 }

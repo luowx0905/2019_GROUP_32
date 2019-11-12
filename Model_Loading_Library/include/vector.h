@@ -36,7 +36,7 @@ using namespace std;
         void calc_mag(float _i,float _j,float _k); //calculates the magnitude of the vector to store in the class
 
 
-        static float get_dot_p(Vector& _Vector1,Vector& _Vector2); //not functioning
+        static double get_dot_p(Vector& _Vector1,Vector& _Vector2); //not functioning //~Ewan changed to double for debugging with cell class
 
 
         static Vector get_cross_p(const Vector& _Vector1, const Vector& _Vector2);
