@@ -3,6 +3,19 @@
 #include <sstream>
 Model::Model(string filePath):sourceFilePath(filePath){}
 Model::~Model(){}
+void Model::displayVertices()
+{
+    for(int i = 0; i < this->listOfVectors.size();i++)
+        cout <<"Vector "<< i << this->listOfVectors[i] << endl;
+}
+void Model::displayCells()
+{
+
+}
+Vector Model::getModelCentre()
+{
+    return Vector();
+}
 void Model::loadModel()
 {
     int vectorListLength = 0;

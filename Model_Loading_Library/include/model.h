@@ -14,13 +14,16 @@ class Model
     public:
     Model(string filePath); 
     ~Model();
+
+    void loadModel();
+
     void displayVertices();
     void displayCells();
-    Vector getModelCentre();
-    void loadModel();
-    vector<Vector> listOfVectors; //currently in public just for testing - must return to private
 
+    Vector getModelCentre();
+    
     private:
+    vector<Vector> listOfVectors;
     vector<Cell> listOfCells;
     vector<Material> listOfMaterials;
     vector<vector<int>> uninitCellList; 
