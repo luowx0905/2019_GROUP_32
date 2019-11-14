@@ -16,7 +16,7 @@ public:
 	~Cell(); //added for completeness ~Ewan
 	//Maybe a copy constructor?? ~Ewan
 	Cell& operator=(const Cell& c);
-
+	//I need an overload function for the output stream operator '<<' to display cells values to console.
 	double getVolume() const;
 	double getWeight() const;
 	std::string getType() const;
@@ -29,7 +29,6 @@ private:
 	double volume;
 	double weight;
 	double density;
-
 	void setVolume();
 	void setWeight();
 	void setGravityCenter();
