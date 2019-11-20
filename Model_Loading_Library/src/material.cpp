@@ -24,29 +24,29 @@ Material::~Material()
 
 }
 //Create Material by Setup Function
-//The line below seems like it will cause issues as you are using this eventhough the function is not inside an object. Is this function even required? ~Ewan
-void Material(double d, string c, string n, double i)
+//The line below seems like it will cause issues as you are using 'this' eventhough the function is not inside an object. Is this function even required? ~Ewan
+/*void Material(double d, string c, string n, double i)
 {
   this->density = d;
   this->colour = c;
   this->name = n:
   this->id = i;
-}
+}*/
 //Accestor Function/ Return Value
-double Matrial::getdensity()
+double Material::getDensity()
 {
-  return this->desity;
+  return this->density;
 }
 
-string Material::getcolour()
+string Material::getColour()
 {
   return this->colour;
 }
-string Material::getstring()
+string Material::getName()
 {
   return this->name;
 }
-double Material::getid()
+double Material::getID()
 {
   return this->id;
 }

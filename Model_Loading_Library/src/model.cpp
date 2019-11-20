@@ -3,12 +3,25 @@
 #include <sstream>
 Model::Model(string filePath):sourceFilePath(filePath){}
 Model::~Model(){}
+void Model::displayVertices()
+{
+    for(int i = 0; i < this->listOfVectors.size();i++)
+        cout <<"Vector "<< i << this->listOfVectors[i] << endl;
+}
+void Model::displayCells()
+{
+
+}
+Vector Model::getModelCentre()
+{
+    return Vector();
+}
 void Model::loadModel()
 {
     int vectorListLength = 0;
     int cellListLength = 0;
     int materialListLength = 0;
-
+    uninitCellList.resize(10); //makes the 10 rows
     this->fileStream.open(this->sourceFilePath.c_str()); //opens file
     if (!this->fileStream) //checks to see if file was opened succesfully
     {
@@ -32,7 +45,10 @@ void Model::loadModel()
                 else if(line.at(0) == 'c')
                 {
                     cellListLength++;
-                    listOfCells.resize(cellListLength);
+                    for(int i = 0; i < 10; i++)//iterates through each of the 11 rows of the 2D list
+                    {
+                        uninitCellList[i].resize(cellListLength);
+                    }
                     readCell(line);
                 }
                 else if(line.at(0) == 'm')
@@ -43,13 +59,14 @@ void Model::loadModel()
                 }
                 else
                 {
-                    cerr << "Error in reading line - Object Identifier not recognised"
+                    cerr << "Error in reading line - Object Identifier not recognised";
                     exit(1);
                 }
                 
             }
         }
     }
+    generateCellList(cellListLength);
     this->fileStream.close();
     return;
 }
@@ -85,26 +102,31 @@ void Model::readCell(string line)
         linestream >> vectors[i]; //reads the rest of the line into an array.
     if(shapeType == 'h')
     {
-        listOfCells.at(cellID) = Cell(listOfVectors[vectors[0]], listOfVectors[vectors[1]], listOfVectors[vectors[2]], 
-                                      listOfVectors[vectors[3]], listOfVectors[vectors[4]], listOfVectors[vectors[5]], 
-                                      listOfVectors[vectors[6]], listOfVectors[vectors[7]], listOfMaterials[materialID]);
+        uninitCellList[0][cellID] = 72; //ASCII for 'H'
+        for(int i = 0; i < 8; i++)
+            uninitCellList[i+1][cellID] = vectors[i];
+        uninitCellList[9][cellID] = materialID;
         return;
     }
     else if(shapeType == 'p')
     {
-        listOfCells.at(cellID) = Cell(listOfVectors[vectors[0]], listOfVectors[vectors[1]], listOfVectors[vectors[2]],
-                                      listOfVectors[vectors[3]], listOfVectors[vectors[4]], listOfMaterials[materialID]);
+        uninitCellList[0][cellID] = 80; //ASCII for 'P'
+        for(int i = 0; i < 5; i++)
+            uninitCellList[i+1][cellID] = vectors[i];
+        uninitCellList[9][cellID] = materialID;
         return;
     }
     else if(shapeType == 't')
     {
-        listOfCells.at(cellID) = Cell(listOfVectors[vectors[0]],listOfVectors[vectors[1]],listOfVectors[vectors[2]],
-                                      listOfVectors[vectors[3]],listOfMaterials[materialID]);
-        return
+        uninitCellList[0][cellID] = 84; //ASCII for 'T'
+        for(int i = 0; i < 4; i++)
+            uninitCellList[i+1][cellID] = vectors[i];
+        uninitCellList[9][cellID] = materialID;
+        return;
     }
     else
     {
-        cerr << "Error in reading cell - shapeType not found"
+        cerr << "Error in reading cell - shapeType not found";
         exit(1);
     }
     //Storing the cell in the list at the ID of its index may cause issues in future if any are added or removed or simply if the IDs are not consecutive and starting from 0.
@@ -122,7 +144,30 @@ void Model::readMaterial(string line)
     linestream >> density;
     linestream >> colour;
     linestream >> name;
-    materialList.at(materialID) = Material(); //TODO finish using Material constructor
+    listOfMaterials.at(materialID) = Material(); //TODO finish using Material constructor
     return;
 }
-//update functions in header
+void Model::generateCellList(int cellListLength)
+{
+    listOfCells.resize(cellListLength);
+    for(int i = 0; i < cellListLength; i++)
+    {
+        if(uninitCellList[0][i] == 72)
+        {
+            listOfCells[i] = Cell(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+                                  listOfVectors[uninitCellList[4][i]], listOfVectors[uninitCellList[5][i]], listOfVectors[uninitCellList[6][i]],
+                                  listOfVectors[uninitCellList[7][i]], listOfVectors[uninitCellList[8][i]], listOfMaterials[uninitCellList[9][i]]);
+        }
+        else if (uninitCellList[0][i] == 80)
+        {
+            listOfCells[i] = Cell(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+                                  listOfVectors[uninitCellList[4][i]], listOfVectors[uninitCellList[5][i]], listOfMaterials[uninitCellList[9][i]]);
+        }
+        else if (uninitCellList[0][i] == 84)
+        {
+            listOfCells[i] = Cell(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+                                  listOfVectors[uninitCellList[4][i]], listOfMaterials[uninitCellList[9][i]]);
+        }
+    }
+    return;
+}

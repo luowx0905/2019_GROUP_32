@@ -1,10 +1,12 @@
 #include "cell.h"
 #include "vector.h"
+#include "material.h"
 #include <vector>
 #include <string>
 
 using namespace std;
-
+Cell::Cell(){}
+Cell::~Cell(){}
 Cell::Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Material& m)
 {
 	cellType = "Tetrahedron";
@@ -54,13 +56,12 @@ Cell::Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Vector& v4, Vector& v
 	setWeight();
 	setGravityCenter();
 }
-
 Cell& Cell::operator=(const Cell& c)
 {
 	if (this != &c)
 	{
 		cellType = c.cellType;
-
+		data.resize(c.data.size()); //Initialises container to be large enough to store all data ~Ewan
 		vector<Vector>::const_iterator citor;
 		vector<Vector>::iterator itor;
 		for (citor = c.data.begin(), itor = data.begin(); citor != c.data.end(); citor++, itor++)
@@ -132,7 +133,7 @@ void Cell::setWeight()
 
 void Cell::setGravityCenter()
 {
-	vector<Vector>::const_iterator itor;
+	vector<Vector>::iterator itor; //CHANGE replaced iterator with const_iterator to avoid having to add const flags to every use of vector get_functions. Update this for robustness at a later date ~Ewan
 	double x, y, z;
 	double sumX = 0, sumY = 0, sumZ = 0;
 

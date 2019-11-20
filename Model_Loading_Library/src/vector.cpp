@@ -37,11 +37,14 @@ Vector::Vector(float _i,float _j,float _k)
 //end of constructors
 //-------------------------------------------------------------------------------------------------
 
+
 void Vector::calc_mag(float _i,float _j,float _k) //calculates the magnitude of the vector to store in the class
 {
     mag=sqrt((_i*_i)+(_j*_j)+(_k*_k));
 }
 
+
+Vector::~Vector(){}
 
 Vector::Vector(const Vector& _Vector) //copy
 {
@@ -150,17 +153,17 @@ void Vector::set_k(const float& value)
 //-------------------------------------------------------------------------------------------------
 float Vector::get_i()  //gets the value of variables
 {
-    return(i);
+    return(this->i);
 }
 
 float Vector::get_j()
 {
-    return(j);
+    return(this->j);
 }
 
 float Vector::get_k()
 {
-    return(k);
+    return(this->k);
 }
 
 float Vector::get_mag()
@@ -173,9 +176,9 @@ float Vector::get_mag()
 
 //calculate dot product.
 //-------------------------------------------------------------------------------------------------
-static float get_dot_p(Vector& _Vector1,Vector& _Vector2) //not functioning
+double Vector::get_dot_p(Vector& _Vector1,Vector& _Vector2) //not functioning //~Ewan changed to double for debugging with cell class
 {
-    float dot_p;
+    double dot_p;
     dot_p=acos(((_Vector1.get_i()*_Vector2.get_i())+(_Vector1.get_j()*_Vector2.get_j())+(_Vector1.get_k()*_Vector2.get_k()))/(_Vector1.get_mag()*_Vector2.get_mag()));
     return(dot_p);
 }
@@ -186,4 +189,11 @@ ostream& operator<<(ostream& out,const Vector& _Vector)
 {
     out<<"\ni = "<<_Vector.i<<"\nj = "<<_Vector.j<<"\nk = "<<_Vector.k<<"\nMagnitude = "<<_Vector.mag;
     return(out);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+Vector Vector::get_cross_p(const Vector& _Vector1, const Vector& _Vector2)
+{
+    return(Vector()); //temporarily made so can compile
 }
