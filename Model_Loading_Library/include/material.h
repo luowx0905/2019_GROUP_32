@@ -1,5 +1,6 @@
 #ifndef MATERIAL_H_INCLUDED
 #define MATERIAL_H_INCLUDED
+
 #include <string>
 using namespace std;//for std::
 

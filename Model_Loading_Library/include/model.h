@@ -1,11 +1,16 @@
 #ifndef MODEL_H_INCLUDED
 #define MODEL_H_INCLUDED
+
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include "vector.h"
+#include "cell.h"
+#include "material.h"
+
 using namespace std;
+
 //For now, class only used to load a model, not create new.
 class Model
 {

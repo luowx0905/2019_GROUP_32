@@ -1,5 +1,5 @@
 #include <iostream>
-#include<material.h>
+#include "material.h"
 
 //Create Material Deault Value
 Material::Material()
@@ -25,24 +25,24 @@ Material::~Material()
 }
 //Create Material by Setup Function
 //The line below seems like it will cause issues as you are using this eventhough the function is not inside an object. Is this function even required? ~Ewan
-void Material(double d, string c, string n, double i)
+void Material::setMaterial(double d, string c, string n, double i)
 {
   this->density = d;
   this->colour = c;
-  this->name = n:
+  this->name = n;
   this->id = i;
 }
 //Accestor Function/ Return Value
-double Matrial::getdensity()
+double Material::getdensity()
 {
-  return this->desity;
+  return this->density;
 }
 
 string Material::getcolour()
 {
   return this->colour;
 }
-string Material::getstring()
+string Material::getname()
 {
   return this->name;
 }
