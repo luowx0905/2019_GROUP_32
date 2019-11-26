@@ -1,5 +1,3 @@
 # Model Loader
 ## Setup
-'
-test
-'
+`test`
