@@ -20,7 +20,7 @@ class Model
     void displayVertices();
     void displayCells();
 
-    Vector getModelCentre();
+    Vector getModelCentre();//TODO implement function
     
     private:
     vector<Vector> listOfVectors;

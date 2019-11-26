@@ -11,7 +11,7 @@ Material::Material()
 }
 
 //Create Material by Overload Constructure
-Material::Material(double d, string c, string n, double i)
+Material::Material(double d, string c, string n, int i)
 {
  this->density = d;
  this->colour = c;

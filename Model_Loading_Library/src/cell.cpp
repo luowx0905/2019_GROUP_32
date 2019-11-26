@@ -77,6 +77,12 @@ Cell& Cell::operator=(const Cell& c)
 	return *this;
 }
 
+ostream& operator<<(ostream& out,const Cell& c)
+{
+    out<<"\ntype = "<<c.cellType<<"\nvolume = "<<c.volume<<"\nweight = "<<c.weight<<"\ndensity = "<<c.density;
+    return(out);
+}
+
 void Cell::setVolume()
 {
 	vector<Vector>::iterator itor = data.begin();
@@ -149,7 +155,7 @@ void Cell::setGravityCenter()
 	z = sumZ / data.size();
 
 	gravityCenter.push_back(x);
-	gravityCenter.push_back(y);
+	gravityCenter.push_back(y); //Could you not store this point as a vector object? ~ Ewan
 	gravityCenter.push_back(z);
 }
 

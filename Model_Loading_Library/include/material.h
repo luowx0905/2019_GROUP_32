@@ -9,7 +9,7 @@ private:
   double density;
   string colour;
   string name;
-  double id;
+  int id;
 public:
   //Default Constructure
   Material();
@@ -19,7 +19,7 @@ public:
   n = name
   i = id
   */
-  Material (double d, string c, string n, double i);
+  Material (double d, string c, string n, int i);
   //Destuctor
   ~Material();
   /*Setup Function

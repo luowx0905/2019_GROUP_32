@@ -16,7 +16,7 @@ public:
 	~Cell(); //added for completeness ~Ewan
 	//Maybe a copy constructor?? ~Ewan
 	Cell& operator=(const Cell& c);
-	//I need an overload function for the output stream operator '<<' to display cells values to console.
+	friend ostream& operator<<(ostream& out,const Cell& c);
 	double getVolume() const;
 	double getWeight() const;
 	std::string getType() const;
@@ -25,7 +25,7 @@ public:
 private:
 	std::vector<Vector> data;
 	std::string cellType;
-	std::vector<double> gravityCenter;
+	std::vector<double> gravityCenter; //Could you not store this point as a vector object? ~ Ewan
 	double volume;
 	double weight;
 	double density;

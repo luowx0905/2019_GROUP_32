@@ -7,9 +7,12 @@ void Model::displayVertices()
 {
     for(int i = 0; i < this->listOfVectors.size();i++)
         cout <<"Vector "<< i << this->listOfVectors[i] << endl;
+    return;
 }
 void Model::displayCells()
 {
+    for(int i = 0; i < this->listOfCells.size();i++)
+        cout <<"Cell "<< i << this->listOfCells[i] << endl;
     return;
 }
 Vector Model::getModelCentre()
@@ -144,7 +147,7 @@ void Model::readMaterial(string line)
     linestream >> density;
     linestream >> colour;
     linestream >> name;
-    listOfMaterials.at(materialID) = Material(); //TODO finish using Material constructor
+    listOfMaterials.at(materialID) = Material(density,colour,name,materialID); //TODO finish using Material constructor
     return;
 }
 void Model::generateCellList(int cellListLength)
