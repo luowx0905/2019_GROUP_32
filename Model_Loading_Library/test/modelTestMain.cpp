@@ -16,7 +16,6 @@ int main(int argc, char *argv[])
     sprintf(filePath,"../test/ExampleModel%s.mod",argv[1]);
     string strfilePath(filePath);
     Model myModel(strfilePath);
-    myModel.loadModel();
     myModel.displayVertices();
     myModel.displayCells();
 }

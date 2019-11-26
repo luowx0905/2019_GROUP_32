@@ -15,7 +15,7 @@ class Model
     Model(string filePath); 
     ~Model();
 
-    void loadModel();
+    
 
     void displayVertices();
     void displayCells();
@@ -32,6 +32,7 @@ class Model
     Data:     type  v1   v2   v3  v4  v5  v6  v7  v8  material
     */
     //each column pertains to a new cellID
+    void loadModel();
     void generateCellList(int cellListLength); //function populates a 2D vector with all the vectors each cell should contain. Will then be used to generate list containing actual Cell objects once the entire file has been read
     void readVector(string line);
     void readCell(string line);

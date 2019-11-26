@@ -1,8 +1,15 @@
 #include "model.h"
 #include <fstream>
 #include <sstream>
-Model::Model(string filePath):sourceFilePath(filePath){}
-Model::~Model(){}
+Model::Model(string filePath):sourceFilePath(filePath){loadModel();}
+Model::~Model()
+{
+    //Declare vectors on the stack so that the vector destructors will be called to deallocate them
+    vector<Vector> listOfVectors;
+    vector<Cell> listOfCells;
+    vector<Material> listOfMaterials;
+    vector<vector<int>> uninitCellList; 
+}
 void Model::displayVertices()
 {
     for(int i = 0; i < this->listOfVectors.size();i++)
