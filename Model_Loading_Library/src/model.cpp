@@ -10,7 +10,7 @@ void Model::displayVertices()
 }
 void Model::displayCells()
 {
-
+    return;
 }
 Vector Model::getModelCentre()
 {
@@ -171,3 +171,4 @@ void Model::generateCellList(int cellListLength)
     }
     return;
 }
+//TODO Replace cellList appending with insert/pushback to remove need to manually resize array at each line in file

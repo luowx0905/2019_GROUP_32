@@ -34,4 +34,4 @@ private:
 	void setGravityCenter();
 };
 
-#endif CELL_H
+#endif //CELL_H
