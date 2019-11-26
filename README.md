@@ -13,4 +13,4 @@
 *Using MSVC:*`msbuild Model_Loading_Library.sln`  
 **5. Run test.exes**  
 *Using mingw32:*`testName.exe`  
-*Using MSVC:*`Debug\testName.exe`  
+*Using MSVC:*`Debug\testName.exe` --NOTE: it is important to run .exe while inside build directory or else test files will not be found  
