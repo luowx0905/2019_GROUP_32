@@ -15,3 +15,9 @@
 *Using mingw32:*`testName.exe`  
 *Using MSVC:*`Debug\testName.exe`  
 --NOTE: it is important to run .exe while inside build directory or else test files will not be found  
+  
+## Test File Interfaces  
+### modelTest.exe  
+Takes one argument which is a number between 1 and 3 that selects the test .mod file to be used. E.g.  
+`modelTest.exe 1`   
+### placeholder  
