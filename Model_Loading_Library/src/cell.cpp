@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <iostream>
 #include "cell.h"
 #include "vector.h"
 
@@ -67,24 +68,30 @@ Cell::Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Vector& v4, Vector& v
 	setGravityCenter();
 }
 
+// overloading assignment operator
 Cell& Cell::operator=(const Cell& c)
 {
 	// avoid self assignment
 	if (this != &c)
 	{
-		cellType = c.cellType;
 		data = c.data;
+		cellType = c.cellType;
 		gravityCenter = c.gravityCenter;
 		volume = c.volume;
 		weight = c.weight;
+		density = c.density;
 	}
 
 	return *this;
 }
 
+// determine the volume
 void Cell::setVolume()
 {
 	vector<Vector>::iterator itor = data.begin();
+
+	// the volume of a tetrahedron is |(v1*v2)，v3|/6
+	// these three vectors should have the same starting point
 	if (cellType == "Tetrahedron") 
 	{
 		Vector v1 = *itor - *(itor + 1); 
@@ -96,6 +103,11 @@ void Cell::setVolume()
 
 		volume = abs(det) / 6;
 	}
+
+	// a pyramid could be divided into two tetrahedrons, therefore 
+	// volume is |(v1*v2)，v3|/6 + |(v1*v3)，v4|/6
+	// these four vectors should have the same starting point
+	// and the starting point is not one of the points on the base
 	else if (cellType == "Pyramid") 
 	{
 		Vector v1 = *(itor + 4) - *itor;
@@ -110,6 +122,11 @@ void Cell::setVolume()
 
 		volume = (det1 + det2) / 6;
 	}
+
+	// the volume of hexahedron could be determined by
+	// |(v1*v2)，v3|/6 + |(v1*v4)，v5|/6 + |(v1*v6)，v7|/6
+	// the formula could be found in Efficient computation of volume of hexahedral cells
+	// available at https://www.osti.gov/biblio/632793/
 	else
 	{
 		Vector v1 = *(itor + 6) - *itor;
@@ -131,11 +148,14 @@ void Cell::setVolume()
 	}
 }
 
+// determine the weight
 void Cell::setWeight()
 {
+	// weight is the product of density and volume
 	weight = density * volume;
 }
 
+// determine the gravity center
 void Cell::setGravityCenter()
 {
 	vector<Vector>::iterator itor;
@@ -158,22 +178,39 @@ void Cell::setGravityCenter()
 	gravityCenter.push_back(z);
 }
 
+// return the weight of the cell
 double Cell::getWeight() const
 {
 	return weight;
 }
 
+// return the volume of the cell
 double Cell::getVolume() const
 {
 	return volume;
 }
 
+// return the cell type of the cell
 string Cell::getType() const
 {
 	return cellType;
 }
 
+// return the gravity center of the cell
 const vector<double>& Cell::getGravityCenter() const
 {
 	return gravityCenter;
+}
+
+// overloading stream insertion operator
+ostream& operator<<(ostream& out, const Cell& c)
+{
+	out << c.cellType << endl;
+	out << "Gravity center (" << c.gravityCenter[0] << ", " << c.gravityCenter[1]
+		<< ", " << c.gravityCenter[2] << ")\n";
+	out << "Volume: " << c.volume << endl;
+	out << "Weight: " << c.weight << endl;
+	out << "Density: " << c.density << endl;
+
+	return out;
 }
