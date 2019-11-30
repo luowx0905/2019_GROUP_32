@@ -24,7 +24,7 @@ public:
 
     void invertMatrix();
     void transposeMatrix();
-
+    float getDotProduct(vector<float> m, vector<float> n);
     friend ostream& operator<<(ostream& out, const Matrix& m);
 private:
     vector<vector<float>> matrixData;

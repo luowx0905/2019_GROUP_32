@@ -1,6 +1,7 @@
 #include "matrix.h"
-
-Matrix::Matrix()
+#include "vector.h"
+//default constructor (zero matrix)
+Matrix::Matrix() 
 {
     matrixData.resize(3);
     matrixData[0].resize(3);
@@ -10,6 +11,8 @@ Matrix::Matrix()
     matrixData[1] = {0,0,0};
     matrixData[2] = {0,0,0};
 }
+
+//3x3 matrix constructor
 Matrix::Matrix(const float& r1c1, const float& r1c2, const float& r1c3,const float& r2c1, const float& r2c2, const float& r2c3,const float& r3c1, const float& r3c2, const float& r3c3)
 {
     matrixData.resize(3);
@@ -20,12 +23,18 @@ Matrix::Matrix(const float& r1c1, const float& r1c2, const float& r1c3,const flo
     matrixData[1] = {r2c1,r2c2,r2c3};
     matrixData[2] = {r3c1,r3c2,r3c3};
 }
+Matrix::Matrix(const Matrix& m)
+{
+    matrixData = m.matrixData;
+}
+//operator= overload function
 const Matrix& Matrix::operator=(const Matrix& m)
 {
     if(this==&m) return (*this);
     this->matrixData = m.matrixData;
     return(*this);
 }
+
 Matrix Matrix::operator+(const Matrix& m)
 {
     Matrix temp;
@@ -67,7 +76,7 @@ Matrix Matrix::operator*(const Vector& v)
     return Matrix();
 }
 
-void Matrix::setMatrixData(int row, int, column, float val)
+void Matrix::setMatrixData(int row, int column, float val)
 {
     this->matrixData[row][column] = val;
 }
@@ -79,7 +88,10 @@ void Matrix::transposeMatrix()
 {
 
 }
-
+float getDotProduct(vector<float> m, vector<float> n)
+{
+    return (m[0] * n[0] + m[1] * n[1] + m[2] * n[2]);
+}
 ostream& operator<<(ostream& out, const Matrix& m)
 {
     for(int i = 0; i < m.matrixData.size(); i++)
