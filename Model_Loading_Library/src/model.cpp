@@ -26,7 +26,7 @@ Model::Model(const Model& m)
     listOfCells = m.listOfCells;
     listOfMaterials = m.listOfMaterials;
 }
-void Model::displayVertices()
+void Model::displayVertices() const
 {
     cout << "-=-=-=-=Vertices=-=-=-=-"<<endl;
     for(int i = 0; i < this->listOfVectors.size();i++)
@@ -34,7 +34,7 @@ void Model::displayVertices()
     cout<<endl<<endl;
     return;
 }
-void Model::displayCells()
+void Model::displayCells() const
 {
     cout << "-=-=-=-=-=Cells=-=-=-=-=-"<<endl;
     for(int i = 0; i < this->listOfCells.size();i++)
@@ -42,7 +42,7 @@ void Model::displayCells()
     cout<<endl<<endl;
     return;
 }
-void Model::displayMaterials()
+void Model::displayMaterials() const
 {
     cout << "-=-=-=-=Materials=-=-=-=-"<<endl;
     for(int i = 0; i < this->listOfMaterials.size(); i++)
@@ -50,23 +50,23 @@ void Model::displayMaterials()
     cout<<endl<<endl;
     return;
 }
-long Model::getNumberOfCells()
+long Model::getNumberOfCells() const
 {
     return this->listOfCells.size();
 }
-long Model::getNumberOfVertices()
+long Model::getNumberOfVertices() const
 {
     return this->listOfVectors.size();
 }
-long Model::getNumberOfMaterials()
+long Model::getNumberOfMaterials() const
 {
     return this->listOfMaterials.size();
 }
-Vector Model::getModelCentre()
+Vector Model::getModelCentre() const //Not implemented
 {
     return Vector();
 }
-double Model::getModelWeight()
+double Model::getModelWeight() const
 {
     double modelWeight = 0;
     for(int i = 0; i < this->listOfCells.size(); i++)
