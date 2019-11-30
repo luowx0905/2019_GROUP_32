@@ -1,5 +1,5 @@
 #include <iostream>
-#include<material.h>
+#include "material.h"
 
 //Create Material Deault Value
 Material::Material()
@@ -29,7 +29,7 @@ Material::~Material()
 {
   this->density = d;
   this->colour = c;
-  this->name = n:
+  this->name = n;
   this->id = i;
 }*/
 //Accessor Function/ Return Value
@@ -38,6 +38,7 @@ ostream& operator<<(ostream& out,const Material& m)
     out<<"\n  Name = "<<m.name<<"\n  Colour = "<<m.colour<<"\n  Density = "<<m.density;
     return(out);
 }
+
 double Material::getDensity()
 {
   return this->density;

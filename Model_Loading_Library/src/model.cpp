@@ -1,6 +1,7 @@
 #include "model.h"
 #include <fstream>
 #include <sstream>
+
 Model::Model(string filePath):sourceFilePath(filePath){loadModel();}
 Model::Model(){}
 Model::~Model()
@@ -77,6 +78,7 @@ void Model::setFilePath(string fp)
     sourceFilePath = fp;
     return;
 }
+
 void Model::loadModel()
 {
     int vectorListLength = 0;
@@ -231,6 +233,7 @@ void Model::generateCellList(int cellListLength)
                                   listOfVectors[uninitCellList[4][i]], listOfMaterials[uninitCellList[9][i]]);
         }
     }
+
     return;
 }
 //TODO Replace cellList appending with insert/pushback to remove need to manually resize array at each line in file

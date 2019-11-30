@@ -1,8 +1,7 @@
+#include <iostream>
 #include "Vector.h"
 
 using namespace std;
-
-
 
 //constructors
 //-------------------------------------------------------------------------------------------------
@@ -29,7 +28,7 @@ Vector::Vector(float _i,float _j,float _k)
 {
     i=_i;
     j=_j;
-    k=_k;//antony pres at ours at 8
+    k=_k;
 
     //calc_Vector(i, j, k);
     calc_mag(_i,_j,_k);
@@ -68,56 +67,80 @@ Vector Vector::operator=(const Vector& _Vector) //= (copies a Vector)
 
 Vector Vector::operator+(const Vector& _Vector) //+ (adds two vectors)
 {
-    i+=_Vector.i;
-    j+=_Vector.j;
-    k+=_Vector.k;
+	float new_i = i + _Vector.i;
+	float new_j = j + _Vector.j;
+	float new_k = k + _Vector.k;
+	Vector temp(new_i, new_j, new_k);
 
-    calc_mag(i,j,k);
 
-    return(*this);
+    temp.calc_mag(i,j,k);
+    //temp.calc_Vector(i,j,k);
+
+    return temp;
 }
 
 Vector Vector::operator+=(const Vector& _Vector) //+= (adds two vectors)
 {
-    i+=_Vector.i;
-    j+=_Vector.j;
-    k+=_Vector.k;
+	float new_i = i + _Vector.i;
+	float new_j = j + _Vector.j;
+	float new_k = k + _Vector.k;
+	Vector temp(new_i, new_j, new_k);
 
-    calc_mag(i,j,k);
 
-    return(*this);
+   temp.calc_mag(i,j,k);
+
+	//temp.calc_Vector(i, j, k);
+
+	return temp;
 }
 
 Vector Vector::operator-=(const Vector& _Vector) //- (subtracts two vectors)
 {
-    i-=_Vector.i;
-    j-=_Vector.j;
-    k-=_Vector.k;
+	float new_i = i - _Vector.i;
+	float new_j = j - _Vector.j;
+	float new_k = k - _Vector.k;
+	Vector temp(new_i, new_j, new_k);
 
-    calc_mag(i,j,k);
+    temp.calc_mag(i,j,k);
+	//temp.calc_Vector(i, j, k);
 
-    return(*this);
+	return temp;
 }
 
 Vector Vector::operator-(const Vector& _Vector) //-= (subtracts two vectors)
 {
-    i-=_Vector.i;
-    j-=_Vector.j;
-    k-=_Vector.k;
+	float new_i = i - _Vector.i;
+	float new_j = j - _Vector.j;
+	float new_k = k - _Vector.k;
+	Vector temp(new_i, new_j, new_k);
 
-    calc_mag(i,j,k);
 
-    return(*this);
+    temp.calc_mag(i,j,k);
+	//temp.calc_Vector(i, j, k);
+
+
+	return temp;
 }
 
-Vector Vector::operator*(const float& ScalingFactor) //* (scales the vector using scalar product)
+
+/*Vector Vector::operator*(const float& ScalingFactor) //* (scales the vector using scalar product)
 {
     i*=ScalingFactor;
     j*=ScalingFactor;
     k*=ScalingFactor;
-    mag*=ScalingFactor;
+    mag*=ScalingFactor;*/
 
-    return(*this);
+
+Vector operator*(const float ScalingFactor, const Vector& v) //* (scales the vector using scalar product)
+{
+	float new_i = v.i * ScalingFactor;
+	float new_j = v.j * ScalingFactor;
+	float new_k = v.k * ScalingFactor;
+	Vector temp(new_i, new_j, new_k);
+
+	//temp.calc_Vector(i, j, k);
+
+	return temp;
 }
 //end of operators
 //-------------------------------------------------------------------------------------------------
@@ -151,49 +174,66 @@ void Vector::set_k(const float& value)
 
 //get Functions
 //-------------------------------------------------------------------------------------------------
-float Vector::get_i()  //gets the value of variables
+float Vector::get_i() const //gets the value of variables
 {
     return(this->i);
 }
 
-float Vector::get_j()
+float Vector::get_j() const
 {
     return(this->j);
 }
 
-float Vector::get_k()
+float Vector::get_k() const
 {
     return(this->k);
 }
 
-float Vector::get_mag()
+float Vector::get_mag() const
 {
     return(mag);
 }
+
+float Vector::get_direction_i() const
+{
+    return(direction_i);
+}
+
+float Vector::get_direction_j()const
+{
+    return(direction_j);
+}
+
+float Vector::get_direction_k() const 
+{
+    return(direction_k);
+}
 //end of get functions.
-//-------------------------------------------------------------------------------------------------
 
 
-//calculate dot product.
 //-------------------------------------------------------------------------------------------------
-double Vector::get_dot_p(Vector& _Vector1,Vector& _Vector2) //not functioning //~Ewan changed to double for debugging with cell class
+
+float Vector::get_dot_p(const Vector& a)
 {
-    double dot_p;
-    dot_p=acos(((_Vector1.get_i()*_Vector2.get_i())+(_Vector1.get_j()*_Vector2.get_j())+(_Vector1.get_k()*_Vector2.get_k()))/(_Vector1.get_mag()*_Vector2.get_mag()));
-    return(dot_p);
+	float temp = i * a.i + j * a.j + k * a.k;
+
+	return temp;
 }
 //-------------------------------------------------------------------------------------------------
 
-
-ostream& operator<<(ostream& out,const Vector& _Vector)
+Vector Vector::get_cross_p(const Vector& _Vector1)
 {
-    out<<"\n  i = "<<_Vector.i<<"\n  j = "<<_Vector.j<<"\n  k = "<<_Vector.k<<"\n  Magnitude = "<<_Vector.mag;
-    return(out);
+	float new_i = j * _Vector1.k - k * _Vector1.j;
+	float new_j = -(i * _Vector1.k - k * _Vector1.i);
+	float new_k = i * _Vector1.j - j * _Vector1.i;
+	Vector temp(new_i, new_j, new_k);
+
+	return temp;
 }
 
-//-------------------------------------------------------------------------------------------------
-
-Vector Vector::get_cross_p(const Vector& _Vector1, const Vector& _Vector2)
+ostream& operator<<(ostream& out, const Vector& v)
 {
-    return(Vector()); //temporarily made so can compile
+	out << "(" << v.i << ", " << v.j << ", " << v.k << ")";
+
+	return out;
 }
