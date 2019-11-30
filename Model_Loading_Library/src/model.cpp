@@ -1,21 +1,84 @@
 #include "model.h"
 #include <fstream>
 #include <sstream>
-Model::Model(string filePath):sourceFilePath(filePath){}
-Model::~Model(){}
-void Model::displayVertices()
-{
-    for(int i = 0; i < this->listOfVectors.size();i++)
-        cout <<"Vector "<< i << this->listOfVectors[i] << endl;
-}
-void Model::displayCells()
-{
 
+Model::Model(string filePath):sourceFilePath(filePath){loadModel();}
+Model::Model(){}
+Model::~Model()
+{
+    //Declare vectors on the stack so that the vector destructors will be called to deallocate them
+    vector<Vector> listOfVectors;
+    vector<Cell> listOfCells;
+    vector<Material> listOfMaterials;
+    vector<vector<int>> uninitCellList; 
 }
-Vector Model::getModelCentre()
+const Model& Model::operator=(const Model& m)
+{
+    if(this==&m) return (*this);
+    listOfVectors = m.listOfVectors;
+    listOfCells = m.listOfCells;
+    listOfMaterials = m.listOfMaterials;
+    return(*this);
+}
+Model::Model(const Model& m)
+{
+    listOfVectors = m.listOfVectors;
+    listOfCells = m.listOfCells;
+    listOfMaterials = m.listOfMaterials;
+}
+void Model::displayVertices() const
+{
+    cout << "-=-=-=-=Vertices=-=-=-=-"<<endl;
+    for(int i = 0; i < this->listOfVectors.size();i++)
+        cout <<"Vector "<< i << ": "<< this->listOfVectors[i] << endl;
+    cout<<endl<<endl;
+    return;
+}
+void Model::displayCells() const
+{
+    cout << "-=-=-=-=-=Cells=-=-=-=-=-"<<endl;
+    for(int i = 0; i < this->listOfCells.size();i++)
+        cout <<"Cell "<< i << ": "<< this->listOfCells[i] << endl;
+    cout<<endl<<endl;
+    return;
+}
+void Model::displayMaterials() const
+{
+    cout << "-=-=-=-=Materials=-=-=-=-"<<endl;
+    for(int i = 0; i < this->listOfMaterials.size(); i++)
+        cout <<"Material "<< i << ": "<<this->listOfMaterials[i] << endl;
+    cout<<endl<<endl;
+    return;
+}
+long Model::getNumberOfCells() const
+{
+    return this->listOfCells.size();
+}
+long Model::getNumberOfVertices() const
+{
+    return this->listOfVectors.size();
+}
+long Model::getNumberOfMaterials() const
+{
+    return this->listOfMaterials.size();
+}
+Vector Model::getModelCentre() const //Not implemented
 {
     return Vector();
 }
+double Model::getModelWeight() const
+{
+    double modelWeight = 0;
+    for(int i = 0; i < this->listOfCells.size(); i++)
+        modelWeight += listOfCells[i].getWeight();
+    return modelWeight;
+}
+void Model::setFilePath(string fp)
+{
+    sourceFilePath = fp;
+    return;
+}
+
 void Model::loadModel()
 {
     int vectorListLength = 0;
@@ -68,6 +131,7 @@ void Model::loadModel()
     }
     generateCellList(cellListLength);
     this->fileStream.close();
+    vector<vector<int>> uninitCellList; //vector no longer needed so de-allocate memory associated with it 
     return;
 }
 void Model::readVector(string line)
@@ -144,7 +208,7 @@ void Model::readMaterial(string line)
     linestream >> density;
     linestream >> colour;
     linestream >> name;
-    listOfMaterials.at(materialID) = Material(); //TODO finish using Material constructor
+    listOfMaterials.at(materialID) = Material(density,colour,name,materialID); //TODO finish using Material constructor
     return;
 }
 void Model::generateCellList(int cellListLength)
@@ -169,5 +233,7 @@ void Model::generateCellList(int cellListLength)
                                   listOfVectors[uninitCellList[4][i]], listOfMaterials[uninitCellList[9][i]]);
         }
     }
+
     return;
 }
+//TODO Replace cellList appending with insert/pushback to remove need to manually resize array at each line in file

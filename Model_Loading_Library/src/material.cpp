@@ -1,5 +1,5 @@
 #include <iostream>
-#include<material.h>
+#include "material.h"
 
 //Create Material Deault Value
 Material::Material()
@@ -11,7 +11,7 @@ Material::Material()
 }
 
 //Create Material by Overload Constructure
-Material::Material(double d, string c, string n, double i)
+Material::Material(double d, string c, string n, int i)
 {
  this->density = d;
  this->colour = c;
@@ -24,15 +24,21 @@ Material::~Material()
 
 }
 //Create Material by Setup Function
-//The line below seems like it will cause issues as you are using 'this' eventhough the function is not inside an object. Is this function even required? ~Ewan
+//The line below seems like it will cause issues as you are using 'this' eventhough the function is not inside an object. ~Ewan
 /*void Material(double d, string c, string n, double i)
 {
   this->density = d;
   this->colour = c;
-  this->name = n:
+  this->name = n;
   this->id = i;
 }*/
-//Accestor Function/ Return Value
+//Accessor Function/ Return Value
+ostream& operator<<(ostream& out,const Material& m)
+{
+    out<<"\n  Name = "<<m.name<<"\n  Colour = "<<m.colour<<"\n  Density = "<<m.density;
+    return(out);
+}
+
 double Material::getDensity()
 {
   return this->density;

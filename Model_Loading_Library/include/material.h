@@ -1,5 +1,6 @@
 #ifndef MATERIAL_H_INCLUDED
 #define MATERIAL_H_INCLUDED
+
 #include <string>
 using namespace std;//for std::
 
@@ -9,7 +10,7 @@ private:
   double density;
   string colour;
   string name;
-  double id;
+  int id;
 public:
   //Default Constructure
   Material();
@@ -19,9 +20,11 @@ public:
   n = name
   i = id
   */
-  Material (double d, string c, string n, double i);
+  Material (double d, string c, string n, int i);
   //Destuctor
   ~Material();
+  //Output stream overload function
+  friend ostream& operator<<(ostream& out,const Material& m);
   /*Setup Function
   d = density
   c = colour 
