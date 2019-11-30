@@ -35,9 +35,9 @@ using namespace std;
         float get_j() const;  
         float get_k() const; 
         float get_mag() const; 
-        float get_direction_i() const;  
-        float get_direction_j() const; 
-        float get_direction_k() const;
+        //float get_direction_i() const;  
+        //float get_direction_j() const; 
+        //float get_direction_k() const;
 
         /*float calc_mag(const Vector& a) //calculate magnitude of a vector from 0,0,0 or a vector between two points.
         float calc_mag(const Vector& start1, const Vector& end1);*/
@@ -45,14 +45,14 @@ using namespace std;
         void calc_mag(float _i,float _j,float _k); //calculates the magnitude of the vector to store in the class
 
 
-        static double get_dot_p(Vector& _Vector1,Vector& _Vector2); //not functioning //~Ewan changed to double for debugging with cell class
+        //static double get_dot_p(Vector& _Vector1,Vector& _Vector2); //not functioning //~Ewan changed to double for debugging with cell class
 
         float get_dot_p(const Vector& a);
 
         Vector get_cross_p(const Vector& _Vector1);
 
 
-        static Vector get_cross_p(const Vector& _Vector1, const Vector& _Vector2);
+        //static Vector get_cross_p(const Vector& _Vector1, const Vector& _Vector2);
 
         //output stream operator for testing
 

@@ -85,12 +85,6 @@ Cell& Cell::operator=(const Cell& c)
 	return *this;
 }
 
-ostream& operator<<(ostream& out,const Cell& c)
-{
-    out<<"\n  Type = "<<c.cellType<<"\n  Volume = "<<c.volume<<"\n  Weight = "<<c.weight<<"\n  Density = "<<c.density;
-    return(out);
-}
-
 // determine the volume
 void Cell::setVolume()
 {
@@ -211,12 +205,12 @@ const vector<double>& Cell::getGravityCenter() const
 // overloading stream insertion operator
 ostream& operator<<(ostream& out, const Cell& c)
 {
-	out << c.cellType << endl;
-	out << "Gravity center (" << c.gravityCenter[0] << ", " << c.gravityCenter[1]
+	out << "\n Type: " <<c.cellType << endl;
+	out << " Centre of Gravity: (" << c.gravityCenter[0] << ", " << c.gravityCenter[1]
 		<< ", " << c.gravityCenter[2] << ")\n";
-	out << "Volume: " << c.volume << endl;
-	out << "Weight: " << c.weight << endl;
-	out << "Density: " << c.density << endl;
+	out << " Volume: " << c.volume << endl;
+	out << " Weight: " << c.weight << endl;
+	out << " Density: " << c.density << endl;
 
 	return out;
 }

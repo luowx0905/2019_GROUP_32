@@ -194,7 +194,7 @@ float Vector::get_mag() const
     return(mag);
 }
 
-float Vector::get_direction_i() const
+/*float Vector::get_direction_i() const
 {
     return(direction_i);
 }
@@ -207,7 +207,7 @@ float Vector::get_direction_j()const
 float Vector::get_direction_k() const 
 {
     return(direction_k);
-}
+}*/
 //end of get functions.
 
 
