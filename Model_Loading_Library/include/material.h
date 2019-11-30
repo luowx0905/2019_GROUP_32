@@ -22,6 +22,8 @@ public:
   Material (double d, string c, string n, int i);
   //Destuctor
   ~Material();
+  //Output stream overload function
+  friend ostream& operator<<(ostream& out,const Material& m);
   /*Setup Function
   d = density
   c = colour 

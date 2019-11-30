@@ -79,7 +79,7 @@ Cell& Cell::operator=(const Cell& c)
 
 ostream& operator<<(ostream& out,const Cell& c)
 {
-    out<<"\ntype = "<<c.cellType<<"\nvolume = "<<c.volume<<"\nweight = "<<c.weight<<"\ndensity = "<<c.density;
+    out<<"\n  Type = "<<c.cellType<<"\n  Volume = "<<c.volume<<"\n  Weight = "<<c.weight<<"\n  Density = "<<c.density;
     return(out);
 }
 

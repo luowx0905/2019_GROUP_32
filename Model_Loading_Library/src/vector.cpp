@@ -187,7 +187,7 @@ double Vector::get_dot_p(Vector& _Vector1,Vector& _Vector2) //not functioning //
 
 ostream& operator<<(ostream& out,const Vector& _Vector)
 {
-    out<<"\ni = "<<_Vector.i<<"\nj = "<<_Vector.j<<"\nk = "<<_Vector.k<<"\nMagnitude = "<<_Vector.mag;
+    out<<"\n  i = "<<_Vector.i<<"\n  j = "<<_Vector.j<<"\n  k = "<<_Vector.k<<"\n  Magnitude = "<<_Vector.mag;
     return(out);
 }
 

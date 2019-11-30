@@ -15,7 +15,14 @@ int main(int argc, char *argv[])
     char filePath[30] = "";
     sprintf(filePath,"../test/ExampleModel%s.mod",argv[1]);
     string strfilePath(filePath);
-    Model myModel(strfilePath);
+    //test constructors
+    Model myModel(strfilePath); 
+    //test display functions
+    cout << "There are " <<myModel.getNumberOfVertices()<<" Vertices in this model"<<endl;
+    cout << "There are " <<myModel.getNumberOfCells()<<" Cells in this model"<<endl;
+    cout << "There are " <<myModel.getNumberOfMaterials()<<" Materials in this model"<<endl;
+    cout << "The total weight of this model is " <<myModel.getModelWeight()<<endl;
     myModel.displayVertices();
     myModel.displayCells();
+    myModel.displayMaterials();
 }
