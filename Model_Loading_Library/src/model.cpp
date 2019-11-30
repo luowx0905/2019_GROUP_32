@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 Model::Model(string filePath):sourceFilePath(filePath){loadModel();}
+Model::Model(){}
 Model::~Model()
 {
     //Declare vectors on the stack so that the vector destructors will be called to deallocate them
@@ -10,21 +11,71 @@ Model::~Model()
     vector<Material> listOfMaterials;
     vector<vector<int>> uninitCellList; 
 }
+const Model& Model::operator=(const Model& m)
+{
+    if(this==&m) return (*this);
+    listOfVectors = m.listOfVectors;
+    listOfCells = m.listOfCells;
+    listOfMaterials = m.listOfMaterials;
+    return(*this);
+}
+Model::Model(const Model& m)
+{
+    listOfVectors = m.listOfVectors;
+    listOfCells = m.listOfCells;
+    listOfMaterials = m.listOfMaterials;
+}
 void Model::displayVertices()
 {
+    cout << "-=-=-=-=Vertices=-=-=-=-"<<endl;
     for(int i = 0; i < this->listOfVectors.size();i++)
-        cout <<"Vector "<< i << this->listOfVectors[i] << endl;
+        cout <<"Vector "<< i << ": "<< this->listOfVectors[i] << endl;
+    cout<<endl<<endl;
     return;
 }
 void Model::displayCells()
 {
+    cout << "-=-=-=-=-=Cells=-=-=-=-=-"<<endl;
     for(int i = 0; i < this->listOfCells.size();i++)
-        cout <<"Cell "<< i << this->listOfCells[i] << endl;
+        cout <<"Cell "<< i << ": "<< this->listOfCells[i] << endl;
+    cout<<endl<<endl;
     return;
+}
+void Model::displayMaterials()
+{
+    cout << "-=-=-=-=Materials=-=-=-=-"<<endl;
+    for(int i = 0; i < this->listOfMaterials.size(); i++)
+        cout <<"Material "<< i << ": "<<this->listOfMaterials[i] << endl;
+    cout<<endl<<endl;
+    return;
+}
+long Model::getNumberOfCells()
+{
+    return this->listOfCells.size();
+}
+long Model::getNumberOfVertices()
+{
+    return this->listOfVectors.size();
+}
+long Model::getNumberOfMaterials()
+{
+    return this->listOfMaterials.size();
 }
 Vector Model::getModelCentre()
 {
     return Vector();
+}
+double Model::getModelWeight()
+{
+    double modelWeight = 0;
+    for(int i = 0; i < this->listOfCells.size(); i++)
+        modelWeight += listOfCells[i].getWeight();
+    return modelWeight;
+}
+void Model::setFilePath(string fp)
+{
+    sourceFilePath = fp;
+    return;
 }
 void Model::loadModel()
 {
@@ -78,6 +129,7 @@ void Model::loadModel()
     }
     generateCellList(cellListLength);
     this->fileStream.close();
+    vector<vector<int>> uninitCellList; //vector no longer needed so de-allocate memory associated with it 
     return;
 }
 void Model::readVector(string line)
