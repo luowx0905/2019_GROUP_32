@@ -13,7 +13,7 @@ using namespace std;
         Vector(float i, float j, float k);
 
 
-        ~Vector(); //destruct //not needed
+        ~Vector(); //destruct
 
         Vector(const Vector& _Vector); //copy
 

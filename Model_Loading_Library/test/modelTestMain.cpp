@@ -2,6 +2,7 @@
 #include "vector.h"
 #include "cell.h"
 #include "material.h"
+#include "matrix.h"
 #include <stdio.h>
 #include <stdlib.h>
 using namespace std;
@@ -25,4 +26,8 @@ int main(int argc, char *argv[])
     myModel.displayVertices();
     myModel.displayCells();
     myModel.displayMaterials();
+    Matrix zeroMatrix;
+    Matrix rowMatrix(1,2,3);
+    Matrix fullMatrix(1,2,3,4,5,6,7,8,9);
+    cout <<fullMatrix<<endl;
 }
