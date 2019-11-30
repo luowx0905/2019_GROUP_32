@@ -3,7 +3,7 @@
 #include <iostream>
 #include "cell.h"
 #include "vector.h"
-
+#include "material.h"
 using namespace std;
 
 // define default constructor
@@ -19,7 +19,7 @@ Cell::Cell()
 Cell::Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Material& m)
 {
 	cellType = "Tetrahedron";
-	this->density = m.getdensity();
+	this->density = m.getDensity();
 	
 	data.push_back(v0);
 	data.push_back(v1);
@@ -35,7 +35,7 @@ Cell::Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Material& m)
 Cell::Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Vector& v4, Material& m)
 {
 	cellType = "Pyramid";
-	this->density = m.getdensity();
+	this->density = m.getDensity();
 
 	data.push_back(v0);
 	data.push_back(v1);
@@ -52,7 +52,7 @@ Cell::Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Vector& v4, Material&
 Cell::Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Vector& v4, Vector& v5, Vector& v6, Vector& v7, Material& m)
 {
 	cellType = "Hexahedron";
-	this->density = m.getdensity();
+	this->density = m.getDensity();
 
 	data.push_back(v0);
 	data.push_back(v1);
@@ -90,7 +90,7 @@ void Cell::setVolume()
 {
 	vector<Vector>::iterator itor = data.begin();
 
-	// the volume of a tetrahedron is |(v1*v2)¡¤v3|/6
+	// the volume of a tetrahedron is |(v1*v2)Â¡Â¤v3|/6
 	// these three vectors should have the same starting point
 	if (cellType == "Tetrahedron") 
 	{
@@ -105,7 +105,7 @@ void Cell::setVolume()
 	}
 
 	// a pyramid could be divided into two tetrahedrons, therefore 
-	// volume is |(v1*v2)¡¤v3|/6 + |(v1*v3)¡¤v4|/6
+	// volume is |(v1*v2)Â¡Â¤v3|/6 + |(v1*v3)Â¡Â¤v4|/6
 	// these four vectors should have the same starting point
 	// and the starting point is not one of the points on the base
 	else if (cellType == "Pyramid") 
@@ -124,7 +124,7 @@ void Cell::setVolume()
 	}
 
 	// the volume of hexahedron could be determined by
-	// |(v1*v2)¡¤v3|/6 + |(v1*v4)¡¤v5|/6 + |(v1*v6)¡¤v7|/6
+	// |(v1*v2)Â¡Â¤v3|/6 + |(v1*v4)Â¡Â¤v5|/6 + |(v1*v6)Â¡Â¤v7|/6
 	// the formula could be found in Efficient computation of volume of hexahedral cells
 	// available at https://www.osti.gov/biblio/632793/
 	else
@@ -174,7 +174,7 @@ void Cell::setGravityCenter()
 	z = sumZ / data.size();
 
 	gravityCenter.push_back(x);
-	gravityCenter.push_back(y);
+	gravityCenter.push_back(y); //Could you not store this point as a vector object? ~ Ewan
 	gravityCenter.push_back(z);
 }
 
@@ -205,12 +205,12 @@ const vector<double>& Cell::getGravityCenter() const
 // overloading stream insertion operator
 ostream& operator<<(ostream& out, const Cell& c)
 {
-	out << c.cellType << endl;
-	out << "Gravity center (" << c.gravityCenter[0] << ", " << c.gravityCenter[1]
+	out << "\n Type: " <<c.cellType << endl;
+	out << " Centre of Gravity: (" << c.gravityCenter[0] << ", " << c.gravityCenter[1]
 		<< ", " << c.gravityCenter[2] << ")\n";
-	out << "Volume: " << c.volume << endl;
-	out << "Weight: " << c.weight << endl;
-	out << "Density: " << c.density << endl;
+	out << " Volume: " << c.volume << endl;
+	out << " Weight: " << c.weight << endl;
+	out << " Density: " << c.density << endl;
 
 	return out;
 }

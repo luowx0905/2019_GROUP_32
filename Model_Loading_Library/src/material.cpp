@@ -11,7 +11,7 @@ Material::Material()
 }
 
 //Create Material by Overload Constructure
-Material::Material(double d, string c, string n, double i)
+Material::Material(double d, string c, string n, int i)
 {
  this->density = d;
  this->colour = c;
@@ -24,29 +24,35 @@ Material::~Material()
 
 }
 //Create Material by Setup Function
-//The line below seems like it will cause issues as you are using this eventhough the function is not inside an object. Is this function even required? ~Ewan
-void Material::setMaterial(double d, string c, string n, double i)
+//The line below seems like it will cause issues as you are using 'this' eventhough the function is not inside an object. ~Ewan
+/*void Material(double d, string c, string n, double i)
 {
   this->density = d;
   this->colour = c;
   this->name = n;
   this->id = i;
+}*/
+//Accessor Function/ Return Value
+ostream& operator<<(ostream& out,const Material& m)
+{
+    out<<"\n  Name = "<<m.name<<"\n  Colour = "<<m.colour<<"\n  Density = "<<m.density;
+    return(out);
 }
-//Accestor Function/ Return Value
-double Material::getdensity()
+
+double Material::getDensity()
 {
   return this->density;
 }
 
-string Material::getcolour()
+string Material::getColour()
 {
   return this->colour;
 }
-string Material::getname()
+string Material::getName()
 {
   return this->name;
 }
-double Material::getid()
+double Material::getID()
 {
   return this->id;
 }
