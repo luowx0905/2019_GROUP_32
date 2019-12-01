@@ -28,6 +28,8 @@ int main(int argc, char *argv[])
     myModel.displayMaterials();
     Matrix zeroMatrix;
     Matrix rowMatrix(1,2,3);
-    Matrix fullMatrix(1,2,3,4,5,6,7,8,9);
-    cout <<fullMatrix<<endl;
+    Matrix fullMatrix(1,2,3,0,1,4,5,6,0);
+    Matrix newMatrix = fullMatrix.calculateInverseMatrix();
+    cout<<newMatrix<<endl;
+    //TODO change vector data to std::vector list -> change getcross/getdot functions
 }

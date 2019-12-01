@@ -20,14 +20,19 @@ public:
     Matrix operator-(const Matrix& m);
     Matrix operator-(const Vector& v);
     Matrix operator*(const Matrix& m);
-    Matrix operator*(const Vector& v);
+    Vector operator*(const Vector& v);
+    Matrix operator/(const float& f);
 
-    void invertMatrix();
-    void transposeMatrix();
-    float getDotProduct(vector<float> m, vector<float> n);
+    Matrix calculateInverseMatrix();
+    Matrix calculateTransposedMatrix();
+    vector<float> getColumn(int column, const Matrix& m);
+
     friend ostream& operator<<(ostream& out, const Matrix& m);
 private:
     vector<vector<float>> matrixData;
-    void setMatrixData(int row, int column, float val);
+    
 };  
+float getDotProduct(vector<float> m, vector<float> n);
+float getDotProduct(vector<float> m, const Vector& v);
+
 #endif //MATRIX_H_INCLUDED
