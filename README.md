@@ -1,7 +1,7 @@
 # Model Loading Library
 ## Test Setup
 **1. Navigate to build directory**  
-*Note: If this is the first time setup you will need to create the build folder using mkdir
+*Note: If this is the first time setup you will need to create the build folder using mkdir  
 `cd Model_Loading_Library\build`  
 **2. Generate cmake files in build directory**  
 *Using mingw32:*`cmake -G "MinGW Makefiles" ..`  
