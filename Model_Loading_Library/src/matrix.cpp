@@ -1,155 +1,462 @@
+#include <iostream>
+#include <stdexcept>
+#include <cmath>
 #include "matrix.h"
-#include "vector.h"
-//default constructor (zero matrix)
-Matrix::Matrix() 
+
+using namespace std;
+
+Matrix::Matrix()
 {
-    matrixData.resize(3);
-    matrixData[0].resize(3);
-    matrixData[1].resize(3);
-    matrixData[2].resize(3);
-    matrixData[0] = {0,0,0};
-    matrixData[1] = {0,0,0};
-    matrixData[2] = {0,0,0};
+	row = 0;
+	col = 0;
+	size = 0;
+	data = nullptr;
 }
 
-//3x3 matrix constructor
-Matrix::Matrix(const float& r1c1, const float& r1c2, const float& r1c3,const float& r2c1, const float& r2c2, const float& r2c3,const float& r3c1, const float& r3c2, const float& r3c3)
+Matrix::Matrix(int row, int col)
 {
-    matrixData.resize(3);
-    matrixData[0].resize(3);
-    matrixData[1].resize(3);
-    matrixData[2].resize(3);
-    matrixData[0] = {r1c1,r1c2,r1c3};
-    matrixData[1] = {r2c1,r2c2,r2c3};
-    matrixData[2] = {r3c1,r3c2,r3c3};
+	if (row > 0 && col > 0)
+	{
+		this->row = row;
+		this->col = col;
+		size = row * col;
+
+		data = new double* [row];
+		for (size_t i = 0; i < row; i++)
+		{
+			data[i] = new double[col];
+		}
+
+		for (size_t i = 0; i < row; i++)
+		{
+			for (size_t j = 0; j < col; j++)
+			{
+				data[i][j] = 0;
+			}
+		}
+	}
+	else
+	{
+		throw runtime_error("Invalid size");
+	}
 }
+
 Matrix::Matrix(const Matrix& m)
 {
-    matrixData = m.matrixData;
+	row = m.row;
+	col = m.col;
+	size = row * col;
+
+	data = new double* [row];
+	for (size_t i = 0; i < row; i++)
+	{
+		data[i] = new double[col];
+	}
+
+	for (size_t i = 0; i < row; i++)
+	{
+		for (size_t j = 0; j < col; j++)
+		{
+			data[i][j] = m.data[i][j];
+		}
+	}
 }
-//operator= overload function
-const Matrix& Matrix::operator=(const Matrix& m)
+
+Matrix::~Matrix()
 {
-    if(this==&m) return (*this);
-    this->matrixData = m.matrixData;
-    return(*this);
+	for (size_t i = 0; i < row; i++)
+	{
+		delete[] data[i];
+	}
+	delete[] data;
+}
+
+Matrix& Matrix::operator=(const Matrix& m)
+{
+	if (this != &m)
+	{
+		row = m.row;
+		col = m.col;
+
+		data = new double* [row];
+		for (size_t i = 0; i < row; i++)
+		{
+			data[i] = new double[col];
+		}
+
+		for (size_t i = 0; i < row; i++)
+		{
+			for (size_t j = 0; j < col; j++)
+			{
+				data[i][j] = m.data[i][j];
+			}
+		}
+	}
+
+	return *this;
 }
 
 Matrix Matrix::operator+(const Matrix& m)
 {
-    Matrix temp;
-    for(int i = 0; i < m.matrixData.size(); i++)
-        for(int j = 0; j < m.matrixData.size(); j++)
-            temp.matrixData[i][j] = this->matrixData[i][j] + m.matrixData[i][j];
-    return temp;
+	if (row == m.row && col == m.col)
+	{
+		Matrix temp(row, col);
+
+		for (size_t i = 0; i < row; i++)
+		{
+			for (size_t j = 0; j < col; j++)
+			{
+				temp.data[i][j] = data[i][j] + m.data[i][j];
+			}
+		}
+
+		return temp;
+	}
+	else
+	{
+		throw runtime_error("operator+ -- size mismatch");
+	}
 }
-Matrix Matrix::operator+(const Vector& v) //vector treated as 3x1 column matrix
-{
-    Matrix temp;
-    temp.matrixData[0][0] = this->matrixData[0][0] + v.get_i();
-    temp.matrixData[1][0] = this->matrixData[1][0] + v.get_j();
-    temp.matrixData[2][0] = this->matrixData[2][0] + v.get_k();
-    return temp;
-}
+
 Matrix Matrix::operator-(const Matrix& m)
 {
-    Matrix temp;
-    for(int i = 0; i < m.matrixData.size(); i++)
-        for(int j = 0; j < m.matrixData.size(); j++)
-            temp.matrixData[i][j] = this->matrixData[i][j] - m.matrixData[i][j];
-    return temp;
+	if (row == m.row && col == m.col)
+	{
+		Matrix temp(row, col);
+
+		for (size_t i = 0; i < row; i++)
+		{
+			for (size_t j = 0; j < col; j++)
+			{
+				temp.data[i][j] = data[i][j] - m.data[i][j];
+			}
+		}
+
+		return temp;
+	}
+	else
+	{
+		throw runtime_error("operator- -- size mismatch");
+	}
 }
-Matrix Matrix::operator-(const Vector& v)
-{
-    Matrix temp;
-    temp.matrixData[0][0] = this->matrixData[0][0] - v.get_i();
-    temp.matrixData[1][0] = this->matrixData[1][0] - v.get_j();
-    temp.matrixData[2][0] = this->matrixData[2][0] - v.get_k();
-    return temp;
-}
+
 Matrix Matrix::operator*(const Matrix& m)
 {
-    Matrix temp;
-    for(int i = 0; i < this->matrixData.size(); i++)
-        for(int j = 0; j < this->matrixData[0].size(); j++)
-            temp.matrixData[i][j] = getDotProduct(this->matrixData[i],getColumn(j,m));
-    return temp;
+	if (row == m.col && col == m.row)
+	{
+		Matrix temp(row, m.col);
+
+		for (size_t i = 0; i < row; i++)
+		{
+			for (size_t j = 0; j < m.col; j++)
+			{
+				for (size_t k = 0; k < col; k++)
+				{
+					temp.data[i][j] += data[i][k] * m.data[k][j];
+				}
+			}
+		}
+
+		return temp;
+	}
+	else
+	{
+		throw runtime_error("operator* -- size mismatch");
+	}
 }
-Vector Matrix::operator*(const Vector& v)
+
+double& Matrix::operator()(size_t row, size_t col)
 {
-    /*Matrix temp;
-    temp.matrixData[0][0] = getDotProduct(this->matrixData[0],v);
-    temp.matrixData[1][0] = getDotProduct(this->matrixData[1],v);
-    temp.matrixData[2][0] = getDotProduct(this->matrixData[2],v);*/
-    Vector temp(getDotProduct(this->matrixData[0],v),getDotProduct(this->matrixData[1],v),getDotProduct(this->matrixData[2],v));
-    return temp;
+	if (row < this->row && col < this->col)
+	{
+		return data[row][col];
+	}
+	else
+	{
+		throw runtime_error("Index out of range");
+	}
 }
-Matrix Matrix::operator/(const float& f)
+
+double Matrix::operator()(size_t row, size_t col) const
 {
-    Matrix temp;
-    for(int i = 0; i < this->matrixData.size(); i++)
-        for(int j = 0; j < this->matrixData.size(); j++)
-            temp.matrixData[i][j] = this->matrixData[i][j] / f;
-    return temp;
+	if (row < this->row && col < this->col)
+	{
+		return data[row][col];
+	}
+	else
+	{
+		throw runtime_error("Index out of range");
+	}
 }
-Matrix Matrix::calculateInverseMatrix()
+
+bool Matrix::operator==(const Matrix& m)
 {
-    float determinant = matrixData[0][0]*(matrixData[1][1]*matrixData[2][2] - matrixData[1][2]*matrixData[2][1])
-                      - matrixData[0][1]*(matrixData[1][0]*matrixData[2][2] - matrixData[1][2]*matrixData[2][0])
-                      + matrixData[0][2]*(matrixData[1][0]*matrixData[2][1] - matrixData[1][1]*matrixData[2][0]);
-    if(determinant==0)
-    {
-        cerr << "no inverse exists\n";
-        return (*this);
-    }
-    Matrix transposed = this->calculateTransposedMatrix();
-    cout<<transposed<<endl;
-    Matrix adjoint;
-    for(int i = 0; i < this->matrixData.size(); i++)
-    {
-        for(int j = 0; j < this->matrixData.size(); j++)
-        {   //modulo equations select cofactors
-            adjoint.matrixData[i][j] = transposed.matrixData[(i+1)%3][(j+1)%3]*transposed.matrixData[(i+2)%3][(j+2)%3]
-                                     - transposed.matrixData[(i+1)%3][(j+2)%3]*transposed.matrixData[(i+2)%3][(j+1)%3]; 
-        }
-    }
-    return adjoint/determinant;
+	if (row == m.row && col == m.col)
+	{
+		for (size_t i = 0; i < row; i++)
+		{
+			for (size_t j = 0; j < col; j++)
+			{
+				if (data[i][j] != m.data[i][j])
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
-Matrix Matrix::calculateTransposedMatrix()
+
+bool Matrix::operator!=(const Matrix& m)
 {
-    Matrix temp;
-    temp.matrixData[0] = getColumn(0,*this);
-    temp.matrixData[1] = getColumn(1,*this);
-    temp.matrixData[2] = getColumn(2,*this);
-    return temp;
+	return !(*this == m);
 }
-float getDotProduct(vector<float> m, vector<float> n)
+
+Matrix Matrix::transpose()
 {
-    return (m[0] * n[0] + m[1] * n[1] + m[2] * n[2]);
+	Matrix temp(col, row);
+
+	for (size_t i = 0; i < row; i++)
+	{
+		for (size_t j = 0; j < col; j++)
+		{
+			temp.data[j][i] = data[i][j];
+		}
+	}
+
+	return temp;
 }
-float getDotProduct(vector<float> m, const Vector& v)
+
+double Matrix::det() const
 {
-    return (m[0] * v.get_i() + m[1] * v.get_j() + m[2] * v.get_k());
+	if (row == col)
+	{
+		if (row == 1)
+		{
+			return data[0][0];
+		}
+		else if (row == 2)
+		{
+			return data[0][0] * data[1][1] - data[0][1] * data[1][0];
+		}
+		else
+		{
+			Matrix copy(*this);
+			double result = 1;
+			int swap = 0;
+
+			for (size_t i = 0; i < row - 1; i++)
+			{
+				size_t next;
+				bool nonZero = false;
+				if (copy.data[i][i] == 0)
+				{
+					for (next = i + 1; next < row; next++)
+					{
+						if (copy.data[i][i] != 0)
+						{
+							nonZero = true;
+							break;
+						}
+					}
+
+					if (!nonZero)
+					{
+						continue;
+					}
+
+					swap++;
+					for (size_t j = 0; j < col; j++)
+					{
+						double temp = copy.data[i][j];
+						copy.data[i][j] = copy.data[next][j];
+						copy.data[next][j] = temp;
+					}
+				}
+
+				for (next = i + 1; next < row; next++)
+				{
+					double factor = copy.data[next][i] / copy.data[i][i];
+					for (size_t k = 0; k < row; k++)
+					{
+						copy.data[next][k] += -factor * copy.data[i][k];
+					}
+				}
+			}
+
+			for (size_t i = 0; i < row; i++)
+			{
+				result *= copy.data[i][i];
+			}
+
+			if (swap % 2 == 0)
+			{
+				return result;
+			}
+			else
+			{
+				return -result;
+			}
+		}
+	}
+	else
+	{
+		throw runtime_error("The determinant is invalid");
+	}
 }
-vector<float> Matrix::getColumn(int column, const Matrix& m)
+
+Matrix Matrix::inv()
 {
-    vector<float> temp;
-    temp.resize(3);
-    temp[0] = m.matrixData[0][column];
-    temp[1] = m.matrixData[1][column]; 
-    temp[2] = m.matrixData[2][column];
-    return temp;
+	if (row != col)
+	{
+		throw runtime_error("No inverse matrix");
+	}
+
+	double determinant = this->det();
+	if (determinant != 0)
+	{
+		Matrix temp = this->adjugate().scale(1 / determinant);
+		return temp;
+	}
+	else
+	{
+		throw runtime_error("No inverse matrix");
+	}
 }
+
 ostream& operator<<(ostream& out, const Matrix& m)
 {
-    for(int i = 0; i < m.matrixData.size(); i++)
-    {
-        out << "(";
-        for(int j = 0; j < m.matrixData[0].size(); j++)
-        {
-            out << m.matrixData[i][j] << ",";
-        }
-        out << ")" << endl;
-    }
+	for (size_t i = 0; i < m.row; i++)
+	{
+		for (size_t j = 0; j < m.col; j++)
+		{
+			out << m.data[i][j] << '\t';
+		}
+		out << endl;
+	}
+
 	return out;
-}         
+}
+
+int Matrix::getRow() const
+{
+	return row;
+}
+
+int Matrix::getCol() const
+{
+	return col;
+}
+
+int Matrix::getSize() const
+{
+	return size;
+}
+
+Matrix Matrix::scale(double size)
+{
+	Matrix temp(*this);
+
+	for (size_t i = 0; i < row; i++)
+	{
+		for (size_t j = 0; j < col; j++)
+		{
+			temp.data[i][j] = data[i][j] * size;
+		}
+	}
+
+	return temp;
+}
+
+Matrix Matrix::subMat(int rowStart, int colStart, int rowEnd, int colEnd)
+{
+	if (rowEnd == 0 && colEnd == 0)
+	{
+		Matrix temp(row - rowStart, col - colStart);
+
+		for (size_t i = rowStart, m = 0; i < row; i++, m++)
+		{
+			for (size_t j = colStart, n = 0; j < col; j++, n++)
+			{
+				temp.data[m][n] = data[i][j];
+			}
+		}
+
+		return temp;
+	}
+	else if (rowStart <= rowEnd && colStart <= colEnd && rowEnd < row && colEnd < col)
+	{
+		Matrix temp(rowEnd - rowStart + 1, colEnd - colStart + 1);
+
+		for (size_t i = rowStart, m = 0; i <= rowEnd; i++, m++)
+		{
+			for (size_t j = colStart, n = 0; j <= colEnd; j++, n++)
+			{
+				temp.data[m][n] = data[i][j];
+			}
+		}
+
+		return temp;
+	}
+	else
+	{
+		throw runtime_error("Submatrix size error");
+	}
+}
+
+Matrix Matrix::minor(int row, int col)
+{
+	Matrix temp(this->row - 1, this->col - 1);
+
+	for (size_t i = 0, m = 0; i < this->row; i++)
+	{
+		if (i == row)
+		{
+			continue;
+		}
+		for (size_t j = 0, n = 0; j < this->col; j++)
+		{
+			if (j == col)
+			{
+				continue;
+			}
+
+			temp.data[m][n] = data[i][j];
+			n++;
+		}
+		m++;
+	}
+
+	return temp;
+}
+
+Matrix Matrix::cofactor(int row, int col)
+{
+	Matrix temp = this->minor(row, col);
+
+	temp = temp.scale(pow(-1, row + col));
+
+	return temp;
+}
+
+Matrix Matrix::adjugate()
+{
+	Matrix result(row, col);
+
+	for (size_t i = 0; i < row; i++)
+	{
+		for (size_t j = 0; j < col; j++)
+		{
+			Matrix temp = this->minor(i, j);
+			double determinant = temp.det() * pow(-1, i + j);
+			result.data[j][i] = determinant;
+		}
+	}
+
+	return result;
+}
