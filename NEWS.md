@@ -1,2 +1,2 @@
-NEWS
---please add your names to TEAM.md
+# News  
+Please remember to make pull requests from master regularly

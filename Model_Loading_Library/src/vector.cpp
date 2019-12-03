@@ -55,8 +55,9 @@ Vector::Vector(const Vector& _Vector) //copy
 
 //operators
 //-------------------------------------------------------------------------------------------------
-Vector Vector::operator=(const Vector& _Vector) //= (copies a Vector)
+const Vector& Vector::operator=(const Vector& _Vector) //= (copies a Vector)
 {
+    if(this==&_Vector) return (*this);
     i=_Vector.i;
     j=_Vector.j;
     k=_Vector.k;
@@ -79,32 +80,22 @@ Vector Vector::operator+(const Vector& _Vector) //+ (adds two vectors)
     return temp;
 }
 
-Vector Vector::operator+=(const Vector& _Vector) //+= (adds two vectors)
+const Vector& Vector::operator+=(const Vector& _Vector) //+= (adds two vectors)
 {
-	float new_i = i + _Vector.i;
-	float new_j = j + _Vector.j;
-	float new_k = k + _Vector.k;
-	Vector temp(new_i, new_j, new_k);
-
-
-   temp.calc_mag(i,j,k);
-
-	//temp.calc_Vector(i, j, k);
-
-	return temp;
+	this->i += _Vector.i;
+	this->j += _Vector.j;
+	this->k += _Vector.k;
+    this->calc_mag(i,j,k);
+	return (*this);
 }
 
-Vector Vector::operator-=(const Vector& _Vector) //- (subtracts two vectors)
+const Vector& Vector::operator-=(const Vector& _Vector) //- (subtracts two vectors)
 {
-	float new_i = i - _Vector.i;
-	float new_j = j - _Vector.j;
-	float new_k = k - _Vector.k;
-	Vector temp(new_i, new_j, new_k);
-
-    temp.calc_mag(i,j,k);
-	//temp.calc_Vector(i, j, k);
-
-	return temp;
+	this->i -= _Vector.i;
+	this->j -= _Vector.j;
+	this->k -= _Vector.k;
+    this->calc_mag(i,j,k);
+	return (*this);
 }
 
 Vector Vector::operator-(const Vector& _Vector) //-= (subtracts two vectors)

@@ -21,15 +21,15 @@ class Model
     Model(const Model&);
     const Model& operator=(const Model&);
 
-    void displayVertices();
-    void displayCells();
-    void displayMaterials();
-    
-    Vector getModelCentre();//TODO implement function
-    double getModelWeight();//TODO implement function
-    long getNumberOfVertices();
-    long getNumberOfCells();
-    long getNumberOfMaterials();
+    void displayVertices()const;
+    void displayCells()const;
+    void displayMaterials()const;
+
+    Vector getModelCentre()const;//Returns models centre as a vector point. still TODO
+    double getModelWeight()const;
+    long getNumberOfVertices()const;
+    long getNumberOfCells()const;
+    long getNumberOfMaterials()const;
 
     
     private:
