@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
     cout << "There are " <<myModel.getNumberOfCells()<<" Cells in this model"<<endl;
     cout << "There are " <<myModel.getNumberOfMaterials()<<" Materials in this model"<<endl;
     cout << "The total weight of this model is " <<myModel.getModelWeight()<<endl;
+    cout << "The centre of this model is " <<myModel.getModelCentre()<<endl;
     myModel.displayVertices();
     myModel.displayCells();
     myModel.displayMaterials();

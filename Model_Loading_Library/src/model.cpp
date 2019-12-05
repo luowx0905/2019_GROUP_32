@@ -62,9 +62,21 @@ long Model::getNumberOfMaterials() const
 {
     return this->listOfMaterials.size();
 }
-Vector Model::getModelCentre() const //Not implemented
+Vector Model::getModelCentre() const
 {
-    return Vector();
+    vector<double> cellCentre;
+    double sumX = 0;
+    double sumY = 0;
+    double sumZ = 0;
+    for(int i = 0; i < listOfCells.size(); i++)
+    {
+        cellCentre = listOfCells[i].getGravityCenter();
+        sumX += cellCentre[0];
+        sumY += cellCentre[1];
+        sumZ += cellCentre[2];
+    }
+    Vector temp(sumX/listOfCells.size(),sumY/listOfCells.size(),sumZ/listOfCells.size());
+    return(temp);
 }
 double Model::getModelWeight() const
 {

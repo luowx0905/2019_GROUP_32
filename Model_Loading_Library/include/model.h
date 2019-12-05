@@ -50,7 +50,6 @@ public:
     void displayMaterials()const;//outputs to the console each material in the model and its properties (Density, name colour)
     /// @brief Calculates the centre of the model
     /// @return Calculation result as a Vector point
-    /// @TODO Implement this function
     Vector getModelCentre()const;
     /// @brief Calculates the total weight of all cells in the model
     /// @return Calculated weight as a double
