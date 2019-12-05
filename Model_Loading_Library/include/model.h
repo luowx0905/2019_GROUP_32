@@ -1,8 +1,8 @@
 // model.h
 #ifndef MODEL_H_INCLUDED
 #define MODEL_H_INCLUDED
-/** @file
- * This file contains the declarations for the model class
+/** 
+ * @file This file contains the declarations for the model class
  */
 #include <vector>
 #include <iostream>
@@ -21,6 +21,8 @@ using namespace std;
 /** 
  * @brief Class for reading .mod file and providing details regarding its contents
  * @author Ewan Drever-Smith
+ * @version 1.0
+ * @date 05/12/2019
  */
 class Model
 {

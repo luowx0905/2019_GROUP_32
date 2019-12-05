@@ -88,20 +88,21 @@ double Model::getModelWeight() const
 
 void Model::loadModel()
 {
+    ifstream fileStream;
     int vectorListLength = 0;
     int cellListLength = 0;
     int materialListLength = 0;
     uninitCellList.resize(10); //makes the 10 rows
-    this->fileStream.open(this->sourceFilePath.c_str()); //opens file
-    if (!this->fileStream) //checks to see if file was opened succesfully
+    fileStream.open(this->sourceFilePath.c_str()); //opens file
+    if (!fileStream) //checks to see if file was opened succesfully
     {
         cerr << "Unable to open model file";
         exit(1);
     }
     string line;
-    while(!this->fileStream.eof()) //loops till end of file reached
+    while(!fileStream.eof()) //loops till end of file reached
     {
-        getline(this->fileStream,line); //read each line into a string 
+        getline(fileStream,line); //read each line into a string 
         if(line.length() != 0) //checks whether line is empty
         {
             if(line.at(0) != '#') //checks if line is a comment first for efficiency
@@ -137,7 +138,7 @@ void Model::loadModel()
         }
     }
     generateCellList(cellListLength);
-    this->fileStream.close();
+    fileStream.close();
     vector<vector<int>> uninitCellList; //vector no longer needed so de-allocate memory associated with it 
     return;
 }
