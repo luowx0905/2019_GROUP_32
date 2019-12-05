@@ -13,15 +13,6 @@ public:
 	// default constructors
 	Cell();
 
-	// constructor for the tetrahedron
-	Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Material& m);
-
-	// constructor for the pyramid
-	Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Vector& v4, Material& m);
-
-	// constructor for the hexahedron
-	Cell(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Vector& v4, Vector& v5, Vector& v6, Vector& v7, Material& m);
-
 	// default destructor
 	~Cell() = default;
 
@@ -36,7 +27,7 @@ public:
 	// overload stream insertion operator
 	friend std::ostream& operator<<(std::ostream& out, const Cell& c);
 
-private:
+protected:
 	std::vector<Vector> data; // store the vertex of the cell
 	std::string cellType; // a string store cell type
 	std::vector<double> gravityCenter; // store gravity center of the cell | Could you not store this point as a vector object? ~ Ewan
@@ -44,7 +35,7 @@ private:
 	double weight; // the weight of the cell
 	double density; // the density of the ell
 
-	void setVolume(); // determine the volume
+	virtual void setVolume(); // determine the volume
 	void setWeight(); // determine the weight
 	void setGravityCenter(); // determine the gravity center
 };
