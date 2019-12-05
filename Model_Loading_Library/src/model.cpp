@@ -28,7 +28,7 @@ Model::Model(const Model& m)
 }
 void Model::displayVertices() const
 {
-    cout << "-=-=-=-=Vertices=-=-=-=-"<<endl;
+    cout << "-=-=-=-=-=Vertices=-=-=-=-=-"<<endl;
     for(int i = 0; i < this->listOfVectors.size();i++)
         cout <<"Vector "<< i << ": "<< this->listOfVectors[i] << endl;
     cout<<endl<<endl;
@@ -36,7 +36,7 @@ void Model::displayVertices() const
 }
 void Model::displayCells() const
 {
-    cout << "-=-=-=-=-=Cells=-=-=-=-=-"<<endl;
+    cout << "-=-=-=-=-=-=-=-=Cells=-=-=-=-=-=-=-=-"<<endl;
     for(int i = 0; i < this->listOfCells.size();i++)
         cout <<"Cell "<< i << ": "<< this->listOfCells[i] << endl;
     cout<<endl<<endl;
@@ -208,7 +208,7 @@ void Model::readMaterial(string line)
     linestream >> density;
     linestream >> colour;
     linestream >> name;
-    listOfMaterials.at(materialID) = Material(density,colour,name,materialID); //TODO finish using Material constructor
+    listOfMaterials.at(materialID) = Material(density,colour,name,materialID);
     return;
 }
 void Model::generateCellList(int cellListLength)
@@ -218,18 +218,18 @@ void Model::generateCellList(int cellListLength)
     {
         if(uninitCellList[0][i] == 72)
         {
-            listOfCells[i] = Cell(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+            listOfCells[i] = Hexahedron(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
                                   listOfVectors[uninitCellList[4][i]], listOfVectors[uninitCellList[5][i]], listOfVectors[uninitCellList[6][i]],
                                   listOfVectors[uninitCellList[7][i]], listOfVectors[uninitCellList[8][i]], listOfMaterials[uninitCellList[9][i]]);
         }
         else if (uninitCellList[0][i] == 80)
         {
-            listOfCells[i] = Cell(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+            listOfCells[i] = Pyramid(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
                                   listOfVectors[uninitCellList[4][i]], listOfVectors[uninitCellList[5][i]], listOfMaterials[uninitCellList[9][i]]);
         }
         else if (uninitCellList[0][i] == 84)
         {
-            listOfCells[i] = Cell(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+            listOfCells[i] = Tetrahedron(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
                                   listOfVectors[uninitCellList[4][i]], listOfMaterials[uninitCellList[9][i]]);
         }
     }

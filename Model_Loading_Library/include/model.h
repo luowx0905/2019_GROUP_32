@@ -11,6 +11,9 @@
 #include "vector.h"
 #include "cell.h"
 #include "material.h"
+#include "hexahedron.h"
+#include "tetrahedron.h"
+#include "pyramid.h"
 
 using namespace std;
 
