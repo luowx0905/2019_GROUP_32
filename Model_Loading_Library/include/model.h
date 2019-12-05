@@ -20,7 +20,6 @@ using namespace std;
 //For now, class only used to load a model, not create new.
 /** 
  * @brief Class for reading .mod file and providing details regarding its contents
- * 
  * @author Ewan Drever-Smith
  */
 class Model
@@ -64,9 +63,9 @@ public:
     /// @return Number of materials as a long
     long getNumberOfMaterials()const;
 private:
-    //Note that each object in the object lists is stored at the index of its ID - This was done for speed in locating the object needed however it does have consequences
-    //in that every ID in the file must be consecutive or else the object will attempted to be added to a point outside the range of the std::vector
-    //In future if this is no longer acceptable, then store ID as a parameter of the object itself. This would mean that each object could be stored at any point in the list, but would take longer to search for the object with a particular ID.
+    //Each object in the object lists is stored at the index of its ID - This was done for speed in locating the object needed. 
+    //However this does have consequences - every ID in the file must be consecutive, or else the object will attempted to be added to a point outside the range of the std::vector.
+    //In the future, if this is no longer acceptable, then store ID as a parameter of the object itself. This would mean that each object could be stored at any point in the list, but would take longer to search for the object with a particular ID.
     vector<Vector> listOfVectors;
     vector<Cell> listOfCells;
     vector<Material> listOfMaterials;
@@ -80,7 +79,6 @@ private:
     void readVector(string line);//reads the passed line string and constructs a vector object using details from the line. This object is then added to the vector list at the index of its ID
     void readCell(string line);//reads the the passed line string and adds the vector 'recipe' to the uninitCellList to be constructed at a later time.
     void readMaterial(string line);//reads the passed line string and constructs a Material object using details from the line. This object is then added to the material list at the index of its ID
-    void setFilePath(string fp);//Unused - delete?
     void loadModel();//Loads file located at sourceFilePath into model object
     string sourceFilePath; // contains the location of the file to be read.
     ifstream fileStream;//TODO remove this from the class data and use locally inside loadModel()

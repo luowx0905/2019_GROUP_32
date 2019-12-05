@@ -85,11 +85,6 @@ double Model::getModelWeight() const
         modelWeight += listOfCells[i].getWeight();
     return modelWeight;
 }
-void Model::setFilePath(string fp)
-{
-    sourceFilePath = fp;
-    return;
-}
 
 void Model::loadModel()
 {
