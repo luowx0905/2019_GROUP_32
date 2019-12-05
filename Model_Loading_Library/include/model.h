@@ -15,9 +15,17 @@
 using namespace std;
 
 //For now, class only used to load a model, not create new.
+/** 
+ * @brief Class for reading .mod file and providing details regarding its contents
+ * @author Ewan Drever-Smith
+ */
 class Model
 {
-    public:
+public:
+/**
+ * @brief Construct model object from data loaded from a given file
+ * @param filePath Location of .mod file to be loaded
+ */
     Model(string filePath); //Constructor that takes the file path to the model file as an argument and loads its data into the object
     Model(); //default constructor
     ~Model(); //Destructor deallocates memory associated with vector lists
@@ -35,7 +43,7 @@ class Model
     long getNumberOfMaterials()const;//returns the length of listOfMaterials
 
     
-    private:
+private:
     //Note that each object in the object lists is stored at the index of its ID - This was done for speed in locating the object needed however it does have consequences
     //in that every ID in the file must be consecutive or else the object will attempted to be added to a point outside the range of the std::vector
     //In future if this is no longer acceptable, then store ID as a parameter of the object itself. This would mean that each object could be stored at any point in the list, but would take longer to search for the object with a particular ID.
