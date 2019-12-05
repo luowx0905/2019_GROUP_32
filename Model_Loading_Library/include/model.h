@@ -17,32 +17,50 @@ using namespace std;
 //For now, class only used to load a model, not create new.
 /** 
  * @brief Class for reading .mod file and providing details regarding its contents
+ * 
  * @author Ewan Drever-Smith
  */
 class Model
 {
 public:
-/**
- * @brief Construct model object from data loaded from a given file
- * @param filePath Location of .mod file to be loaded
- */
-    Model(string filePath); //Constructor that takes the file path to the model file as an argument and loads its data into the object
-    Model(); //default constructor
-    ~Model(); //Destructor deallocates memory associated with vector lists
-    Model(const Model&); //copy constructor
-    const Model& operator=(const Model&); //operator= overload
-
+    /**
+    * @brief Construct model object from data loaded from a given file
+    * @param filePath Location of .mod file to be loaded
+    */
+    Model(string filePath);
+    /// Default constructor
+    Model();
+    /// @brief Deallocates memory associated with vector lists
+    ~Model();
+    /// Copy constructor
+    Model(const Model&); 
+    /// Operator= overload
+    const Model& operator=(const Model&); 
+    /// @brief Outputs the coordinates of each vertice in the model to the console
+    /// @return Void
     void displayVertices()const;//outputs to the console each vertice and its coordinate vector (x,y,z)
+    /// @brief Outputs the properties of each cell in the model to the console
+    /// @return Void
     void displayCells()const;//outputs to the console each cell and its properties (type, volume, weight, density)
+    /// @brief Outputs the properties of each material in the model to the console
+    /// @return Void
     void displayMaterials()const;//outputs to the console each material in the model and its properties (Density, name colour)
-
-    Vector getModelCentre()const;//Returns models centre as a vector point. still TODO
-    double getModelWeight()const;//returns the combined weight of all cells
-    long getNumberOfVertices()const;//returns the length of listOfVectors
-    long getNumberOfCells()const;//returns the length of listOfCells
-    long getNumberOfMaterials()const;//returns the length of listOfMaterials
-
-    
+    /// @brief Calculates the centre of the model
+    /// @return Calculation result as a Vector point
+    /// @TODO Implement this function
+    Vector getModelCentre()const;
+    /// @brief Calculates the total weight of all cells in the model
+    /// @return Calculated weight as a double
+    double getModelWeight()const;
+    /// @brief Gets the number of vertices in the model
+    /// @return Number of vertices as a long
+    long getNumberOfVertices()const;
+    /// @brief Gets the number of cells in the model
+    /// @return Number of cells as a long
+    long getNumberOfCells()const;
+    /// @brief Gets the number of materials in the model
+    /// @return Number of materials as a long
+    long getNumberOfMaterials()const;
 private:
     //Note that each object in the object lists is stored at the index of its ID - This was done for speed in locating the object needed however it does have consequences
     //in that every ID in the file must be consecutive or else the object will attempted to be added to a point outside the range of the std::vector
