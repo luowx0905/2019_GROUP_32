@@ -1,9 +1,11 @@
 // model.h
 #ifndef MODEL_H_INCLUDED
 #define MODEL_H_INCLUDED
+
 /** 
  * @file This file contains the declarations for the model class
  */
+
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -27,10 +29,8 @@ using namespace std;
 class Model
 {
 public:
-    /**
-    * @brief Construct model object from data loaded from a given file
-    * @param filePath Location of .mod file to be loaded
-    */
+    /// @brief Construct model object from data loaded from a given file
+    /// @param filePath Location of .mod file to be loaded
     Model(string filePath);
     /// Default constructor
     Model();
@@ -83,6 +83,5 @@ private:
     void readMaterial(string line);//reads the passed line string and constructs a Material object using details from the line. This object is then added to the material list at the index of its ID
     void loadModel();//Loads file located at sourceFilePath into model object
     string sourceFilePath; // contains the location of the file to be read.
-    ifstream fileStream;//TODO remove this from the class data and use locally inside loadModel()
 };
 #endif // MODEL_H_INCLUDED

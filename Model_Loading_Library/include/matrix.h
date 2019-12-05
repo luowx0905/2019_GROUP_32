@@ -1,21 +1,45 @@
+//matrix.h
 #ifndef MATRIX_H
 #define MATRIX_H 
 
+/** 
+ * @file This file contains the declarations for the matrix class
+ */
+
 #include <iostream>
 #include <stdexcept>
-
+/** 
+ * @brief Class for creating matrix object to use in matrix calculations
+ * @author
+ * @version 1.0
+ * @date 05/12/2019
+ */
 class Matrix
 {
 public:
-	Matrix(); // default constructor
+	///Default constructor
+	Matrix();
+	///@brief Constructs a matrix object of given dimensions
+	///@param row number of rows the matrix will have
+	///@param col number of columns the matrix will have
 	Matrix(int row, int col);
-	Matrix(const Matrix& m); // copy constructor
-	~Matrix(); // destructor
-	
-	//// overload some useful operators
-	Matrix& operator=(const Matrix& m); 
+	///Copy constructor
+	Matrix(const Matrix& m);
+	///Default destructor
+	~Matrix(); 
+	///operator= overload
+	Matrix& operator=(const Matrix& m);
+	///@brief overload matrix addition
+	///@note matricies must have the same dimensions for matrix addition
+	///@warning throws runtime error when there is a size mismatch 
 	Matrix operator+(const Matrix& m);
+	///@brief overload matrix subtraction
+	///@note matricies must have the same dimensions for matrix subtraction
+	///@warning throws runtime error when there is a size mismatch 
 	Matrix operator-(const Matrix& m);
+	///@brief overload matrix multiplication
+	///@note when multiplying matricies, the first matrix must have as many columns as the second has rows. i.e 3xN * Nx3
+	///@warning throws runtime error when there is a size mismatch
 	Matrix operator*(const Matrix& m);
 
 	double& operator()(size_t row, size_t col);
