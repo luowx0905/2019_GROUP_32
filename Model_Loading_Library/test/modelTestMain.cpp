@@ -26,9 +26,4 @@ int main(int argc, char *argv[])
     myModel.displayVertices();
     myModel.displayCells();
     myModel.displayMaterials();
-    Matrix myMatrix(3,3);
-    myMatrix(1,2) = 5.6;
-    myMatrix(2,1) = 7.8;
-    cout<<myMatrix(1,2)<<" "<<myMatrix(2,1);
-    //TODO change vector data to std::vector list -> change getcross/getdot functions
 }
