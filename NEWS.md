@@ -1,2 +1,2 @@
 # News  
-Please remember to pull changes from master regularly
+Please remember to make pull requests from master regularly

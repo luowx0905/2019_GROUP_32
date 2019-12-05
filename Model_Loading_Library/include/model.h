@@ -25,7 +25,7 @@ class Model
     void displayCells()const;
     void displayMaterials()const;
 
-    Vector getModelCOG()const;//Returns models centre of gravity as a vector point. still TODO
+    Vector getModelCentre()const;//Returns models centre as a vector point. still TODO
     double getModelWeight()const;
     long getNumberOfVertices()const;
     long getNumberOfCells()const;

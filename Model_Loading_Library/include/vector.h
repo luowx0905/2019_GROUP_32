@@ -13,14 +13,14 @@ using namespace std;
         Vector(float i, float j, float k);
 
 
-        ~Vector(); //destruct //not needed
+        ~Vector(); //destruct
 
         Vector(const Vector& _Vector); //copy
 
-        Vector operator=(const Vector& _Vector); //= (copies a Vector) //operators
+        const Vector& operator=(const Vector& _Vector); //= (copies a Vector) //operators
         Vector operator+(const Vector& _Vector); //+ (adds two vectors)
-        Vector operator+=(const Vector& _Vector); //+= (adds two vectors)
-        Vector operator-=(const Vector& _Vector); //- (subtracts two vectors)
+        const Vector& operator+=(const Vector& _Vector); //+= (adds two vectors)
+        const Vector& operator-=(const Vector& _Vector); //- (subtracts two vectors)
         Vector operator-(const Vector& _Vector); //-= (subtracts two vectors)
 
         //Vector operator*(const float& ScalingFactor); //* (scales the vector using scalar product)
