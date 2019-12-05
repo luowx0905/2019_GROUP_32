@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// default constructor
 Matrix::Matrix()
 {
 	row = 0;
@@ -13,6 +14,7 @@ Matrix::Matrix()
 	data = nullptr;
 }
 
+// the size of generated matrix is row * col 
 Matrix::Matrix(int row, int col)
 {
 	if (row > 0 && col > 0)
@@ -21,6 +23,7 @@ Matrix::Matrix(int row, int col)
 		this->col = col;
 		size = row * col;
 
+		// dynamic memory allocation for two dimensional array
 		data = new double* [row];
 		for (size_t i = 0; i < row; i++)
 		{
@@ -31,16 +34,18 @@ Matrix::Matrix(int row, int col)
 		{
 			for (size_t j = 0; j < col; j++)
 			{
-				data[i][j] = 0;
+				data[i][j] = 0; // initialize all the elements in the matrix to 0
 			}
 		}
 	}
 	else
 	{
+		// if the size of matrix is invalid an exception would be thrown
 		throw runtime_error("Invalid size");
 	}
 }
 
+// copy constructor
 Matrix::Matrix(const Matrix& m)
 {
 	row = m.row;
@@ -57,13 +62,15 @@ Matrix::Matrix(const Matrix& m)
 	{
 		for (size_t j = 0; j < col; j++)
 		{
-			data[i][j] = m.data[i][j];
+			data[i][j] = m.data[i][j]; // copy all the elements in another matrix
 		}
 	}
 }
 
+// destructor
 Matrix::~Matrix()
 {
+	// delete the menory
 	for (size_t i = 0; i < row; i++)
 	{
 		delete[] data[i];
@@ -71,9 +78,10 @@ Matrix::~Matrix()
 	delete[] data;
 }
 
+// overload assignment operator
 Matrix& Matrix::operator=(const Matrix& m)
 {
-	if (this != &m)
+	if (this != &m) // avoid self assignment
 	{
 		row = m.row;
 		col = m.col;
@@ -88,7 +96,7 @@ Matrix& Matrix::operator=(const Matrix& m)
 		{
 			for (size_t j = 0; j < col; j++)
 			{
-				data[i][j] = m.data[i][j];
+				data[i][j] = m.data[i][j]; // copy all the elements
 			}
 		}
 	}
@@ -96,11 +104,12 @@ Matrix& Matrix::operator=(const Matrix& m)
 	return *this;
 }
 
+// overload plus operator
 Matrix Matrix::operator+(const Matrix& m)
 {
-	if (row == m.row && col == m.col)
+	if (row == m.row && col == m.col) // check the size of two matrix
 	{
-		Matrix temp(row, col);
+		Matrix temp(row, col); // store the result
 
 		for (size_t i = 0; i < row; i++)
 		{
@@ -114,10 +123,12 @@ Matrix Matrix::operator+(const Matrix& m)
 	}
 	else
 	{
+		// if the size are incompatible an exception would be thrown
 		throw runtime_error("operator+ -- size mismatch");
 	}
 }
 
+// overload minus operator
 Matrix Matrix::operator-(const Matrix& m)
 {
 	if (row == m.row && col == m.col)
@@ -140,6 +151,7 @@ Matrix Matrix::operator-(const Matrix& m)
 	}
 }
 
+// overload multiply operator
 Matrix Matrix::operator*(const Matrix& m)
 {
 	if (row == m.col && col == m.row)
@@ -165,18 +177,21 @@ Matrix Matrix::operator*(const Matrix& m)
 	}
 }
 
+// overload the bracket, this operator could return a reference of the specfic element (lvalue)
 double& Matrix::operator()(size_t row, size_t col)
 {
-	if (row < this->row && col < this->col)
+	if (row < this->row && col < this->col) // check the validation of the index
 	{
 		return data[row][col];
 	}
 	else
 	{
+		// if the index is out of range an exception would be thrown
 		throw runtime_error("Index out of range");
 	}
 }
 
+// overload the bracket, this operator could return a value of the specfic element (rvalue)
 double Matrix::operator()(size_t row, size_t col) const
 {
 	if (row < this->row && col < this->col)
@@ -189,6 +204,7 @@ double Matrix::operator()(size_t row, size_t col) const
 	}
 }
 
+// overload operator to check if two matrix is equal
 bool Matrix::operator==(const Matrix& m)
 {
 	if (row == m.row && col == m.col)
@@ -212,11 +228,13 @@ bool Matrix::operator==(const Matrix& m)
 	}
 }
 
+// overload operator to check if two matrix is not equal
 bool Matrix::operator!=(const Matrix& m)
 {
 	return !(*this == m);
 }
 
+// obatin the transpose matrix
 Matrix Matrix::transpose()
 {
 	Matrix temp(col, row);
@@ -232,9 +250,14 @@ Matrix Matrix::transpose()
 	return temp;
 }
 
+// obtain the determinant of the matrix
+// this function would first copy the original matrix and 
+// then convert the copy to an upper triangle matrix
+// in the upper triangle matrix, the product of all the elements
+// on the diagonal is the determinant of the original matrix
 double Matrix::det() const
 {
-	if (row == col)
+	if (row == col) // ensure the matrix is a square matrix
 	{
 		if (row == 1)
 		{
@@ -246,10 +269,11 @@ double Matrix::det() const
 		}
 		else
 		{
-			Matrix copy(*this);
+			Matrix copy(*this); // copy the original matrix
 			double result = 1;
-			int swap = 0;
+			int swap = 0; // record the times that any two rows are swapped
 
+			// this for loop would convert the copy to an upper triangle matrix
 			for (size_t i = 0; i < row - 1; i++)
 			{
 				size_t next;
@@ -258,7 +282,7 @@ double Matrix::det() const
 				{
 					for (next = i + 1; next < row; next++)
 					{
-						if (copy.data[i][i] != 0)
+						if (copy.data[next][i] != 0)
 						{
 							nonZero = true;
 							break;
@@ -270,6 +294,7 @@ double Matrix::det() const
 						continue;
 					}
 
+					// swap these two rows
 					swap++;
 					for (size_t j = 0; j < col; j++)
 					{
@@ -279,6 +304,7 @@ double Matrix::det() const
 					}
 				}
 
+				// use Gaussian elimination method
 				for (next = i + 1; next < row; next++)
 				{
 					double factor = copy.data[next][i] / copy.data[i][i];
@@ -289,11 +315,16 @@ double Matrix::det() const
 				}
 			}
 
+			// obtain the product of all the elements on the diagonal
 			for (size_t i = 0; i < row; i++)
 			{
 				result *= copy.data[i][i];
 			}
 
+			// one of the properties of matrix is
+			// if two rows or columns are interchanged, then the sign of 
+			// the determinant changes, so if variable swap is an even number 
+			// the determinant is the same, otherwise determinant is -result
 			if (swap % 2 == 0)
 			{
 				return result;
@@ -310,15 +341,18 @@ double Matrix::det() const
 	}
 }
 
+// obtain inverse matrix
+// the inverse matrix is all the elements in the adjugate matrix
+// multiply 1/determinant
 Matrix Matrix::inv()
 {
-	if (row != col)
+	if (row != col) // ensure the matrix is a square matrix
 	{
 		throw runtime_error("No inverse matrix");
 	}
 
 	double determinant = this->det();
-	if (determinant != 0)
+	if (determinant != 0)// ensure the matrix is nonsingular matrix
 	{
 		Matrix temp = this->adjugate().scale(1 / determinant);
 		return temp;
@@ -329,6 +363,7 @@ Matrix Matrix::inv()
 	}
 }
 
+// overload stream inseration operator
 ostream& operator<<(ostream& out, const Matrix& m)
 {
 	for (size_t i = 0; i < m.row; i++)
@@ -343,21 +378,25 @@ ostream& operator<<(ostream& out, const Matrix& m)
 	return out;
 }
 
+// get number of row
 int Matrix::getRow() const
 {
 	return row;
 }
 
+// get the number of column
 int Matrix::getCol() const
 {
 	return col;
 }
 
+// get the number of elements
 int Matrix::getSize() const
 {
 	return size;
 }
 
+// all the elements in the matrix multiply a constant
 Matrix Matrix::scale(double size)
 {
 	Matrix temp(*this);
@@ -373,6 +412,7 @@ Matrix Matrix::scale(double size)
 	return temp;
 }
 
+// return a submatrix
 Matrix Matrix::subMat(int rowStart, int colStart, int rowEnd, int colEnd)
 {
 	if (rowEnd == 0 && colEnd == 0)
@@ -409,6 +449,7 @@ Matrix Matrix::subMat(int rowStart, int colStart, int rowEnd, int colEnd)
 	}
 }
 
+// obtain the minor of the specific element
 Matrix Matrix::minor(int row, int col)
 {
 	Matrix temp(this->row - 1, this->col - 1);
@@ -435,6 +476,7 @@ Matrix Matrix::minor(int row, int col)
 	return temp;
 }
 
+// obtain the cofactor of the specific element
 Matrix Matrix::cofactor(int row, int col)
 {
 	Matrix temp = this->minor(row, col);
@@ -444,6 +486,7 @@ Matrix Matrix::cofactor(int row, int col)
 	return temp;
 }
 
+// obtain the adjugate matrix
 Matrix Matrix::adjugate()
 {
 	Matrix result(row, col);
