@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0)
 
 project(Model_Loading_Library VERSION 0.1)
-
+#adds all the classes as libraries
 add_library(cell src/cell.cpp include/cell.h)
 add_library(material src/material.cpp include/material.h)
 add_library(matrix src/matrix.cpp include/matrix.h)
@@ -11,9 +11,12 @@ add_library(hexa src/hexahedron.cpp include/hexahedron.h)
 add_library(pyramid src/pyramid.cpp include/pyramid.h)
 add_library(tetra src/tetrahedron.cpp include/tetrahedron.h)
 include_directories(include)
+#identify mains of executables
 add_executable(modelTest test/modelTestMain.cpp)
 add_executable(matrixTest test/matrixTestMain.cpp)
+#test main includes
 target_include_directories(modelTest PUBLIC include)
 target_include_directories(matrixTest PUBLIC include)
+#links required libraries
 target_link_libraries(modelTest model cell material matrix vector hexa pyramid tetra)
 target_link_libraries(matrixTest matrix vector)
