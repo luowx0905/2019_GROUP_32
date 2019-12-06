@@ -28,6 +28,7 @@ Model::Model(const Model& m)
     listOfCells = m.listOfCells;
     listOfMaterials = m.listOfMaterials;
 }
+//outputs  details of all the vertices in this model to the console
 void Model::displayVertices() const
 {
     cout << "-=-=-=-=-=Vertices=-=-=-=-=-"<<endl;
@@ -36,6 +37,7 @@ void Model::displayVertices() const
     cout<<endl<<endl;
     return;
 }
+//outputs details of all the cells in this model to the console
 void Model::displayCells() const
 {
     cout << "-=-=-=-=-=-=-=-=Cells=-=-=-=-=-=-=-=-"<<endl;
@@ -44,6 +46,7 @@ void Model::displayCells() const
     cout<<endl<<endl;
     return;
 }
+//outputs details of all the materials in this model to the console
 void Model::displayMaterials() const
 {
     cout << "-=-=-=-=Materials=-=-=-=-"<<endl;
@@ -52,18 +55,22 @@ void Model::displayMaterials() const
     cout<<endl<<endl;
     return;
 }
+//returns the number of cells in this model as a long int
 long Model::getNumberOfCells() const
 {
     return this->listOfCells.size();
 }
+//returns the number of vertices(vectors) in this model as a long int
 long Model::getNumberOfVertices() const
 {
     return this->listOfVectors.size();
 }
+//returns the number of materials in this model as a long int
 long Model::getNumberOfMaterials() const
 {
     return this->listOfMaterials.size();
 }
+//returns the geometric centre of the model as a vector point
 Vector Model::getModelCentre() const
 {
     vector<double> cellCentre;
@@ -80,6 +87,7 @@ Vector Model::getModelCentre() const
     Vector temp(sumX/listOfCells.size(),sumY/listOfCells.size(),sumZ/listOfCells.size());
     return(temp);
 }
+//returns the total weight of all component cells of this model as a double
 double Model::getModelWeight() const
 {
     double modelWeight = 0;
@@ -87,7 +95,7 @@ double Model::getModelWeight() const
         modelWeight += listOfCells[i].getWeight();
     return modelWeight;
 }
-
+//opens file and reads its data into std::vector lists
 void Model::loadModel()
 {
     ifstream fileStream;
@@ -115,19 +123,17 @@ void Model::loadModel()
                     listOfVectors.resize(vectorListLength); //increases the size of the vector list by one to make space for new addition
                     readVector(line);
                 }
-                else if(line.at(0) == 'c')
+                else if(line.at(0) == 'c')//check first character to see if line represents a cell
                 {
                     cellListLength++;
                     for(int i = 0; i < 10; i++)//iterates through each of the 11 rows of the 2D list
-                    {
-                        uninitCellList[i].resize(cellListLength);
-                    }
+                        uninitCellList[i].resize(cellListLength); //increase the size of the second dimension to make space for a new addition
                     readCell(line);
                 }
-                else if(line.at(0) == 'm')
+                else if(line.at(0) == 'm') //check first character to see if line represents a material
                 {
                     materialListLength++;
-                    listOfMaterials.resize(materialListLength);
+                    listOfMaterials.resize(materialListLength);//increases the size of the material list by one to make space for new addition
                     readMaterial(line);
                 }
                 else
@@ -148,7 +154,7 @@ void Model::readVector(string line)
 {
     istringstream linestream(line); //turn line string into string stream
     int vectorID;
-    float xcoord; //TODO Mention to anthony about possibly changing vector parameters to doubles for more precision
+    float xcoord;
     float ycoord;
     float zcoord;
     linestream.ignore(1); //ignore the object identifier
@@ -161,6 +167,7 @@ void Model::readVector(string line)
     //If this becomes an issue then a solution would be to make the ID a parameter of the vector object itself.
     return;
 }
+//reads cell line into 2D vector list containing 'recipe' to make cells later
 void Model::readCell(string line)
 {
     istringstream linestream(line); //c 0 h 0 0 1 2 3 4 5 6 7
@@ -168,7 +175,7 @@ void Model::readCell(string line)
     char shapeType;
     int materialID;
     int vectors[8];
-    linestream.ignore(1);
+    linestream.ignore(1); //ignore the object identifier
     linestream >> cellID;
     linestream >> shapeType;
     linestream >> materialID;
@@ -221,6 +228,7 @@ void Model::readMaterial(string line)
     listOfMaterials.at(materialID) = Material(density,colour,name,materialID);
     return;
 }
+//Constructs cells from uninitCellList and adds them to listOfCells 
 void Model::generateCellList(int cellListLength)
 {
     listOfCells.resize(cellListLength);
