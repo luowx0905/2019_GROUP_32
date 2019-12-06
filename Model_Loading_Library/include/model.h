@@ -67,23 +67,59 @@ public:
     /// @brief stream insertion overload
     friend std::ostream& operator<<(std::ostream& out, const Model& m);
 private:
-    //Each object in the object lists is stored at the index of its ID - This was done for speed in locating the object needed. 
-    //However this does have consequences - every ID in the file must be consecutive, or else the object will attempted to be added to a point outside the range of the std::vector.
-    //In the future, if this is no longer acceptable, then store ID as a parameter of the object itself. This would mean that each object could be stored at any point in the list, but would take longer to search for the object with a particular ID.
+    ///@brief Vector sequence containing all the vector objects in the model
+    ///@note Each object in the object list is stored at the index of its ID - This was done for speed in locating the object needed. 
+    ///However this does have consequences - every ID in the file must be consecutive, or else the object will attempted to be added to a point outside the range of the std::vector.
+    ///In the future, if this is no longer acceptable, then store ID as a parameter of the object itself. This would mean that each object could be stored at any point in the list, but would take longer to search for the object with a particular ID.
     vector<Vector> listOfVectors;
+    ///@brief Vector sequence containing all the cell objects in the model
+    ///@note Each object in the object list is stored at the index of its ID - This was done for speed in locating the object needed. 
+    ///However this does have consequences - every ID in the file must be consecutive, or else the object will attempted to be added to a point outside the range of the std::vector.
+    ///In the future, if this is no longer acceptable, then store ID as a parameter of the object itself. This would mean that each object could be stored at any point in the list, but would take longer to search for the object with a particular ID.
     vector<Cell> listOfCells;
+    ///@brief Vector sequence containing all the material objects in the model
+    ///@note Each object in the object list is stored at the index of its ID - This was done for speed in locating the object needed. 
+    ///However this does have consequences - every ID in the file must be consecutive, or else the object will attempted to be added to a point outside the range of the std::vector.
+    ///In the future, if this is no longer acceptable, then store ID as a parameter of the object itself. This would mean that each object could be stored at any point in the list, but would take longer to search for the object with a particular ID.
     vector<Material> listOfMaterials;
+    ///@brief stores a 'recipe' to generate Cell objects from 
+    /**
+     * @note Table shows how vector and material IDs are stored
+     * Cell ID       | [0]:0 | [1]:1 | [n]:n |
+     * --------------|-------|-------|-------|
+     * [0]: Type     |[0][0] |[0][1] |[0][n] |
+     * [1]: Vector 1 |[1][0] |[1][1] |[1][n] |
+     * [2]: Vector 2 |[2][0] |[2][1] |[2][n] |
+     * [3]: Vector 3 |[3][0] |[3][1] |[3][n] |
+     * [4]: Vector 4 |[4][0] |[4][1] |[4][n] |
+     * [5]: Vector 5 |[5][0] |[5][1] |[5][n] |
+     * [6]: Vector 6 |[6][0] |[6][1] |[6][n] |
+     * [7]: Vector 7 |[7][0] |[7][1] |[7][n] |
+     * [8]: Vector 8 |[8][0] |[8][1] |[8][n] |
+     * [9]: Material |[9][0] |[9][1] |[9][n] |
+     */
     vector<vector<int>> uninitCellList; 
-    /*uninitCellList
-    Row Index: 0    1     2    3    4   5   6   7   8   9   
-    Data:     type  v1   v2   v3   v4  v5  v6  v7  v8  material
-    */
-    //each column pertains to a new cellID
-    void generateCellList(int cellListLength); //function populates a 2D vector with all the vectors each cell should contain. Will then be used to generate list containing actual Cell objects once the entire file has been read
-    void readVector(string line);//reads the passed line string and constructs a vector object using details from the line. This object is then added to the vector list at the index of its ID
-    void readCell(string line);//reads the the passed line string and adds the vector 'recipe' to the uninitCellList to be constructed at a later time.
-    void readMaterial(string line);//reads the passed line string and constructs a Material object using details from the line. This object is then added to the material list at the index of its ID
-    void loadModel();//Loads file located at sourceFilePath into model object
-    string sourceFilePath; // contains the location of the file to be read.
+    ///@brief Populates listOfCells from uninitCellList
+    ///@param cellListLength Size of the uninitCellList (how many cells are in the model)
+    ///@return void
+    ///@note Must be called after the entire file has been read to ensure that each Cell's dependent vectors have been constructed
+    void generateCellList(int cellListLength);
+    ///@brief Reads vectors from line constructs them and adds them to listOfVectors
+    ///@param line line string from file containing the vector parameters
+    ///@return void
+    void readVector(string line);
+    ///@brief Reads cells from line and adds its recipe (IDs of its component Vectors) to uninitCellList
+    ///@param line line string from file containing the Cell parameters
+    ///@return void
+    void readCell(string line);
+    ///@brief Reads vectors from line constructs them and adds them to listOfMaterials
+    ///@param line line string from file containing the material parameters
+    ///@return void
+    void readMaterial(string line);
+    ///@brief loads the file located at sourceFilePath in model object
+    ///@return void
+    void loadModel();
+    ///@brief Contains the location of the file to be read
+    string sourceFilePath;
 };
 #endif // MODEL_H_INCLUDED
