@@ -1,5 +1,5 @@
 # Model Loading Library
-## Test 
+## Testing
 ### Test Setup (Windows)
 **1. Navigate to build directory**  
 *Note: If this is the first time setup you will need to create the build folder using mkdir  
