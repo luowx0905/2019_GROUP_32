@@ -14,12 +14,14 @@ Model::~Model()
 }
 const Model& Model::operator=(const Model& m)
 {
+    //checks address of object to avoid self-assignment
     if(this==&m) return (*this);
     listOfVectors = m.listOfVectors;
     listOfCells = m.listOfCells;
     listOfMaterials = m.listOfMaterials;
     return(*this);
 }
+///Copy constructor
 Model::Model(const Model& m)
 {
     listOfVectors = m.listOfVectors;
