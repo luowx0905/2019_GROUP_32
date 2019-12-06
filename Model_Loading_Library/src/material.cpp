@@ -52,7 +52,7 @@ string Material::getName()
 {
   return this->name;
 }
-double Material::getID()
+int Material::getID()
 {
   return this->id;
 }

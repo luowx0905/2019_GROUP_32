@@ -1,9 +1,19 @@
+//material.h
 #ifndef MATERIAL_H_INCLUDED
 #define MATERIAL_H_INCLUDED
 
+/** 
+ * @file This file contains the declarations for the model class
+ */
+
 #include <string>
 using namespace std;//for std::
-
+/** 
+ * @brief Class for storing properties of a material
+ * @author Vorrapol Gundthanachart
+ * @version 1.0
+ * @date 06/12/2019
+ */
 class Material {
 private:
   //Variables
@@ -12,29 +22,40 @@ private:
   string name;
   int id;
 public:
-  //Default Constructure
+  ///Default Constructor
   Material();
-  /*Overload Constructure
-  d = density
-  c = colour
-  n = name
-  i = id
+ /**
+  * @brief Construct Material given its parameters
+  * @param d density of material
+  * @param c colour of material in hex i.e 00FF00
+  * @param n name of material
+  * @param i id of material
   */
   Material (double d, string c, string n, int i);
-  //Destuctor
+  ///Default Destructor
   ~Material();
-  //Output stream overload function
+  ///Output stream overload
   friend ostream& operator<<(ostream& out,const Material& m);
-  /*Setup Function
-  d = density
-  c = colour 
-  n = name
-  i = id*/
+  /**
+  * @brief Set material parameters
+  * @param d density of material
+  * @param c colour of material in hex i.e 00FF00
+  * @param n name of material
+  * @param i id of material
+  */
   void setMaterial( double d, string c, string n, double i);
-  double getDensity();//return density
-  string getColour();//return colour
-  string getName();//return name
-  double getID();//return id
+  ///@brief get the density of material
+  ///@return density as double
+  double getDensity();
+  ///@brief get the colour of material
+  ///@return colour as hex string
+  string getColour();
+  ///@brief get the name of material
+  ///@return name as string
+  string getName();
+  ///@brief get the ID of the material
+  ///@return id as an int
+  int getID();
   };
 
  #endif // End of material.h
