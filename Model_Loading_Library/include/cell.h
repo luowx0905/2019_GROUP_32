@@ -1,5 +1,10 @@
+//cell.h
 #ifndef CELL_H
 #define CELL_H
+
+/** 
+ * @file This file contains the declarations for the cell class
+ */
 
 #include <vector>
 #include <string>
@@ -7,21 +12,31 @@
 #include "vector.h"
 #include "material.h"
 
+/** 
+ * @brief Class for storing properties of a cell
+ * @author Wenxiang Luo
+ * @version 1.0
+ * @date 06/12/2019
+ */
+
 class Cell
 {
 public:
-	// default constructors
+	///Default Constructor
 	Cell();
 
-	// default destructor
+	///Default Destructor
 	~Cell() = default;
 
-	// overload assignment operator
+	///Assignment operator overload
 	Cell& operator=(const Cell& c);
 
-	double getVolume() const; // get the volume of the cell
-	double getWeight() const; // get the weight of the cell
-	std::string getType() const; //get the type of the cell
+	///@brief gets the volume of the cell
+	double getVolume() const;
+	///@brief gets the weight of the cell
+	double getWeight() const;
+	///@brief gets the type of the cell
+	std::string getType() const; 
 	const std::vector<double>& getGravityCenter() const; // get the gravity center of the cell
 
 	// overload stream insertion operator
