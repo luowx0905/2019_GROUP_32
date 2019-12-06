@@ -64,6 +64,8 @@ public:
     /// @brief Gets the number of materials in the model
     /// @return Number of materials as a long
     long getNumberOfMaterials()const;
+    /// @brief stream insertion overload
+    friend std::ostream& operator<<(std::ostream& out, const Model& m);
 private:
     //Each object in the object lists is stored at the index of its ID - This was done for speed in locating the object needed. 
     //However this does have consequences - every ID in the file must be consecutive, or else the object will attempted to be added to a point outside the range of the std::vector.

@@ -246,4 +246,13 @@ void Model::generateCellList(int cellListLength)
 
     return;
 }
-//TODO Replace cellList appending with insert/pushback to remove need to manually resize array at each line in file
+// overload stream insertion operator
+ostream& operator<<(ostream& out, const Model& m)
+{
+	out << "There are " <<m.getNumberOfVertices()<<" Vertices in this model"<<endl;
+    out << "There are " <<m.getNumberOfCells()<<" Cells in this model"<<endl;
+    out << "There are " <<m.getNumberOfMaterials()<<" Materials in this model"<<endl;
+    out << "The total weight of this model is " <<m.getModelWeight()<<endl;
+    out << "The centre of this model is " <<m.getModelCentre()<<endl;
+	return out;
+}

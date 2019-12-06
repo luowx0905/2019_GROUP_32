@@ -19,11 +19,7 @@ int main(int argc, char *argv[])
     //test constructors
     Model myModel(strfilePath); 
     //test display functions
-    cout << "There are " <<myModel.getNumberOfVertices()<<" Vertices in this model"<<endl;
-    cout << "There are " <<myModel.getNumberOfCells()<<" Cells in this model"<<endl;
-    cout << "There are " <<myModel.getNumberOfMaterials()<<" Materials in this model"<<endl;
-    cout << "The total weight of this model is " <<myModel.getModelWeight()<<endl;
-    cout << "The centre of this model is " <<myModel.getModelCentre()<<endl;
+    cout<<myModel;
     myModel.displayVertices();
     myModel.displayCells();
     myModel.displayMaterials();
