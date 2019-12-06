@@ -1,5 +1,6 @@
 # Model Loading Library
-## Test Setup (Windows)
+## Test 
+### Test Setup (Windows)
 **1. Navigate to build directory**  
 *Note: If this is the first time setup you will need to create the build folder using mkdir  
 `cd Model_Loading_Library\build`  
@@ -17,12 +18,12 @@
 *Using MSVC:*`Debug\testName.exe`  
 --NOTE: it is important to run .exe while inside build directory or else test files will not be found  
   
-## Test Files 
-### modelTest.exe  
+### Test Files 
+#### modelTest.exe  
 Takes one argument which is a number between 1 and 3 that selects the test .mod file to be used. Outputs to the console details about all the details, cells and materials in the model and its center.  
 Example Syntax:    
 `modelTest.exe 2`   
-### matrixTest.exe    
+#### matrixTest.exe    
 Generates two randomly populated 3x3 matricies and performs a range of operations on them  
 Example Syntax:  
 `matrixTest.exe`
