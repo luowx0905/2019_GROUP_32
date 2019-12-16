@@ -254,6 +254,33 @@ void Model::generateCellList(int cellListLength)
 
     return;
 }
+void Model::saveModel(string saveDirectory)const
+{
+    ofstream fileStream;
+    fileStream.open(saveDirectory.c_str());
+    for (int i = 0; i < listOfMaterials.size(); i++)
+        fileStream << "m " << i << " " << listOfMaterials[i].getDensity() << " "<< listOfMaterials[i].getColour() << " " << listOfMaterials[i].getName() << endl;
+    for (int i = 0; i < listOfVectors.size(); i++)
+        fileStream << "v " << i << " " << listOfVectors[i].get_i() << " "<< listOfVectors[i].get_j() << " " << listOfVectors[i].get_k() << endl;
+    for (int i = 0; i < listOfCells.size(); i++)
+        {
+            ///TODO change cell class so that it stores the material it is made from so that this info can be saved
+            ///TODO implement a method for getting the IDs of vertices making up a cell
+            if (listOfCells[i].getType().compare("Hexahedron") == 0)
+            {
+                fileStream << "c " << i << " h " << endl;
+            }
+            else if (listOfCells[i].getType().compare("Tetrahedron") == 0)
+            {
+                fileStream << "c " << i << " t " << endl;
+            }
+            else if (listOfCells[i].getType().compare("Pyramid") == 0)
+            {
+                fileStream << "c " << i << " p " << endl;
+            }
+        }
+    fileStream.close();
+}
 // overload stream insertion operator
 ostream& operator<<(ostream& out, const Model& m)
 {

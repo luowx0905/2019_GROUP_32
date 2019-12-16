@@ -64,6 +64,8 @@ public:
     /// @brief Gets the number of materials in the model
     /// @return Number of materials as a long
     long getNumberOfMaterials()const;
+    /// @brief Saves contents of model to a file
+    void saveModel(string saveDirectory)const;
     /// @brief stream insertion overload
     friend std::ostream& operator<<(std::ostream& out, const Model& m);
 private:

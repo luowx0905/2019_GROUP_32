@@ -23,4 +23,6 @@ int main(int argc, char *argv[])
     myModel.displayVertices();
     myModel.displayCells();
     myModel.displayMaterials();
+    cout << "Saving to file..." << endl;
+    myModel.saveModel("newModel.mod");
 }

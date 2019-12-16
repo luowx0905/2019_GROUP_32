@@ -46,16 +46,16 @@ public:
   void setMaterial( double d, string c, string n, double i);
   ///@brief get the density of material
   ///@return density as double
-  double getDensity();
+  double getDensity()const;
   ///@brief get the colour of material
   ///@return colour as hex string
-  string getColour();
+  string getColour()const;
   ///@brief get the name of material
   ///@return name as string
-  string getName();
+  string getName()const;
   ///@brief get the ID of the material
   ///@return id as an int
-  int getID();
+  int getID()const;
   };
 
  #endif // End of material.h
