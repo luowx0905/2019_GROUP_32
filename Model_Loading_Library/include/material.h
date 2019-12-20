@@ -10,7 +10,7 @@
 using namespace std;//for std::
 /** 
  * @brief Class for storing properties of a material
- * @author Vorrapol Gundthanachart
+ * @author Vorrapol Gundthanachart with modifications from Ewan Drever-Smith
  * @version 1.0
  * @date 06/12/2019
  */

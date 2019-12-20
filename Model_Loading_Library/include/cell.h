@@ -36,15 +36,18 @@ public:
 	///@brief gets the weight of the cell
 	double getWeight() const;
 	///@brief gets the type of the cell
-	std::string getType() const; 
-	const std::vector<double>& getGravityCenter() const; // get the gravity center of the cell
+	std::string getType() const;
+	/// et the gravity center of the cell 
+	const std::vector<double>& getGravityCenter() const; 
 
-	// overload stream insertion operator
+	/// overload stream insertion operator
 	friend std::ostream& operator<<(std::ostream& out, const Cell& c);
 
 protected:
-	std::vector<Vector> data; // store the vertex of the cell
-	std::string cellType; // a string store cell type
+	///Store the vertex of the cell
+	std::vector<Vector> data;
+	///A string to store cell type 
+	std::string cellType; 
 	std::vector<double> gravityCenter; // store gravity center of the cell | Could you not store this point as a vector object? ~ Ewan
 	double volume; // the volume of the cell
 	double weight; // the weight of the cell
