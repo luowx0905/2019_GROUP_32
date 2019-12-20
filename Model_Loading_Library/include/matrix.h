@@ -8,11 +8,13 @@
 
 #include <iostream>
 #include <stdexcept>
+#include "vector.h"
 /** 
  * @brief Class for creating matrix object to use in matrix calculations
  * @author Wenxiang Luo
- * @version 1.0
- * @date 05/12/2019
+ * @author Ewan Drever-Smith
+ * @version 1.1
+ * @date 20/12/2019
  */
 class Matrix
 {
@@ -23,6 +25,9 @@ public:
 	///@param row number of rows the matrix will have
 	///@param col number of columns the matrix will have
 	Matrix(int row, int col);
+	///@brief Constructs a 1x3 matrix object from a vector
+	///@param v the vector to use to construct the matrix
+	Matrix(Vector v);
 	///Copy constructor
 	Matrix(const Matrix& m);
 	///Default destructor
@@ -103,6 +108,16 @@ public:
 	///@brief obtain the adjugate matrix of the matrix
 	///@return the adjugate matrix as a matrix object
 	Matrix adjugate();
+	///@brief obtain the rotation matrix for a given angle and rotation plane
+	///@param plane the dimensional plane to rotate in
+	///@param angle the angle in radians
+	///@return the rotation matrix
+	///@note static so can be called without an instance of the matrix class
+	static Matrix genRotationMatrix(char plane, double angle);
+	///@brief converts the matrix to a vector
+	///@return the matrix as a vector object
+	///@warning will throw runtime error if matrix is not a 1x3
+	Vector convertToVector();
 
 private:
 	double** data; // store data in this pointer
