@@ -20,7 +20,11 @@ int main(int argc, char *argv[])
     Model myModel(strfilePath); 
     //test display functions
     cout<<myModel;
+    myModel.displayDimensions();
     myModel.displayVertices();
     myModel.displayCells();
     myModel.displayMaterials();
+    cout << "Saving to file..." << endl;
+    myModel.saveModel("newModel.mod");
+    cout << "Model saved as newModel.mod" << endl;
 }

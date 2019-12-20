@@ -147,7 +147,6 @@ void Model::loadModel()
     }
     generateCellList(cellListLength);
     fileStream.close();
-    vector<vector<int>> uninitCellList; //vector no longer needed so de-allocate memory associated with it 
     return;
 }
 void Model::readVector(string line)
@@ -253,6 +252,84 @@ void Model::generateCellList(int cellListLength)
     }
 
     return;
+}
+void Model::saveModel(string saveDirectory)const
+{
+    ofstream fileStream;
+    fileStream.open(saveDirectory.c_str());
+    for (int i = 0; i < listOfMaterials.size(); i++)
+        fileStream << "m " << i << " " << listOfMaterials[i].getDensity() << " "<< listOfMaterials[i].getColour() << " " << listOfMaterials[i].getName() << endl;
+    for (int i = 0; i < listOfVectors.size(); i++)
+        fileStream << "v " << i << " " << listOfVectors[i].get_i() << " "<< listOfVectors[i].get_j() << " " << listOfVectors[i].get_k() << endl;
+    for (int i = 0; i < listOfCells.size(); i++)
+        {
+            if (listOfCells[i].getType().compare("Hexahedron") == 0)
+            {
+                fileStream << "c " << i << " h " << uninitCellList[9][i];
+                for (int j = 1; j <= 8; j++)
+                    fileStream << " " << uninitCellList[j][i];
+                fileStream << endl;
+            }
+            else if (listOfCells[i].getType().compare("Tetrahedron") == 0)
+            {
+                fileStream << "c " << i << " t " << uninitCellList[9][i];
+                for (int j = 1; j <= 4; j++)
+                    fileStream << " " << uninitCellList[j][i];
+                fileStream << endl;
+            }
+            else if (listOfCells[i].getType().compare("Pyramid") == 0)
+            {
+                fileStream << "c " << i << " p " << uninitCellList[9][i]; 
+                for (int j = 1; j <= 5; j++)
+                    fileStream << " " << uninitCellList[j][i];
+                fileStream << endl;
+            }
+        }
+    fileStream.close();
+}
+void Model::displayDimensions()const
+{
+    cout << "The dimensions of this model are: " << this->getWidth() << " x " << this->getHeight()
+    << " x " << this->getDepth() << endl;
+}
+double Model::getHeight()const
+{
+    double lowestJ  = listOfVectors[0].get_j();
+    double highestJ = listOfVectors[0].get_j();
+    for(int i = 1; i < listOfVectors.size(); i++)
+    {
+        if (lowestJ > listOfVectors[i].get_j())
+            lowestJ = listOfVectors[i].get_j();
+        if (highestJ < listOfVectors[i].get_j())
+            highestJ = listOfVectors[i].get_j();
+    }
+    return (highestJ - lowestJ);
+}
+double Model::getWidth()const
+{
+    double lowestI  = listOfVectors[0].get_i();
+    double highestI = listOfVectors[0].get_i();
+    for(int i = 1; i < listOfVectors.size(); i++)
+    {
+        if (lowestI > listOfVectors[i].get_i())
+            lowestI = listOfVectors[i].get_i();
+        if (highestI < listOfVectors[i].get_i())
+            highestI = listOfVectors[i].get_i();
+    }
+    return (highestI - lowestI);
+}
+double Model::getDepth()const
+{
+    double lowestK  = listOfVectors[0].get_k();
+    double highestK = listOfVectors[0].get_k();
+    for(int i = 1; i < listOfVectors.size(); i++)
+    {
+        if (lowestK > listOfVectors[i].get_k())
+            lowestK = listOfVectors[i].get_k();
+        if (highestK < listOfVectors[i].get_k())
+            highestK = listOfVectors[i].get_k();
+    }
+    return (highestK - lowestK);
 }
 // overload stream insertion operator
 ostream& operator<<(ostream& out, const Model& m)

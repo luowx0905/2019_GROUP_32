@@ -49,6 +49,18 @@ public:
     /// @brief Outputs the properties of each material in the model to the console
     /// @return Void
     void displayMaterials()const;//outputs to the console each material in the model and its properties (Density, name colour)
+    /// @brief Outputs to the console the overall dimensions of the model
+    /// @return void
+    void displayDimensions()const;
+    /// @brief Gets the total height of the model
+    /// @return height of model as double
+    double getHeight()const;
+    /// @brief Gets the total width of the model
+    /// @return width of model as double
+    double getWidth()const;
+    /// @brief Gets the total depth of the model
+    /// @return depth of model as double
+    double getDepth()const;
     /// @brief Calculates the centre of the model
     /// @return Calculation result as a Vector point
     Vector getModelCentre()const;
@@ -64,6 +76,9 @@ public:
     /// @brief Gets the number of materials in the model
     /// @return Number of materials as a long
     long getNumberOfMaterials()const;
+    /// @brief Saves contents of model to a file
+    /// @param saveDirectory string containing the path of the .mod file to save to
+    void saveModel(string saveDirectory)const;
     /// @brief stream insertion overload
     friend std::ostream& operator<<(std::ostream& out, const Model& m);
 private:

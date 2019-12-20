@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16.0)
+cmake_minimum_required(VERSION 3.13.0)
 
 project(Model_Loading_Library VERSION 0.1)
 #adds all the classes as libraries
