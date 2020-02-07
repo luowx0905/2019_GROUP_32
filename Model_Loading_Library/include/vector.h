@@ -1,6 +1,8 @@
 #ifndef Vector_H
 #define Vector_H
-
+/**
+ * @file This file contains the declarations for the vector class
+ */
 #include <math.h>
 #include <iostream>
 
@@ -11,8 +13,6 @@ class Vector
 public:
     Vector(); //constructor
     Vector(float i, float j, float k);
-
-
     ~Vector(); //destruct
 
     Vector(const Vector& _Vector); //copy

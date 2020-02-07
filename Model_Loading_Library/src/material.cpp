@@ -39,20 +39,20 @@ ostream& operator<<(ostream& out,const Material& m)
     return(out);
 }
 
-double Material::getDensity()
+double Material::getDensity()const
 {
   return this->density;
 }
 
-string Material::getColour()
+string Material::getColour()const
 {
   return this->colour;
 }
-string Material::getName()
+string Material::getName()const
 {
   return this->name;
 }
-double Material::getID()
+int Material::getID()const
 {
   return this->id;
 }

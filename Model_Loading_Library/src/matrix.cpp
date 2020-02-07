@@ -44,7 +44,21 @@ Matrix::Matrix(int row, int col)
 		throw runtime_error("Invalid size");
 	}
 }
-
+Matrix::Matrix(Vector v)
+{
+	this->row = 1;
+	this->col = 3;
+	this->size = 3;
+	// dynamic memory allocation for two dimensional array
+	data = new double* [row];
+	for (size_t i = 0; i < row; i++)
+	{
+		data[i] = new double[col];
+	}
+	data[0][0] = v.get_i();
+	data[0][1] = v.get_j();
+	data[0][2] = v.get_k();
+}
 // copy constructor
 Matrix::Matrix(const Matrix& m)
 {
@@ -154,7 +168,7 @@ Matrix Matrix::operator-(const Matrix& m)
 // overload multiply operator
 Matrix Matrix::operator*(const Matrix& m)
 {
-	if (row == m.col && col == m.row)
+	if (col == m.row)
 	{
 		Matrix temp(row, m.col);
 
@@ -503,3 +517,48 @@ Matrix Matrix::adjugate()
 
 	return result;
 }
+Matrix Matrix::genRotationMatrix(char plane, double angle)
+{
+	Matrix temp(3,3);
+	if (plane == 'Z' || plane == 'z')
+	{
+		temp(0,0) = 1;
+		temp(1,1) = cos(angle);
+		temp(1,2) = -1 * sin(angle);
+		temp(2,1) = sin(angle);
+		temp(2,2) = cos(angle);
+	}
+	else if (plane == 'Y' || plane == 'y')
+	{
+		temp(0,0) = cos(angle);
+		temp(0,2) = sin(angle);
+		temp(1,1) = 1;
+		temp(2,0) = -1 * sin(angle);
+		temp(2,2) = cos(angle);
+	}
+	else if (plane == 'X' || plane == 'x')
+	{
+		temp(0,0) = cos(angle);
+		temp(0,1) = -1 * sin(angle);
+		temp(1,0) = sin(angle);
+		temp(1,1) = cos(angle);
+		temp(2,2) = 1;
+	}
+	else
+	{
+		throw runtime_error("Rotation plane is invalid");
+	}
+	return temp;
+}
+Vector Matrix::convertToVector()
+{
+	if(this->row == 1 && this->col == 3)
+	{
+		return Vector(this->data[0][0],this->data[0][1],this->data[0][2]);
+	}
+	else
+	{
+		throw runtime_error("Invalid matrix size to convert to vector");
+	}
+}
+

@@ -19,16 +19,12 @@ int main(int argc, char *argv[])
     //test constructors
     Model myModel(strfilePath); 
     //test display functions
-    cout << "There are " <<myModel.getNumberOfVertices()<<" Vertices in this model"<<endl;
-    cout << "There are " <<myModel.getNumberOfCells()<<" Cells in this model"<<endl;
-    cout << "There are " <<myModel.getNumberOfMaterials()<<" Materials in this model"<<endl;
-    cout << "The total weight of this model is " <<myModel.getModelWeight()<<endl;
+    cout<<myModel;
+    myModel.displayDimensions();
     myModel.displayVertices();
     myModel.displayCells();
     myModel.displayMaterials();
-    Matrix myMatrix(3,3);
-    myMatrix(1,2) = 5.6;
-    myMatrix(2,1) = 7.8;
-    cout<<myMatrix(1,2)<<" "<<myMatrix(2,1);
-    //TODO change vector data to std::vector list -> change getcross/getdot functions
+    cout << "Saving to file..." << endl;
+    myModel.saveModel("newModel.mod");
+    cout << "Model saved as newModel.mod" << endl;
 }
