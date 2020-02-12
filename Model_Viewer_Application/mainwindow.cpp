@@ -148,7 +148,7 @@ void MainWindow::open()
     // set the filter for STL file
     QString filter = "STL file (*.stl)";
     // obtain the file name
-    QString filename = QFileDialog::getOpenFileName(this, QString("Open STL file"), "D:\\year 3\\Project\\Computing\\STL+Model+Files-20200202", filter);
+    QString filename = QFileDialog::getOpenFileName(this, QString("Open STL file"), "./", filter);
 
     // if file name is invalid then terminate the function
     if(filename.isEmpty())
@@ -487,7 +487,12 @@ void MainWindow::primitiveShape(int checked)
 }
 
 // this function could reset camera
+//I added a method to reset the camera 'zoom' and its roll however its azimuth angle and elevation angle must also be reset.. TODO
 void MainWindow::resetCamera()
 {
+    renderer->ResetCamera();
+    renderer->ResetCameraClippingRange();
+    renderer->GetActiveCamera()->SetRoll(0);
+    ui->openGLWidget->GetRenderWindow()->Render();
 
 }

@@ -63,7 +63,7 @@ private:
     vtkSmartPointer<vtkActor> actor;
     vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
     vtkSmartPointer<vtkLight> light;
-	vtkSmartPointer<vtkNamedColors> color;
+    vtkSmartPointer<vtkNamedColors> color;
     vtkSmartPointer<vtkDataSetMapper> mapper;
     vtkSmartPointer<vtkActor> shapeActor;
 
