@@ -20,6 +20,7 @@
 #include <vtkNew.h>
 #include <vtkOrientationMarkerWidget.h>
 #include <vtkPlane.h>
+#include <vtkPlaneWidget.h>
 #include <vtkPoints.h>
 #include <vtkPolyData.h>
 #include <vtkProperty.h>
@@ -71,6 +72,8 @@ public slots:
     void resetCamera();
     //adds orientation widget to the bottom left of the screen
     void displayOrientationWidget(bool);
+    //adds widget that allows planes to be edited
+    void displayPlaneWidget(bool);
 
 private:
     Ui::MainWindow *ui;
@@ -85,6 +88,7 @@ private:
     vtkSmartPointer<vtkActor> shapeActor;
     vtkSmartPointer<vtkAxesActor> axes;
     vtkSmartPointer<vtkOrientationMarkerWidget> orientationMarker;
+    vtkSmartPointer<vtkPlaneWidget> planeWidget;
 
     vector<double> value; // store the RGB value of light
     double intensity; // store the intensity of light

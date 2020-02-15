@@ -82,6 +82,11 @@ MainWindow::MainWindow(QWidget *parent)
     orientationMarker->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
     orientationMarker->SetViewport( 0.0, 0.0, 0.4, 0.4 );
 
+    // Set up plane widget
+    planeWidget = vtkSmartPointer<vtkPlaneWidget>::New();
+    planeWidget->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
+    ui->actionDisplayPlaneWidget->setEnabled(false); //TODO_1 Whilst not fully functional, widget is disabled.
+
     // set short cut for some operations
     ui->actionOpen->setShortcut(tr("Ctrl+O"));
     ui->changeColorItor->setShortcut(tr("Ctrl+C"));
@@ -135,6 +140,7 @@ MainWindow::MainWindow(QWidget *parent)
     // connect operations to its widgets
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open()));
     connect(ui->actionDisplayOrientationWidget, SIGNAL(toggled(bool)), this, SLOT(displayOrientationWidget(bool)));
+    connect(ui->actionDisplayPlaneWidget, SIGNAL(toggled(bool)), this, SLOT(displayPlaneWidget(bool)));
     connect(ui->color, SIGNAL(clicked()), this, SLOT(setLightColor()));
     connect(ui->intensity, SIGNAL(valueChanged(double)), this, SLOT(setLightIntensity()));
     connect(ui->removeLight, SIGNAL(clicked()), this, SLOT(resetLight()));
@@ -199,19 +205,34 @@ void MainWindow::open()
     ui->noFilter->setEnabled(true);
     ui->clipfilter->setEnabled(true);
     ui->shrinkfilter->setEnabled(true);
+
+    //reset actions
+    ui->actionDisplayOrientationWidget->setChecked(false);
+    ui->actionDisplayPlaneWidget->setChecked(false);
 }
 // This function will display the orientation widget
 void MainWindow::displayOrientationWidget(bool checked)
 {
     if(checked)
     {
-          orientationMarker->SetEnabled( 1 );
-          orientationMarker->InteractiveOff(); //This stops the widget to be moved by the user -- I feel it is a little too obtrusive otherwise
+        orientationMarker->SetEnabled( 1 );
+        orientationMarker->InteractiveOff(); //This stops the widget to be moved by the user -- I feel it is a little too obtrusive otherwise
     }
     else
-    {
         orientationMarker->SetEnabled( 0 );
+    ui->openGLWidget->GetRenderWindow()->Render();
+}
+// This function displays the plane widget
+//TODO_1 fix so that widget isnt so tiny when added
+void MainWindow::displayPlaneWidget(bool checked)
+{
+    if(checked)
+    {
+        planeWidget->On();
+        planeWidget->PlaceWidget();
     }
+    else
+        planeWidget->Off();
     ui->openGLWidget->GetRenderWindow()->Render();
 }
 // this function would set color of the light
