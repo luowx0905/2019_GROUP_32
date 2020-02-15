@@ -14,6 +14,7 @@
 |Change CMakeLists.txt to include library|NS|||
 |Complete camera reset method so that both the camera's position and orientation are reset|U|EDS|Roll and 'zoom' is reset but azimuth and elevation are not yet|
 |Change name of vtkWindow from openGLWidget to something more accurate|NS|||
+|Implement a orientation widget|U|EDS||
 
 ## Status Legend
 - **C** - Completed  
