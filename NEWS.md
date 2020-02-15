@@ -13,6 +13,7 @@
 |Fix compile issues from sem1 feedback|NS|||
 |Change CMakeLists.txt to include library|NS|||
 |Complete camera reset method so that both the camera's position and orientation are reset|U|EDS|Roll and 'zoom' is reset but azimuth and elevation are not yet|
+|Change name of vtkWindow from openGLWidget to something more accurate|NS|||
 
 ## Status Legend
 - **C** - Completed  
