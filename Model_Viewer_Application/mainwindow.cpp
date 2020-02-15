@@ -7,33 +7,35 @@
 #include <map>
 #include <vector>
 
-#include <QFileDialog>
-#include <QDialog>
-#include <QDebug>
+#include <QButtonGroup>
 #include <QColor>
 #include <QColorDialog>
-#include <QButtonGroup>
+#include <QDebug>
+#include <QDialog>
+#include <QFileDialog>
 
+#include <vtkActor.h>
+#include <vtkAxesActor.h>
+#include <vtkCamera.h>
+#include <vtkCellArray.h>
+#include <vtkClipDataSet.h>
+#include <vtkDataSetMapper.h>
+#include <vtkHexahedron.h>
+#include <vtkLight.h>
+#include <vtkNamedColors.h>
+#include <vtkNew.h>
+#include <vtkOrientationMarkerWidget.h>
+#include <vtkPlane.h>
+#include <vtkPoints.h>
+#include <vtkPolyData.h>
+#include <vtkProperty.h>
+#include <vtkPyramid.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkSTLReader.h>
-#include <vtkPolyData.h>
-#include <vtkSmartPointer.h>
-#include <vtkDataSetMapper.h>
-#include <vtkActor.h>
-#include <vtkNew.h>
-#include <vtkLight.h>
-#include <vtkCamera.h>
-#include <vtkProperty.h>
-#include <vtkNamedColors.h>
-#include <vtkPlane.h>
-#include <vtkClipDataSet.h>
 #include <vtkShrinkFilter.h>
-#include <vtkPyramid.h>
+#include <vtkSmartPointer.h>
 #include <vtkTetra.h>
-#include <vtkHexahedron.h>
-#include <vtkPoints.h>
-#include <vtkCellArray.h>
 #include <vtkUnstructuredGrid.h>
 
 
@@ -55,11 +57,15 @@ MainWindow::MainWindow(QWidget *parent)
     // create a light to provides light setting
     light = vtkSmartPointer<vtkLight>::New();
     // create color to set related information
-	color = vtkSmartPointer<vtkNamedColors>::New();
+    color = vtkSmartPointer<vtkNamedColors>::New();
     // create a mapper to hold a the information of the model
     mapper = vtkSmartPointer<vtkDataSetMapper>::New();
     // create an actor for primitive shape
     shapeActor = vtkSmartPointer<vtkActor>::New();
+    // create axes to use for orientation widget
+    axes = vtkSmartPointer<vtkAxesActor>::New();
+    // creates interactable orientation widget object
+    orientationMarker = vtkSmartPointer<vtkOrientationMarkerWidget>::New();
 
     // set the background color of the render window
     renderer->SetBackground(0.2, 0.5, 0.1);
@@ -68,7 +74,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     // link the render window to Qt widget
     ui->openGLWidget->SetRenderWindow(renderWindow);
-	ui->openGLWidget->GetRenderWindow()->AddRenderer(renderer);
+    ui->openGLWidget->GetRenderWindow()->AddRenderer(renderer);
+
+    // Set up Orientation Widget and link to axes
+    orientationMarker->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
+    orientationMarker->SetOrientationMarker( axes );
+    orientationMarker->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
+    orientationMarker->SetViewport( 0.0, 0.0, 0.4, 0.4 );
 
     // set short cut for some operations
     ui->actionOpen->setShortcut(tr("Ctrl+O"));
@@ -122,6 +134,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // connect operations to its widgets
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open()));
+    connect(ui->actionDisplayOrientationWidget, SIGNAL(toggled(bool)), this, SLOT(displayOrientationWidget(bool)));
     connect(ui->color, SIGNAL(clicked()), this, SLOT(setLightColor()));
     connect(ui->intensity, SIGNAL(valueChanged(double)), this, SLOT(setLightIntensity()));
     connect(ui->removeLight, SIGNAL(clicked()), this, SLOT(resetLight()));
@@ -187,7 +200,20 @@ void MainWindow::open()
     ui->clipfilter->setEnabled(true);
     ui->shrinkfilter->setEnabled(true);
 }
-
+// This function will display the orientation widget
+void MainWindow::displayOrientationWidget(bool checked)
+{
+    if(checked)
+    {
+          orientationMarker->SetEnabled( 1 );
+          orientationMarker->InteractiveOff(); //This stops the widget to be moved by the user -- I feel it is a little too obtrusive otherwise
+    }
+    else
+    {
+        orientationMarker->SetEnabled( 0 );
+    }
+    ui->openGLWidget->GetRenderWindow()->Render();
+}
 // this function would set color of the light
 void MainWindow::setLightColor()
 {
