@@ -366,6 +366,10 @@ void MainWindow::setBackgroundColor()
     // obtain the color selected by user
     QColor selectedColor = QColorDialog::getColor(Qt::white, this,
                                            "Select the object color", QColorDialog::ShowAlphaChannel);
+
+    if(!(selectedColor.isValid())) //If no color selected function returns before any changes are made.
+        return;
+
     // calculate the RGB conponents
     redComponent = selectedColor.red() / 255.0;
     greenComponent = selectedColor.green() / 255.0;
