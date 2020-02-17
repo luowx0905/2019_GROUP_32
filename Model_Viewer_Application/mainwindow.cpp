@@ -42,6 +42,30 @@
 using std::map;
 using std::vector;
 
+
+vtkBoxWidgetCallback* vtkBoxWidgetCallback::New()
+{
+    return new vtkBoxWidgetCallback;
+}
+void vtkBoxWidgetCallback::SetActor( vtkSmartPointer<vtkActor> actor )
+{
+    m_actor = actor;
+}
+
+void vtkBoxWidgetCallback::Execute( vtkObject *caller, unsigned long, void* )
+{
+    vtkSmartPointer<vtkBoxWidget2> boxWidget =
+    vtkBoxWidget2::SafeDownCast(caller);
+
+    vtkSmartPointer<vtkTransform> t =
+    vtkSmartPointer<vtkTransform>::New();
+
+    vtkBoxRepresentation::SafeDownCast( boxWidget->GetRepresentation() )->GetTransform( t );
+    this->m_actor->SetUserTransform( t );
+}
+
+//vtkBoxWidgetCallback(){}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -86,6 +110,13 @@ MainWindow::MainWindow(QWidget *parent)
     planeWidget = vtkSmartPointer<vtkPlaneWidget>::New();
     planeWidget->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
     ui->actionDisplayPlaneWidget->setEnabled(false); //TODO_1 Whilst not fully functional, widget is disabled.
+
+    //Set up box widget
+    boxWidget = vtkSmartPointer<vtkBoxWidget2>::New();
+    boxWidget->SetInteractor(ui->openGLWidget->GetRenderWindow()->GetInteractor());
+    //set up a callback for the interactor so it can manipulate the actor
+    boxWidgetCallback = vtkSmartPointer<vtkBoxWidgetCallback>::New();
+
 
     // set short cut for some operations
     ui->actionOpen->setShortcut(tr("Ctrl+O"));
@@ -141,6 +172,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open()));
     connect(ui->actionDisplayOrientationWidget, SIGNAL(toggled(bool)), this, SLOT(displayOrientationWidget(bool)));
     connect(ui->actionDisplayPlaneWidget, SIGNAL(toggled(bool)), this, SLOT(displayPlaneWidget(bool)));
+    connect(ui->actionDisplayBoxWidget, SIGNAL(toggled(bool)), this, SLOT(displayBoxWidget(bool)));
     connect(ui->color, SIGNAL(clicked()), this, SLOT(setLightColor()));
     connect(ui->intensity, SIGNAL(valueChanged(double)), this, SLOT(setLightIntensity()));
     connect(ui->removeLight, SIGNAL(clicked()), this, SLOT(resetLight()));
@@ -209,6 +241,7 @@ void MainWindow::open()
     //reset actions
     ui->actionDisplayOrientationWidget->setChecked(false);
     ui->actionDisplayPlaneWidget->setChecked(false);
+    ui->actionDisplayBoxWidget->setChecked(false);
 }
 // This function will display the orientation widget
 void MainWindow::displayOrientationWidget(bool checked)
@@ -233,6 +266,23 @@ void MainWindow::displayPlaneWidget(bool checked)
     }
     else
         planeWidget->Off();
+    ui->openGLWidget->GetRenderWindow()->Render();
+}
+// This function displays the box widget
+void MainWindow::displayBoxWidget(bool checked)
+{
+    if(checked)
+    {
+       boxWidget->GetRepresentation()->SetPlaceFactor( 1 ); // Default is 0.5
+       boxWidget->GetRepresentation()->PlaceWidget(actor->GetBounds());
+       boxWidgetCallback->SetActor(actor);
+       boxWidget->AddObserver( vtkCommand::InteractionEvent, boxWidgetCallback );
+       boxWidget->On();
+    }
+    else
+    {
+       boxWidget->Off();
+    }
     ui->openGLWidget->GetRenderWindow()->Render();
 }
 // this function would set color of the light
@@ -547,3 +597,4 @@ void MainWindow::resetCamera()
     ui->openGLWidget->GetRenderWindow()->Render();
 
 }
+

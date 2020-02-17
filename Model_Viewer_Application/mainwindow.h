@@ -9,7 +9,10 @@
 
 #include <vtkActor.h>
 #include <vtkAxesActor.h>
+#include <vtkBoxWidget2.h>
+#include <vtkBoxRepresentation.h>
 #include <vtkCamera.h>
+#include <vtkCommand.h>
 #include <vtkCellArray.h>
 #include <vtkClipDataSet.h>
 #include <vtkDataSetMapper.h>
@@ -31,6 +34,7 @@
 #include <vtkShrinkFilter.h>
 #include <vtkSmartPointer.h>
 #include <vtkTetra.h>
+#include <vtkTransform.h>
 #include <vtkUnstructuredGrid.h>
 
 using std::vector;
@@ -38,6 +42,15 @@ using std::vector;
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+class vtkBoxWidgetCallback : public vtkCommand
+{
+public:
+  static vtkBoxWidgetCallback *New();
+  void SetActor( vtkSmartPointer<vtkActor> actor );
+  virtual void Execute( vtkObject *caller, unsigned long, void* );
+  vtkSmartPointer<vtkActor> m_actor;
+};
 
 class MainWindow : public QMainWindow
 {
@@ -74,6 +87,8 @@ public slots:
     void displayOrientationWidget(bool);
     //adds widget that allows planes to be edited
     void displayPlaneWidget(bool);
+    //adds box widget that allows model to be edited
+    void displayBoxWidget(bool);
 
 private:
     Ui::MainWindow *ui;
@@ -89,6 +104,8 @@ private:
     vtkSmartPointer<vtkAxesActor> axes;
     vtkSmartPointer<vtkOrientationMarkerWidget> orientationMarker;
     vtkSmartPointer<vtkPlaneWidget> planeWidget;
+    vtkSmartPointer<vtkBoxWidget2> boxWidget;
+    vtkSmartPointer<vtkBoxWidgetCallback> boxWidgetCallback;
 
     vector<double> value; // store the RGB value of light
     double intensity; // store the intensity of light
