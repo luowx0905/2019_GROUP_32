@@ -15,6 +15,8 @@
 |Complete camera reset method so that both the camera's position and orientation are reset|U|EDS|Roll and 'zoom' is reset but azimuth and elevation are not yet|
 |Change name of vtkWindow from openGLWidget to something more accurate|NS|||
 |Implement a orientation widget|C|EDS|Widget accessible through view menu|
+|Implement a box widget|C|EDS|Widget works but there are some issues when a new model is loaded|
+|Fix box widget issues when loading new model|NS|||
 
 ## Status Legend
 - **C** - Completed  
