@@ -34,14 +34,20 @@ include( ${VTK_USE_FILE} )
 
 # Define the executable output and its sources
 add_executable( QtVTKExample MACOSX_BUNDLE
-				main.cpp mainwindow.cpp 
-				mainwindow.h 
-				dialogcolor.h
-				dialogcolor.cpp
-				mainwindow.ui
-				${UI_Srcs}
-				${QRC_Srcs}
-				)
+		main.cpp mainwindow.cpp 
+		mainwindow.h 
+		dialogcolor.h dialogcolor.cpp
+		mainwindow.ui	
+		cell.h cell.cpp
+		hexahedron.h hexahedron.cpp
+		material.h material.cpp
+		model.h model.cpp
+		pyramid.h pyramid.cpp
+		tetrahedron.h tetrahedron.cpp
+		vector.h vector.cpp
+		${UI_Srcs}
+		${QRC_Srcs}
+		)
 
 # Tell CMake that the executable depends on the Qt::Widget libraries.
 target_link_libraries( QtVTKExample Qt5::Widgets )
