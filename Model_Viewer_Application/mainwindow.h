@@ -3,35 +3,37 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+//Qt libraries
+#include <QButtonGroup>
+#include <QColor>
+#include <QColorDialog>
+#include <QDebug>
+#include <QDialog>
+#include <QFileDialog>
 #include <QMainWindow>
+#include <QMessageBox>
 
-#include <vector>
-
-#include <vtkSmartPointer.h>
-#include <vtkSTLReader.h>
-#include <vtkRenderer.h>
-#include <vtkRenderWindow.h>
+//VTK libaries
 #include <vtkActor.h>
-
 #include <vtkAxesActor.h>
-#include <vtkBoxWidget2.h>
 #include <vtkBoxRepresentation.h>
+#include <vtkBoxWidget2.h>
 #include <vtkCamera.h>
-#include <vtkCommand.h>
 #include <vtkCellArray.h>
 #include <vtkClipDataSet.h>
-
+#include <vtkCommand.h>
 #include <vtkDataSetMapper.h>
 #include <vtkGenericOpenGLRenderWindow.h>
+#include <vtkHexahedron.h>
 #include <vtkLight.h>
 #include <vtkNamedColors.h>
-
 #include <vtkNew.h>
 #include <vtkOrientationMarkerWidget.h>
 #include <vtkPlane.h>
 #include <vtkPlaneWidget.h>
 #include <vtkPoints.h>
 #include <vtkPolyData.h>
+#include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkPyramid.h>
 #include <vtkRenderWindow.h>
@@ -43,6 +45,18 @@
 #include <vtkTransform.h>
 #include <vtkUnstructuredGrid.h>
 
+//C++ libaries
+#include <map>
+#include <vector>
+
+//Model Loading Library
+#include "vector.h"
+#include "model.h"
+#include "material.h"
+#include "cell.h"
+#include "pyramid.h"
+#include "hexahedron.h"
+#include "tetrahedron.h"
 
 using std::vector;
 

@@ -4,49 +4,6 @@
 #include "ui_mainwindow.h"
 #include "dialogcolor.h"
 
-#include <map>
-#include <vector>
-
-#include <QFileDialog>
-#include <QDialog>
-#include <QDebug>
-#include <QColor>
-#include <QColorDialog>
-#include <QButtonGroup>
-#include <QMessageBox>
-
-#include <vtkRenderWindow.h>
-#include <vtkRenderer.h>
-#include <vtkSTLReader.h>
-#include <vtkPolyData.h>
-#include <vtkSmartPointer.h>
-#include <vtkDataSetMapper.h>
-#include <vtkActor.h>
-#include <vtkNew.h>
-#include <vtkLight.h>
-#include <vtkCamera.h>
-#include <vtkProperty.h>
-#include <vtkNamedColors.h>
-#include <vtkPlane.h>
-#include <vtkClipDataSet.h>
-#include <vtkShrinkFilter.h>
-#include <vtkPyramid.h>
-#include <vtkTetra.h>
-#include <vtkHexahedron.h>
-#include <vtkPoints.h>
-#include <vtkCellArray.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkPolyData.h>
-#include <vtkPolyDataMapper.h>
-
-#include "vector.h"
-#include "model.h"
-#include "material.h"
-#include "cell.h"
-#include "pyramid.h"
-#include "hexahedron.h"
-#include "tetrahedron.h"
-
 using std::map;
 using std::vector;
 
