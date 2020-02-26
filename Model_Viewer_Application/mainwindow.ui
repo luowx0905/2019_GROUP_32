@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1107</width>
-    <height>822</height>
+    <height>828</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,8 +29,8 @@
      <rect>
       <x>40</x>
       <y>590</y>
-      <width>231</width>
-      <height>161</height>
+      <width>271</width>
+      <height>173</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -51,7 +51,10 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QHBoxLayout" name="horizontalLayout"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QLabel" name="intensityLabel">
            <property name="text">
@@ -60,7 +63,18 @@
           </widget>
          </item>
          <item>
-          <widget class="QDoubleSpinBox" name="intensity"/>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QDoubleSpinBox" name="intensity"/>
+           </item>
+           <item>
+            <widget class="QSlider" name="intensitySlider">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
@@ -121,7 +135,7 @@
       <x>330</x>
       <y>590</y>
       <width>241</width>
-      <height>161</height>
+      <height>168</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -210,20 +224,21 @@
      <x>0</x>
      <y>0</y>
      <width>1107</width>
-     <height>21</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen"/>
-   </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>View</string>
-    </property>
-    <addaction name="actionDisplayOrientationWidget"/>
+    <widget class="QMenu" name="menuOpen">
+     <property name="title">
+      <string>Open</string>
+     </property>
+     <addaction name="actionSTL_file"/>
+     <addaction name="actionMOD_file_2"/>
+    </widget>
+    <addaction name="menuOpen"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -233,19 +248,25 @@
     <addaction name="actionDisplayBoxWidget"/>
    </widget>
    <addaction name="menuFile"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSTL_file">
    <addaction name="menuView"/>
    <addaction name="menuTools"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
-    <string>Open</string>
+    <string>STL file</string>
    </property>
   </action>
-  <action name="actionDisplayOrientationWidget">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="actionMOD_file">
    <property name="text">
+    <string>MOD file</string>
+   </property>
+  </action>
+  <action name="actionMOD_file_2">
+   <property name="text">
+    <string>MOD file</string>
     <string>Orientation Widget</string>
    </property>
   </action>
@@ -263,6 +284,7 @@
    </property>
    <property name="text">
     <string>Box Widget</string>
+
    </property>
   </action>
  </widget>

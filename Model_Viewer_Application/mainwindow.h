@@ -7,7 +7,12 @@
 
 #include <vector>
 
+#include <vtkSmartPointer.h>
+#include <vtkSTLReader.h>
+#include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
 #include <vtkActor.h>
+
 #include <vtkAxesActor.h>
 #include <vtkBoxWidget2.h>
 #include <vtkBoxRepresentation.h>
@@ -15,11 +20,12 @@
 #include <vtkCommand.h>
 #include <vtkCellArray.h>
 #include <vtkClipDataSet.h>
+
 #include <vtkDataSetMapper.h>
 #include <vtkGenericOpenGLRenderWindow.h>
-#include <vtkHexahedron.h>
 #include <vtkLight.h>
 #include <vtkNamedColors.h>
+
 #include <vtkNew.h>
 #include <vtkOrientationMarkerWidget.h>
 #include <vtkPlane.h>
@@ -36,6 +42,7 @@
 #include <vtkTetra.h>
 #include <vtkTransform.h>
 #include <vtkUnstructuredGrid.h>
+
 
 using std::vector;
 
@@ -66,7 +73,8 @@ public slots:
     // set the color of the light
     void setLightColor();
     // set the intensity of the light
-    void setLightIntensity();
+    void setLightIntensitySpinBox();
+    void setLightIntensitySlider();
     // reset the light
     void resetLight();
     // change the color of the object in a specfic sequence
@@ -83,6 +91,10 @@ public slots:
     void primitiveShape(int);
     // reset camera
     void resetCamera();
+
+    // open the mod file
+    void openMODFile();
+
     //adds orientation widget to the bottom left of the screen
     void displayOrientationWidget(bool);
     //adds widget that allows planes to be edited
@@ -98,9 +110,10 @@ private:
     vtkSmartPointer<vtkActor> actor;
     vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
     vtkSmartPointer<vtkLight> light;
-    vtkSmartPointer<vtkNamedColors> color;
+	vtkSmartPointer<vtkNamedColors> color;
     vtkSmartPointer<vtkDataSetMapper> mapper;
     vtkSmartPointer<vtkActor> shapeActor;
+    vtkSmartPointer<vtkCamera> camera;
     vtkSmartPointer<vtkAxesActor> axes;
     vtkSmartPointer<vtkOrientationMarkerWidget> orientationMarker;
     vtkSmartPointer<vtkPlaneWidget> planeWidget;
@@ -109,6 +122,7 @@ private:
 
     vector<double> value; // store the RGB value of light
     double intensity; // store the intensity of light
-
+    vector<vtkSmartPointer<vtkActor>> primitiveShapeActor; // store all the actor for primitive shape
+    vector<vtkSmartPointer<vtkActor>>::const_iterator shapeItor; // iterator for primitive shape
 };
 #endif // MAINWINDOW_H
