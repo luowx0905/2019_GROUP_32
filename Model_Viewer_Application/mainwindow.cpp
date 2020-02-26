@@ -50,6 +50,30 @@
 using std::map;
 using std::vector;
 
+
+vtkBoxWidgetCallback* vtkBoxWidgetCallback::New()
+{
+    return new vtkBoxWidgetCallback;
+}
+void vtkBoxWidgetCallback::SetActor( vtkSmartPointer<vtkActor> actor )
+{
+    m_actor = actor;
+}
+
+void vtkBoxWidgetCallback::Execute( vtkObject *caller, unsigned long, void* )
+{
+    vtkSmartPointer<vtkBoxWidget2> boxWidget =
+    vtkBoxWidget2::SafeDownCast(caller);
+
+    vtkSmartPointer<vtkTransform> t =
+    vtkSmartPointer<vtkTransform>::New();
+
+    vtkBoxRepresentation::SafeDownCast( boxWidget->GetRepresentation() )->GetTransform( t );
+    this->m_actor->SetUserTransform( t );
+}
+
+//vtkBoxWidgetCallback(){}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -88,6 +112,18 @@ MainWindow::MainWindow(QWidget *parent)
     // link the render window to Qt widget
     ui->openGLWidget->SetRenderWindow(renderWindow);
 	ui->openGLWidget->GetRenderWindow()->AddRenderer(renderer);
+
+    // Set up plane widget
+    planeWidget = vtkSmartPointer<vtkPlaneWidget>::New();
+    planeWidget->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
+    ui->actionDisplayPlaneWidget->setEnabled(false); //TODO_1 Whilst not fully functional, widget is disabled.
+
+    //Set up box widget
+    boxWidget = vtkSmartPointer<vtkBoxWidget2>::New();
+    boxWidget->SetInteractor(ui->openGLWidget->GetRenderWindow()->GetInteractor());
+    //set up a callback for the interactor so it can manipulate the actor
+    boxWidgetCallback = vtkSmartPointer<vtkBoxWidgetCallback>::New();
+
 
     // set short cut for some operations
     ui->actionSTL_file->setShortcut(tr("Shift+S"));
@@ -151,6 +187,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // connect operations to its widgets
     connect(ui->actionSTL_file, SIGNAL(triggered()), this, SLOT(open()));
+    connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open()));
+    connect(ui->actionDisplayOrientationWidget, SIGNAL(toggled(bool)), this, SLOT(displayOrientationWidget(bool)));
+    connect(ui->actionDisplayPlaneWidget, SIGNAL(toggled(bool)), this, SLOT(displayPlaneWidget(bool)));
+    connect(ui->actionDisplayBoxWidget, SIGNAL(toggled(bool)), this, SLOT(displayBoxWidget(bool)));
     connect(ui->color, SIGNAL(clicked()), this, SLOT(setLightColor()));
     connect(ui->intensity, SIGNAL(valueChanged(double)), this, SLOT(setLightIntensitySpinBox()));
     connect(ui->intensitySlider, SIGNAL(valueChanged(int)), this, SLOT(setLightIntensitySlider()));
@@ -226,8 +266,54 @@ void MainWindow::open()
     ui->clipfilter->setEnabled(true);
     ui->shrinkfilter->setEnabled(true);
     ui->camera->setEnabled(true);
-}
 
+    //reset actions
+    ui->actionDisplayOrientationWidget->setChecked(false);
+    ui->actionDisplayPlaneWidget->setChecked(false);
+    ui->actionDisplayBoxWidget->setChecked(false);
+}
+// This function will display the orientation widget
+void MainWindow::displayOrientationWidget(bool checked)
+{
+    if(checked)
+    {
+        orientationMarker->SetEnabled( 1 );
+        orientationMarker->InteractiveOff(); //This stops the widget to be moved by the user -- I feel it is a little too obtrusive otherwise
+    }
+    else
+        orientationMarker->SetEnabled( 0 );
+    ui->openGLWidget->GetRenderWindow()->Render();
+}
+// This function displays the plane widget
+//TODO_1 fix so that widget isnt so tiny when added
+void MainWindow::displayPlaneWidget(bool checked)
+{
+    if(checked)
+    {
+        planeWidget->On();
+        planeWidget->PlaceWidget();
+    }
+    else
+        planeWidget->Off();
+    ui->openGLWidget->GetRenderWindow()->Render();
+}
+// This function displays the box widget
+void MainWindow::displayBoxWidget(bool checked)
+{
+    if(checked)
+    {
+       boxWidget->GetRepresentation()->SetPlaceFactor( 1 ); // Default is 0.5
+       boxWidget->GetRepresentation()->PlaceWidget(actor->GetBounds());
+       boxWidgetCallback->SetActor(actor);
+       boxWidget->AddObserver( vtkCommand::InteractionEvent, boxWidgetCallback );
+       boxWidget->On();
+    }
+    else
+    {
+       boxWidget->Off();
+    }
+    ui->openGLWidget->GetRenderWindow()->Render();
+}
 // this function would set color of the light
 void MainWindow::setLightColor()
 {
@@ -372,11 +458,9 @@ void MainWindow::setBackgroundColor()
     // obtain the color selected by user
     QColor selectedColor = QColorDialog::getColor(Qt::white, this,
                                            "Select the object color", QColorDialog::ShowAlphaChannel);
-    // check the validity of the selected color
-    if(!selectedColor.isValid())
-    {
-        return ;
-    }
+
+    if(!(selectedColor.isValid())) //If no color selected function returns before any changes are made.
+        return;
 
     // calculate the RGB conponents
     redComponent = selectedColor.red() / 255.0;
@@ -760,3 +844,4 @@ void MainWindow::openMODFile()
     ui->shrinkfilter->setEnabled(false);
     ui->camera->setEnabled(true);
 }
+

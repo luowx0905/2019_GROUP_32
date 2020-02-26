@@ -217,6 +217,7 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -239,10 +240,21 @@
     </widget>
     <addaction name="menuOpen"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionDisplayPlaneWidget"/>
+    <addaction name="actionDisplayBoxWidget"/>
+   </widget>
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSTL_file">
+   <addaction name="menuView"/>
+   <addaction name="menuTools"/>
+  </widget>
+  <action name="actionOpen">
    <property name="text">
     <string>STL file</string>
    </property>
@@ -255,6 +267,24 @@
   <action name="actionMOD_file_2">
    <property name="text">
     <string>MOD file</string>
+    <string>Orientation Widget</string>
+   </property>
+  </action>
+  <action name="actionDisplayPlaneWidget">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Plane Widget</string>
+   </property>
+  </action>
+  <action name="actionDisplayBoxWidget">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Box Widget</string>
+
    </property>
   </action>
  </widget>
