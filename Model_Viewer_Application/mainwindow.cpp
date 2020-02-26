@@ -89,13 +89,17 @@ MainWindow::MainWindow(QWidget *parent)
     // create a light to provides light setting
     light = vtkSmartPointer<vtkLight>::New();
     // create color to set related information
-	color = vtkSmartPointer<vtkNamedColors>::New();
+    color = vtkSmartPointer<vtkNamedColors>::New();
     // create a mapper to hold a the information of the model
     mapper = vtkSmartPointer<vtkDataSetMapper>::New();
     // create an actor for primitive shape
     shapeActor = vtkSmartPointer<vtkActor>::New();
     // create a camera
     camera = vtkSmartPointer<vtkCamera>::New();
+    // create axes to use for orientation widget
+    axes = vtkSmartPointer<vtkAxesActor>::New();
+    // creates interactable orientation widget object
+    orientationMarker = vtkSmartPointer<vtkOrientationMarkerWidget>::New();
 
     // set the background color of the render window
     renderer->SetBackground(0.1, 0.7, 0.1);
@@ -111,7 +115,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     // link the render window to Qt widget
     ui->openGLWidget->SetRenderWindow(renderWindow);
-	ui->openGLWidget->GetRenderWindow()->AddRenderer(renderer);
+    ui->openGLWidget->GetRenderWindow()->AddRenderer(renderer);
+
+    // Set up Orientation Widget and link to axes
+    orientationMarker->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
+    orientationMarker->SetOrientationMarker( axes );
+    orientationMarker->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
+    orientationMarker->SetViewport( 0.0, 0.0, 0.4, 0.4 );
 
     // Set up plane widget
     planeWidget = vtkSmartPointer<vtkPlaneWidget>::New();
@@ -199,8 +209,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->objectColor, SIGNAL(clicked()), this, SLOT(selectedObjectColor()));
     connect(ui->edgeCheck, SIGNAL(stateChanged(int)), this, SLOT(visableEdge(int)));
     connect(ui->backgroundColor, SIGNAL(clicked()), this, SLOT(setBackgroundColor()));
-    //connect(filterButton, SIGNAL(buttonClicked(int)), this, SLOT(applyFilter(int)));
-    //connect(shapeButton, SIGNAL(buttonClicked(int)), this, SLOT(primitiveShape(int)));
+    connect(filterButton, SIGNAL(buttonClicked(int)), this, SLOT(applyFilter(int)));
+    connect(shapeButton, SIGNAL(buttonClicked(int)), this, SLOT(primitiveShape(int)));
     //connect(shapeButton, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &MainWindow::primitiveShape);
     connect(ui->resetCameraButton, SIGNAL(clicked()), this, SLOT(resetCamera()));
     connect(ui->actionOpenMODFile, SIGNAL(triggered()), this, SLOT(openMODFile()));
