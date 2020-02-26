@@ -7,8 +7,7 @@
 
 |Jobs|Status|Initials|Notes|
 |----|------|--------|-----|
-|Change model class in Library so that each cell can be accessed individually (getter)|NS|||
-|Change cell class in library so that the points a cell is made from can be accessed (getter)|NS|||
+|Change CMakeLists.txt so that library does not need to be in the same directory as application, possibly add a top level CMakeLists.txt|NS|||
 |Change format of UI such that it can be resized|NS|||
 |Fix compile issues from sem1 feedback|NS|||
 |Change CMakeLists.txt to include library|NS|||
