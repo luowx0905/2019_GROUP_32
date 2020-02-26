@@ -126,12 +126,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // set short cut for some operations
-    ui->actionSTL_file->setShortcut(tr("Shift+S"));
-    ui->actionMOD_file_2->setShortcut(tr("Shift+M"));
+    ui->actionOpenSTLFile->setShortcut(tr("Shift+S"));
+    ui->actionOpenMODFile->setShortcut(tr("Shift+M"));
     ui->changeColorItor->setShortcut(tr("Ctrl+I"));
-    ui->color->setShortcut(tr("Alt+C"));
+    ui->changeLightColourButton->setShortcut(tr("Alt+C"));
     ui->objectColor->setShortcut(tr("Shift+C"));
-    ui->camera->setShortcut(tr("Ctrl+R"));
+    ui->resetCameraButton->setShortcut(tr("Ctrl+R"));
 
     // set the position of the text on the label
     ui->lightLabel->setAlignment(Qt::AlignCenter);
@@ -153,13 +153,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
     ui->changeColorItor->setEnabled(false);
-    ui->color->setEnabled(false);
+    ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);
     ui->noFilter->setEnabled(false);
     ui->clipfilter->setEnabled(false);
     ui->shrinkfilter->setEnabled(false);
-    ui->camera->setEnabled(false);
+    ui->resetCameraButton->setEnabled(false);
 
     // set initial state of check box and radio buttons
     ui->edgeCheck->setChecked(false);
@@ -186,12 +186,12 @@ MainWindow::MainWindow(QWidget *parent)
 	}
 
     // connect operations to its widgets
-    connect(ui->actionSTL_file, SIGNAL(triggered()), this, SLOT(open()));
+    connect(ui->actionOpenSTLFile, SIGNAL(triggered()), this, SLOT(open()));
     //connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open()));
     connect(ui->actionDisplayOrientationWidget, SIGNAL(toggled(bool)), this, SLOT(displayOrientationWidget(bool)));
     connect(ui->actionDisplayPlaneWidget, SIGNAL(toggled(bool)), this, SLOT(displayPlaneWidget(bool)));
     connect(ui->actionDisplayBoxWidget, SIGNAL(toggled(bool)), this, SLOT(displayBoxWidget(bool)));
-    connect(ui->color, SIGNAL(clicked()), this, SLOT(setLightColor()));
+    connect(ui->changeLightColourButton, SIGNAL(clicked()), this, SLOT(setLightColor()));
     connect(ui->intensity, SIGNAL(valueChanged(double)), this, SLOT(setLightIntensitySpinBox()));
     connect(ui->intensitySlider, SIGNAL(valueChanged(int)), this, SLOT(setLightIntensitySlider()));
     connect(ui->removeLight, SIGNAL(clicked()), this, SLOT(resetLight()));
@@ -199,11 +199,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->objectColor, SIGNAL(clicked()), this, SLOT(selectedObjectColor()));
     connect(ui->edgeCheck, SIGNAL(stateChanged(int)), this, SLOT(visableEdge(int)));
     connect(ui->backgroundColor, SIGNAL(clicked()), this, SLOT(setBackgroundColor()));
-    connect(filterButton, SIGNAL(buttonClicked(int)), this, SLOT(applyFilter(int)));
-    connect(shapeButton, SIGNAL(buttonClicked(int)), this, SLOT(primitiveShape(int)));
+    //connect(filterButton, SIGNAL(buttonClicked(int)), this, SLOT(applyFilter(int)));
+    //connect(shapeButton, SIGNAL(buttonClicked(int)), this, SLOT(primitiveShape(int)));
     //connect(shapeButton, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &MainWindow::primitiveShape);
-    connect(ui->camera, SIGNAL(clicked()), this, SLOT(resetCamera()));
-    connect(ui->actionMOD_file_2, SIGNAL(triggered()), this, SLOT(openMODFile()));
+    connect(ui->resetCameraButton, SIGNAL(clicked()), this, SLOT(resetCamera()));
+    connect(ui->actionOpenMODFile, SIGNAL(triggered()), this, SLOT(openMODFile()));
 }
 
 MainWindow::~MainWindow()
@@ -256,7 +256,7 @@ void MainWindow::open()
     renderer->ResetCameraClippingRange();
 
     // enable some of the meaningful operations after loading the file
-    ui->color->setEnabled(true);
+    ui->changeLightColourButton->setEnabled(true);
     ui->intensity->setEnabled(true);
     ui->intensitySlider->setEnabled(true);
     ui->changeColorItor->setEnabled(true);
@@ -265,7 +265,7 @@ void MainWindow::open()
     ui->noFilter->setEnabled(true);
     ui->clipfilter->setEnabled(true);
     ui->shrinkfilter->setEnabled(true);
-    ui->camera->setEnabled(true);
+    ui->resetCameraButton->setEnabled(true);
 
     //reset actions
     ui->actionDisplayOrientationWidget->setChecked(false);
@@ -641,13 +641,13 @@ void MainWindow::primitiveShape(int checked)
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
     ui->changeColorItor->setEnabled(false);
-    ui->color->setEnabled(false);
+    ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);
     ui->noFilter->setEnabled(false);
     ui->clipfilter->setEnabled(false);
     ui->shrinkfilter->setEnabled(false);
-    ui->camera->setEnabled(true);
+    ui->resetCameraButton->setEnabled(true);
 
     // reset all other functions
     ui->noFilter->setChecked(true);
@@ -836,12 +836,12 @@ void MainWindow::openMODFile()
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
     ui->changeColorItor->setEnabled(false);
-    ui->color->setEnabled(false);
+    ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);
     ui->noFilter->setEnabled(false);
     ui->clipfilter->setEnabled(false);
     ui->shrinkfilter->setEnabled(false);
-    ui->camera->setEnabled(true);
+    ui->resetCameraButton->setEnabled(true);
 }
 

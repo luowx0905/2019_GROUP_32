@@ -44,7 +44,7 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QPushButton" name="color">
+        <widget class="QPushButton" name="changeLightColourButton">
          <property name="text">
           <string>Color</string>
          </property>
@@ -168,7 +168,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="camera">
+      <widget class="QPushButton" name="resetCameraButton">
        <property name="text">
         <string>Reset camera</string>
        </property>
@@ -231,8 +231,8 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionSTL_file"/>
-    <addaction name="actionMOD_file_2"/>
+    <addaction name="actionOpenSTLFile"/>
+    <addaction name="actionOpenMODFile"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -251,17 +251,12 @@
    <addaction name="menuView"/>
    <addaction name="menuTools"/>
   </widget>
-  <action name="actionSTL_file">
+  <action name="actionOpenSTLFile">
    <property name="text">
     <string>STL file</string>
    </property>
   </action>
-  <action name="actionMOD_file">
-   <property name="text">
-    <string>MOD file</string>
-   </property>
-  </action>
-  <action name="actionMOD_file_2">
+  <action name="actionOpenMODFile">
    <property name="text">
     <string>MOD file</string>
    </property>
