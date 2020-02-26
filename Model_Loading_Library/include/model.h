@@ -81,6 +81,9 @@ public:
     void saveModel(string saveDirectory)const;
     /// @brief stream insertion overload
     friend std::ostream& operator<<(std::ostream& out, const Model& m);
+    vector<Pyramid> getPyramid() const;
+    vector<Hexahedron> getHex() const;
+    vector<Tetrahedron> getTetra() const;
 private:
     ///@brief Vector sequence containing all the vector objects in the model
     ///@note Each object in the object list is stored at the index of its ID - This was done for speed in locating the object needed. 
@@ -138,3 +141,5 @@ private:
     string sourceFilePath;
 };
 #endif // MODEL_H_INCLUDED
+
+

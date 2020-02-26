@@ -341,3 +341,19 @@ ostream& operator<<(ostream& out, const Model& m)
     out << "The centre of this model is " <<m.getModelCentre()<<endl;
 	return out;
 }
+vector<Pyramid> Model::getPyramid() const
+{
+	return pyramidList;
+}
+
+vector<Hexahedron> Model::getHex() const
+{
+	return hexList;
+}
+
+vector<Tetrahedron> Model::getTetra() const
+{
+	return tetraList;
+}
+
+//TODO Replace cellList appending with insert/pushback to remove need to manually resize array at each line in file

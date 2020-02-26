@@ -4,49 +4,6 @@
 #include "ui_mainwindow.h"
 #include "dialogcolor.h"
 
-#include <map>
-#include <vector>
-
-#include <QFileDialog>
-#include <QDialog>
-#include <QDebug>
-#include <QColor>
-#include <QColorDialog>
-#include <QButtonGroup>
-#include <QMessageBox>
-
-#include <vtkRenderWindow.h>
-#include <vtkRenderer.h>
-#include <vtkSTLReader.h>
-#include <vtkPolyData.h>
-#include <vtkSmartPointer.h>
-#include <vtkDataSetMapper.h>
-#include <vtkActor.h>
-#include <vtkNew.h>
-#include <vtkLight.h>
-#include <vtkCamera.h>
-#include <vtkProperty.h>
-#include <vtkNamedColors.h>
-#include <vtkPlane.h>
-#include <vtkClipDataSet.h>
-#include <vtkShrinkFilter.h>
-#include <vtkPyramid.h>
-#include <vtkTetra.h>
-#include <vtkHexahedron.h>
-#include <vtkPoints.h>
-#include <vtkCellArray.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkPolyData.h>
-#include <vtkPolyDataMapper.h>
-
-#include "vector.h"
-#include "model.h"
-#include "material.h"
-#include "cell.h"
-#include "pyramid.h"
-#include "hexahedron.h"
-#include "tetrahedron.h"
-
 using std::map;
 using std::vector;
 
@@ -89,13 +46,17 @@ MainWindow::MainWindow(QWidget *parent)
     // create a light to provides light setting
     light = vtkSmartPointer<vtkLight>::New();
     // create color to set related information
-	color = vtkSmartPointer<vtkNamedColors>::New();
+    color = vtkSmartPointer<vtkNamedColors>::New();
     // create a mapper to hold a the information of the model
     mapper = vtkSmartPointer<vtkDataSetMapper>::New();
     // create an actor for primitive shape
     shapeActor = vtkSmartPointer<vtkActor>::New();
     // create a camera
     camera = vtkSmartPointer<vtkCamera>::New();
+    // create axes to use for orientation widget
+    axes = vtkSmartPointer<vtkAxesActor>::New();
+    // creates interactable orientation widget object
+    orientationMarker = vtkSmartPointer<vtkOrientationMarkerWidget>::New();
 
     // set the background color of the render window
     renderer->SetBackground(0.1, 0.7, 0.1);
@@ -111,7 +72,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     // link the render window to Qt widget
     ui->openGLWidget->SetRenderWindow(renderWindow);
-	ui->openGLWidget->GetRenderWindow()->AddRenderer(renderer);
+    ui->openGLWidget->GetRenderWindow()->AddRenderer(renderer);
+
+    // Set up Orientation Widget and link to axes
+    orientationMarker->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
+    orientationMarker->SetOrientationMarker( axes );
+    orientationMarker->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
+    orientationMarker->SetViewport( 0.0, 0.0, 0.4, 0.4 );
 
     // Set up plane widget
     planeWidget = vtkSmartPointer<vtkPlaneWidget>::New();
@@ -126,12 +93,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // set short cut for some operations
-    ui->actionSTL_file->setShortcut(tr("Shift+S"));
-    ui->actionMOD_file_2->setShortcut(tr("Shift+M"));
+    ui->actionOpenSTLFile->setShortcut(tr("Shift+S"));
+    ui->actionOpenMODFile->setShortcut(tr("Shift+M"));
     ui->changeColorItor->setShortcut(tr("Ctrl+I"));
-    ui->color->setShortcut(tr("Alt+C"));
+    ui->changeLightColourButton->setShortcut(tr("Alt+C"));
     ui->objectColor->setShortcut(tr("Shift+C"));
-    ui->camera->setShortcut(tr("Ctrl+R"));
+    ui->resetCameraButton->setShortcut(tr("Ctrl+R"));
 
     // set the position of the text on the label
     ui->lightLabel->setAlignment(Qt::AlignCenter);
@@ -153,13 +120,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
     ui->changeColorItor->setEnabled(false);
-    ui->color->setEnabled(false);
+    ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);
     ui->noFilter->setEnabled(false);
     ui->clipfilter->setEnabled(false);
     ui->shrinkfilter->setEnabled(false);
-    ui->camera->setEnabled(false);
+    ui->resetCameraButton->setEnabled(false);
 
     // set initial state of check box and radio buttons
     ui->edgeCheck->setChecked(false);
@@ -186,12 +153,12 @@ MainWindow::MainWindow(QWidget *parent)
 	}
 
     // connect operations to its widgets
-    connect(ui->actionSTL_file, SIGNAL(triggered()), this, SLOT(open()));
-    connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open()));
+    connect(ui->actionOpenSTLFile, SIGNAL(triggered()), this, SLOT(open()));
+    //connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open()));
     connect(ui->actionDisplayOrientationWidget, SIGNAL(toggled(bool)), this, SLOT(displayOrientationWidget(bool)));
     connect(ui->actionDisplayPlaneWidget, SIGNAL(toggled(bool)), this, SLOT(displayPlaneWidget(bool)));
     connect(ui->actionDisplayBoxWidget, SIGNAL(toggled(bool)), this, SLOT(displayBoxWidget(bool)));
-    connect(ui->color, SIGNAL(clicked()), this, SLOT(setLightColor()));
+    connect(ui->changeLightColourButton, SIGNAL(clicked()), this, SLOT(setLightColor()));
     connect(ui->intensity, SIGNAL(valueChanged(double)), this, SLOT(setLightIntensitySpinBox()));
     connect(ui->intensitySlider, SIGNAL(valueChanged(int)), this, SLOT(setLightIntensitySlider()));
     connect(ui->removeLight, SIGNAL(clicked()), this, SLOT(resetLight()));
@@ -202,8 +169,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(filterButton, SIGNAL(buttonClicked(int)), this, SLOT(applyFilter(int)));
     connect(shapeButton, SIGNAL(buttonClicked(int)), this, SLOT(primitiveShape(int)));
     //connect(shapeButton, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &MainWindow::primitiveShape);
-    connect(ui->camera, SIGNAL(clicked()), this, SLOT(resetCamera()));
-    connect(ui->actionMOD_file_2, SIGNAL(triggered()), this, SLOT(openMODFile()));
+    connect(ui->resetCameraButton, SIGNAL(clicked()), this, SLOT(resetCamera()));
+    connect(ui->actionOpenMODFile, SIGNAL(triggered()), this, SLOT(openMODFile()));
 }
 
 MainWindow::~MainWindow()
@@ -256,7 +223,7 @@ void MainWindow::open()
     renderer->ResetCameraClippingRange();
 
     // enable some of the meaningful operations after loading the file
-    ui->color->setEnabled(true);
+    ui->changeLightColourButton->setEnabled(true);
     ui->intensity->setEnabled(true);
     ui->intensitySlider->setEnabled(true);
     ui->changeColorItor->setEnabled(true);
@@ -265,7 +232,7 @@ void MainWindow::open()
     ui->noFilter->setEnabled(true);
     ui->clipfilter->setEnabled(true);
     ui->shrinkfilter->setEnabled(true);
-    ui->camera->setEnabled(true);
+    ui->resetCameraButton->setEnabled(true);
 
     //reset actions
     ui->actionDisplayOrientationWidget->setChecked(false);
@@ -641,13 +608,13 @@ void MainWindow::primitiveShape(int checked)
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
     ui->changeColorItor->setEnabled(false);
-    ui->color->setEnabled(false);
+    ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);
     ui->noFilter->setEnabled(false);
     ui->clipfilter->setEnabled(false);
     ui->shrinkfilter->setEnabled(false);
-    ui->camera->setEnabled(true);
+    ui->resetCameraButton->setEnabled(true);
 
     // reset all other functions
     ui->noFilter->setChecked(true);
@@ -836,12 +803,12 @@ void MainWindow::openMODFile()
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
     ui->changeColorItor->setEnabled(false);
-    ui->color->setEnabled(false);
+    ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);
     ui->noFilter->setEnabled(false);
     ui->clipfilter->setEnabled(false);
     ui->shrinkfilter->setEnabled(false);
-    ui->camera->setEnabled(true);
+    ui->resetCameraButton->setEnabled(true);
 }
 
