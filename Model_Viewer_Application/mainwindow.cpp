@@ -187,7 +187,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // connect operations to its widgets
     connect(ui->actionSTL_file, SIGNAL(triggered()), this, SLOT(open()));
-    connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open()));
+    //connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open()));
     connect(ui->actionDisplayOrientationWidget, SIGNAL(toggled(bool)), this, SLOT(displayOrientationWidget(bool)));
     connect(ui->actionDisplayPlaneWidget, SIGNAL(toggled(bool)), this, SLOT(displayPlaneWidget(bool)));
     connect(ui->actionDisplayBoxWidget, SIGNAL(toggled(bool)), this, SLOT(displayBoxWidget(bool)));

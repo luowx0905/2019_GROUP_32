@@ -224,21 +224,15 @@
      <x>0</x>
      <y>0</y>
      <width>1107</width>
-     <height>29</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuOpen">
-     <property name="title">
-      <string>Open</string>
-     </property>
-     <addaction name="actionSTL_file"/>
-     <addaction name="actionMOD_file_2"/>
-    </widget>
-    <addaction name="menuOpen"/>
+    <addaction name="actionSTL_file"/>
+    <addaction name="actionMOD_file_2"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -247,14 +241,17 @@
     <addaction name="actionDisplayPlaneWidget"/>
     <addaction name="actionDisplayBoxWidget"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionDisplayOrientationWidget"/>
+   </widget>
    <addaction name="menuFile"/>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionSTL_file">
    <addaction name="menuView"/>
    <addaction name="menuTools"/>
   </widget>
-  <action name="actionOpen">
+  <action name="actionSTL_file">
    <property name="text">
     <string>STL file</string>
    </property>
@@ -267,6 +264,13 @@
   <action name="actionMOD_file_2">
    <property name="text">
     <string>MOD file</string>
+   </property>
+  </action>
+  <action name="actionDisplayOrientationWidget">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
     <string>Orientation Widget</string>
    </property>
   </action>
@@ -284,7 +288,6 @@
    </property>
    <property name="text">
     <string>Box Widget</string>
-
    </property>
   </action>
  </widget>
