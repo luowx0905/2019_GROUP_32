@@ -96,7 +96,7 @@ const vector<double>& Cell::getGravityCenter() const
 // overloading stream insertion operator
 ostream& operator<<(ostream& out, const Cell& c)
 {
-	out << " \n Type: " <<c.cellType << endl;
+	out << "Type: " <<c.cellType << endl;
 	out << " Volume: " << c.volume << endl;
 	out << " Weight: " << c.weight << endl;
 	out << " Density: " << c.density << endl;
@@ -107,7 +107,7 @@ ostream& operator<<(ostream& out, const Cell& c)
 
 		vector<Vector>::const_iterator citor;
 
-		cout << " The vectors:" << endl;
+		cout << " The vector:" << endl;
 		for (citor = c.data.begin(); citor != c.data.end(); citor++)
 		{
 			cout << " " << citor->get_i() << "\t" << citor->get_j() 
@@ -116,4 +116,9 @@ ostream& operator<<(ostream& out, const Cell& c)
 	}
 
 	return out;
+}
+
+vector<Vector> Cell::getVertex() const
+{
+	return data;
 }
