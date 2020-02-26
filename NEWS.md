@@ -16,6 +16,7 @@
 |Implement a orientation widget|C|EDS|Widget accessible through view menu|
 |Implement a box widget|C|EDS|Widget works but there are some issues when a new model is loaded|
 |Fix box widget issues when loading new model|NS|||
+|Refactor code and remove fluff - generally just neaten up code|||
 
 ## Status Legend
 - **C** - Completed  
