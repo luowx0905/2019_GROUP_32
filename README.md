@@ -1,4 +1,6 @@
 # 3D Model Viewer Project
+## Model Loading Application  
+**CHECK JOB LIST IN NEWS.MD IF UNSURE OF WHAT TO DO**  
 ## Model Loading Library
 ### Testing
 #### Test Setup (Windows)
