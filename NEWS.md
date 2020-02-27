@@ -18,6 +18,7 @@
 |Fix box widget issues when loading new model|NS|||
 |Refactor code and remove fluff - generally just neaten up code|NS|||
 |Condense Open functions into one that can handle both .mod and .stl|NS|||
+|Fix compile warnings - mostly type changes|NS|||
 
 ## Status Legend
 - **C** - Completed  
