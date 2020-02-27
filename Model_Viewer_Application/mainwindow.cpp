@@ -192,7 +192,7 @@ void MainWindow::open()
     // set the filter for STL file
     QString filter = "STL file (*.stl)";
     // obtain the file name
-    QString filename = QFileDialog::getOpenFileName(this, QString("Open STL file"), "D:\\year 3\\Project\\Computing\\STL+Model+Files-20200202", filter);
+    QString filename = QFileDialog::getOpenFileName(this, QString("Open STL file"), "./", filter);
 
     // if file name is invalid then terminate the function
     if(filename.isEmpty())
@@ -641,7 +641,7 @@ void MainWindow::openMODFile()
 {
     // set the file format and get file name
     QString filter = "MOD file (*.mod)";
-    QString filename = QFileDialog::getOpenFileName(this, QString("Open MOD file"), "D:\\year 3\\Project\\Computing\\Model files", filter);
+    QString filename = QFileDialog::getOpenFileName(this, QString("Open MOD file"), "./", filter);
 
     // if the file name is invalid then terminate the function
     if(filename.isEmpty())
