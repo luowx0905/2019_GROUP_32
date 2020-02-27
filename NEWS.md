@@ -19,6 +19,7 @@
 |Refactor code and remove fluff - generally just neaten up code|NS|||
 |Condense Open functions into one that can handle both .mod and .stl|NS|||
 |Fix compile warnings - mostly type changes|NS|||
+|Create a function in mainwindow.cpp that resets all widgets to a default state e.g. whether they're checked, enabled etc...|NS|||
 
 ## Status Legend
 - **C** - Completed  
