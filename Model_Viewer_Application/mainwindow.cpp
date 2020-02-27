@@ -93,8 +93,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // set short cut for some operations
-    ui->actionOpenSTLFile->setShortcut(tr("Shift+S"));
-    ui->actionOpenMODFile->setShortcut(tr("Shift+M"));
+    ui->actionOpen->setShortcut(tr("Ctrl+O"));
     ui->changeColorItor->setShortcut(tr("Ctrl+I"));
     ui->changeLightColourButton->setShortcut(tr("Alt+C"));
     ui->objectColor->setShortcut(tr("Shift+C"));
@@ -153,8 +152,7 @@ MainWindow::MainWindow(QWidget *parent)
 	}
 
     // connect operations to its widgets
-    connect(ui->actionOpenSTLFile, SIGNAL(triggered()), this, SLOT(open()));
-    //connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open()));
+    connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(open()));
     connect(ui->actionDisplayOrientationWidget, SIGNAL(toggled(bool)), this, SLOT(displayOrientationWidget(bool)));
     connect(ui->actionDisplayPlaneWidget, SIGNAL(toggled(bool)), this, SLOT(displayPlaneWidget(bool)));
     connect(ui->actionDisplayBoxWidget, SIGNAL(toggled(bool)), this, SLOT(displayBoxWidget(bool)));
@@ -170,7 +168,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(shapeButton, SIGNAL(buttonClicked(int)), this, SLOT(primitiveShape(int)));
     //connect(shapeButton, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &MainWindow::primitiveShape);
     connect(ui->resetCameraButton, SIGNAL(clicked()), this, SLOT(resetCamera()));
-    connect(ui->actionOpenMODFile, SIGNAL(triggered()), this, SLOT(openMODFile()));
 }
 
 MainWindow::~MainWindow()
@@ -187,20 +184,39 @@ void MainWindow::open()
         renderer->RemoveActor(*shapeItor);
     }
     renderer->RemoveActor(shapeActor);
+    renderer->RemoveActor(actor);
     ui->noShape->setChecked(true);
 
     // set the filter for STL file
-    QString filter = "STL file (*.stl)";
+    QString filter = "Model Files (*.stl *.mod)";
     // obtain the file name
     QString filename = QFileDialog::getOpenFileName(this, QString("Open STL file"), "./", filter);
 
-    // if file name is invalid then terminate the function
-    if(filename.isEmpty())
+    if(filename.endsWith(".stl"))
+        openSTL(filename);
+
+    else if(filename.endsWith(".mod"))
+        openMOD(filename);
+
+    else //terminate if filename isnt valid
     {
         QMessageBox::critical(this, "Error", "Invalid file name", QMessageBox::Ok);
         return;
     }
 
+    resetCamera();
+    //reset actions
+    ui->actionDisplayOrientationWidget->setChecked(false);
+    ui->actionDisplayPlaneWidget->setChecked(false);
+    ui->actionDisplayBoxWidget->setChecked(false);
+
+    // reset all other functions
+    ui->noShape->setChecked(true);
+    ui->noFilter->setChecked(true);
+    ui->edgeCheck->setChecked(false);
+}
+void MainWindow::openSTL(QString filename)
+{
     // read the file
     STLReader->SetFileName(filename.toLatin1().data());
     STLReader->Update();
@@ -217,11 +233,6 @@ void MainWindow::open()
     ui->openGLWidget->GetRenderWindow()->AddRenderer(renderer);
     ui->openGLWidget->GetRenderWindow()->Render();
 
-    renderer->ResetCamera();
-    renderer->GetActiveCamera()->Azimuth(30);
-    renderer->GetActiveCamera()->Elevation(30);
-    renderer->ResetCameraClippingRange();
-
     // enable some of the meaningful operations after loading the file
     ui->changeLightColourButton->setEnabled(true);
     ui->intensity->setEnabled(true);
@@ -233,11 +244,157 @@ void MainWindow::open()
     ui->clipfilter->setEnabled(true);
     ui->shrinkfilter->setEnabled(true);
     ui->resetCameraButton->setEnabled(true);
+}
+void MainWindow::openMOD(QString filename)
+{
+    // read the file and declare vectors to store the data
+    Model loadMOD(filename.toStdString());
+    vector<Tetrahedron> tetrData = loadMOD.getTetra();
+    vector<Pyramid> pyramidData = loadMOD.getPyramid();
+    vector<Hexahedron> hexData = loadMOD.getHex();
 
-    //reset actions
-    ui->actionDisplayOrientationWidget->setChecked(false);
-    ui->actionDisplayPlaneWidget->setChecked(false);
-    ui->actionDisplayBoxWidget->setChecked(false);
+    // obtain the number of the primitive shapes
+    int shapeNumber = hexData.size() + pyramidData.size() + tetrData.size();
+
+    // declare vectors to store the information different types of primitive shapes
+    vector<vtkSmartPointer<vtkHexahedron>> hexSource(hexData.size());
+    vector<vtkSmartPointer<vtkPyramid>> pyramidSource(pyramidData.size());
+    vector<vtkSmartPointer<vtkTetra>> tetrSource(tetrData.size());
+
+    // remove light
+    renderer->RemoveLight(light);
+
+    // declare a vector to store all the information related to actors
+    primitiveShapeActor.resize(shapeNumber);
+    vector<vtkSmartPointer<vtkCellArray>> cellData(shapeNumber);
+    vector<vtkSmartPointer<vtkPoints>> pointData(shapeNumber);
+    vector<vtkSmartPointer<vtkUnstructuredGrid>> ugData(shapeNumber);
+    vector<vtkSmartPointer<vtkDataSetMapper>> mapperData(shapeNumber);
+
+
+    // declare variable for iteration
+    size_t i, j, k;
+
+    for(i = 0; i < hexData.size(); i++)
+    {
+        hexSource[i] = vtkSmartPointer<vtkHexahedron>::New();
+        pointData[i] = vtkSmartPointer<vtkPoints>::New();
+                primitiveShapeActor[i] = vtkSmartPointer<vtkActor>::New();
+
+        float p0[3] = {hexData[i].getVertex()[0].get_i(), hexData[i].getVertex()[0].get_j(), hexData[i].getVertex()[0].get_k()};
+        float p1[3] = {hexData[i].getVertex()[1].get_i(), hexData[i].getVertex()[1].get_j(), hexData[i].getVertex()[1].get_k()};
+        float p2[3] = {hexData[i].getVertex()[2].get_i(), hexData[i].getVertex()[2].get_j(), hexData[i].getVertex()[2].get_k()};
+        float p3[3] = {hexData[i].getVertex()[3].get_i(), hexData[i].getVertex()[3].get_j(), hexData[i].getVertex()[3].get_k()};
+        float p4[3] = {hexData[i].getVertex()[4].get_i(), hexData[i].getVertex()[4].get_j(), hexData[i].getVertex()[4].get_k()};
+        float p5[3] = {hexData[i].getVertex()[5].get_i(), hexData[i].getVertex()[5].get_j(), hexData[i].getVertex()[5].get_k()};
+        float p6[3] = {hexData[i].getVertex()[6].get_i(), hexData[i].getVertex()[6].get_j(), hexData[i].getVertex()[6].get_k()};
+        float p7[3] = {hexData[i].getVertex()[7].get_i(), hexData[i].getVertex()[7].get_j(), hexData[i].getVertex()[7].get_k()};
+
+        float* data[8] = {p0, p1, p2, p3, p4, p5, p6, p7};
+
+        for(size_t m = 0; m < 8; m++)
+        {
+            pointData[i]->InsertNextPoint(data[m]);
+            hexSource[i]->GetPointIds()->SetId(m, m);
+        }
+
+        cellData[i] = vtkSmartPointer<vtkCellArray>::New();
+        cellData[i]->InsertNextCell(hexSource[i]);
+
+        ugData[i] = vtkSmartPointer<vtkUnstructuredGrid>::New();
+        ugData[i]->SetPoints(pointData[i]);
+        ugData[i]->InsertNextCell(hexSource[i]->GetCellType(), hexSource[i]->GetPointIds());
+
+        mapperData[i] = vtkSmartPointer<vtkDataSetMapper>::New();
+        mapperData[i]->SetInputData(ugData[i]);
+
+        primitiveShapeActor[i]->SetMapper(mapperData[i]);
+    }
+
+    for(j = 0; j < pyramidData.size(); j++)
+    {
+        int offset = i;
+
+        pyramidSource[j] = vtkSmartPointer<vtkPyramid>::New();
+        pointData[j + offset] = vtkSmartPointer<vtkPoints>::New();
+        primitiveShapeActor[j + offset] = vtkSmartPointer<vtkActor>::New();
+
+        float p0[3] = {pyramidData[j].getVertex()[0].get_i(), pyramidData[j].getVertex()[0].get_j(), pyramidData[j].getVertex()[0].get_k()};
+        float p1[3] = {pyramidData[j].getVertex()[1].get_i(), pyramidData[j].getVertex()[1].get_j(), pyramidData[j].getVertex()[1].get_k()};
+        float p2[3] = {pyramidData[j].getVertex()[2].get_i(), pyramidData[j].getVertex()[2].get_j(), pyramidData[j].getVertex()[2].get_k()};
+        float p3[3] = {pyramidData[j].getVertex()[3].get_i(), pyramidData[j].getVertex()[3].get_j(), pyramidData[j].getVertex()[3].get_k()};
+        float p4[3] = {pyramidData[j].getVertex()[4].get_i(), pyramidData[j].getVertex()[4].get_j(), pyramidData[j].getVertex()[4].get_k()};
+        float* data[5] = {p0, p1, p2, p3, p4};
+
+        for(size_t m = 0; m < 5; m++)
+        {
+            pointData[j + offset]->InsertNextPoint(data[m]);
+            pyramidSource[j]->GetPointIds()->SetId(m, m);
+        }
+
+        cellData[j + offset] = vtkSmartPointer<vtkCellArray>::New();
+        cellData[j + offset]->InsertNextCell(pyramidSource[j]);
+
+        ugData[j + offset] = vtkSmartPointer<vtkUnstructuredGrid>::New();
+        ugData[j + offset]->SetPoints(pointData[j+offset]);
+        ugData[j + offset]->InsertNextCell(pyramidSource[j]->GetCellType(), pyramidSource[j]->GetPointIds());
+
+        mapperData[j + offset] = vtkSmartPointer<vtkDataSetMapper>::New();
+        mapperData[j + offset]->SetInputData(ugData[j + offset]);
+
+        primitiveShapeActor[j + offset]->SetMapper(mapperData[j + offset]);
+    }
+
+    for(k = 0; k < tetrData.size(); k++)
+    {
+        int offset = i + j;
+
+        tetrSource[k] = vtkSmartPointer<vtkTetra>::New();
+        pointData[k + offset] = vtkSmartPointer<vtkPoints>::New();
+        primitiveShapeActor[k + offset] = vtkSmartPointer<vtkActor>::New();
+
+        pointData[k + offset]->InsertNextPoint(tetrData[k].getVertex()[0].get_i(), tetrData[k].getVertex()[0].get_j(), tetrData[k].getVertex()[0].get_k());
+        pointData[k + offset]->InsertNextPoint(tetrData[k].getVertex()[1].get_i(), tetrData[k].getVertex()[1].get_j(), tetrData[k].getVertex()[1].get_k());
+        pointData[k + offset]->InsertNextPoint(tetrData[k].getVertex()[2].get_i(), tetrData[k].getVertex()[2].get_j(), tetrData[k].getVertex()[2].get_k());
+        pointData[k + offset]->InsertNextPoint(tetrData[k].getVertex()[3].get_i(), tetrData[k].getVertex()[3].get_j(), tetrData[k].getVertex()[3].get_k());
+
+        for(size_t m = 0; m < 4; m++)
+        {
+            tetrSource[k]->GetPointIds()->SetId(m, m);
+        }
+
+        cellData[k + offset] = vtkSmartPointer<vtkCellArray>::New();
+        cellData[k + offset]->InsertNextCell(tetrSource[k]);
+
+        ugData[k+ offset] = vtkSmartPointer<vtkUnstructuredGrid>::New();
+        ugData[k+ offset]->SetPoints(pointData[k + offset]);
+        ugData[k+ offset]->SetCells(VTK_TETRA, cellData[k + offset]);
+
+        mapperData[k + offset] = vtkSmartPointer<vtkDataSetMapper>::New();
+        mapperData[k + offset]->SetInputData(ugData[k + offset]);
+
+        primitiveShapeActor[k + offset]->SetMapper(mapperData[k + offset]);
+    }
+
+
+    for(size_t n = 0; n < primitiveShapeActor.size(); n++)
+    {
+        renderer->AddActor(primitiveShapeActor[n]);
+    }
+    ui->openGLWidget->GetRenderWindow()->Render();
+
+    // disable some functions
+    ui->intensity->setEnabled(false);
+    ui->intensitySlider->setEnabled(false);
+    ui->removeLight->setEnabled(false);
+    ui->changeColorItor->setEnabled(false);
+    ui->changeLightColourButton->setEnabled(false);
+    ui->objectColor->setEnabled(false);
+    ui->edgeCheck->setEnabled(false);
+    ui->noFilter->setEnabled(false);
+    ui->clipfilter->setEnabled(false);
+    ui->shrinkfilter->setEnabled(false);
+    ui->resetCameraButton->setEnabled(true);
 }
 // This function will display the orientation widget
 void MainWindow::displayOrientationWidget(bool checked)
@@ -635,180 +792,3 @@ void MainWindow::resetCamera()
     ui->openGLWidget->GetRenderWindow()->Render();
 
 }
-
-// this function could open a mod file
-void MainWindow::openMODFile()
-{
-    // set the file format and get file name
-    QString filter = "MOD file (*.mod)";
-    QString filename = QFileDialog::getOpenFileName(this, QString("Open MOD file"), "./", filter);
-
-    // if the file name is invalid then terminate the function
-    if(filename.isEmpty())
-    {
-        QMessageBox::critical(this, "Error", "Invalid file name", QMessageBox::Ok);
-        return;
-    }
-
-    // read the file and declare vectors to store the data
-    Model loadMOD(filename.toStdString());
-    vector<Tetrahedron> tetrData = loadMOD.getTetra();
-    vector<Pyramid> pyramidData = loadMOD.getPyramid();
-    vector<Hexahedron> hexData = loadMOD.getHex();
-
-    // obtain the number of the primitive shapes
-    int shapeNumber = hexData.size() + pyramidData.size() + tetrData.size();
-
-    // declare vectors to store the information different types of primitive shapes
-    vector<vtkSmartPointer<vtkHexahedron>> hexSource(hexData.size());
-    vector<vtkSmartPointer<vtkPyramid>> pyramidSource(pyramidData.size());
-    vector<vtkSmartPointer<vtkTetra>> tetrSource(tetrData.size());
-
-    // remove all the actors
-    for(shapeItor = primitiveShapeActor.begin(); shapeItor != primitiveShapeActor.end(); shapeItor++)
-    {
-        renderer->RemoveActor(*shapeItor);
-    }
-    renderer->RemoveActor(actor);
-    renderer->RemoveActor(shapeActor);
-    // remove light
-    renderer->RemoveLight(light);
-
-    // declare a vector to store all the information related to actors
-    primitiveShapeActor.resize(shapeNumber);
-    vector<vtkSmartPointer<vtkCellArray>> cellData(shapeNumber);
-    vector<vtkSmartPointer<vtkPoints>> pointData(shapeNumber);
-    vector<vtkSmartPointer<vtkUnstructuredGrid>> ugData(shapeNumber);
-    vector<vtkSmartPointer<vtkDataSetMapper>> mapperData(shapeNumber);
-
-
-    // declare variable for iteration
-    size_t i, j, k;
-
-    for(i = 0; i < hexData.size(); i++)
-    {
-        hexSource[i] = vtkSmartPointer<vtkHexahedron>::New();
-        pointData[i] = vtkSmartPointer<vtkPoints>::New();
-		primitiveShapeActor[i] = vtkSmartPointer<vtkActor>::New();
-
-        float p0[3] = {hexData[i].getVertex()[0].get_i(), hexData[i].getVertex()[0].get_j(), hexData[i].getVertex()[0].get_k()};
-        float p1[3] = {hexData[i].getVertex()[1].get_i(), hexData[i].getVertex()[1].get_j(), hexData[i].getVertex()[1].get_k()};
-        float p2[3] = {hexData[i].getVertex()[2].get_i(), hexData[i].getVertex()[2].get_j(), hexData[i].getVertex()[2].get_k()};
-        float p3[3] = {hexData[i].getVertex()[3].get_i(), hexData[i].getVertex()[3].get_j(), hexData[i].getVertex()[3].get_k()};
-        float p4[3] = {hexData[i].getVertex()[4].get_i(), hexData[i].getVertex()[4].get_j(), hexData[i].getVertex()[4].get_k()};
-        float p5[3] = {hexData[i].getVertex()[5].get_i(), hexData[i].getVertex()[5].get_j(), hexData[i].getVertex()[5].get_k()};
-        float p6[3] = {hexData[i].getVertex()[6].get_i(), hexData[i].getVertex()[6].get_j(), hexData[i].getVertex()[6].get_k()};
-        float p7[3] = {hexData[i].getVertex()[7].get_i(), hexData[i].getVertex()[7].get_j(), hexData[i].getVertex()[7].get_k()};
-
-        float* data[8] = {p0, p1, p2, p3, p4, p5, p6, p7};
-
-        for(size_t m = 0; m < 8; m++)
-        {
-            pointData[i]->InsertNextPoint(data[m]);
-            hexSource[i]->GetPointIds()->SetId(m, m);
-        }
-
-        cellData[i] = vtkSmartPointer<vtkCellArray>::New();
-        cellData[i]->InsertNextCell(hexSource[i]);
-
-        ugData[i] = vtkSmartPointer<vtkUnstructuredGrid>::New();
-        ugData[i]->SetPoints(pointData[i]);
-        ugData[i]->InsertNextCell(hexSource[i]->GetCellType(), hexSource[i]->GetPointIds());
-
-        mapperData[i] = vtkSmartPointer<vtkDataSetMapper>::New();
-        mapperData[i]->SetInputData(ugData[i]);
-
-        primitiveShapeActor[i]->SetMapper(mapperData[i]);
-    }
-
-    for(j = 0; j < pyramidData.size(); j++)
-    {
-        int offset = i;
-
-        pyramidSource[j] = vtkSmartPointer<vtkPyramid>::New();
-        pointData[j + offset] = vtkSmartPointer<vtkPoints>::New();
-        primitiveShapeActor[j + offset] = vtkSmartPointer<vtkActor>::New();
-
-        float p0[3] = {pyramidData[j].getVertex()[0].get_i(), pyramidData[j].getVertex()[0].get_j(), pyramidData[j].getVertex()[0].get_k()};
-        float p1[3] = {pyramidData[j].getVertex()[1].get_i(), pyramidData[j].getVertex()[1].get_j(), pyramidData[j].getVertex()[1].get_k()};
-        float p2[3] = {pyramidData[j].getVertex()[2].get_i(), pyramidData[j].getVertex()[2].get_j(), pyramidData[j].getVertex()[2].get_k()};
-        float p3[3] = {pyramidData[j].getVertex()[3].get_i(), pyramidData[j].getVertex()[3].get_j(), pyramidData[j].getVertex()[3].get_k()};
-        float p4[3] = {pyramidData[j].getVertex()[4].get_i(), pyramidData[j].getVertex()[4].get_j(), pyramidData[j].getVertex()[4].get_k()};
-        float* data[5] = {p0, p1, p2, p3, p4};
-
-        for(size_t m = 0; m < 5; m++)
-        {
-            pointData[j + offset]->InsertNextPoint(data[m]);
-            pyramidSource[j]->GetPointIds()->SetId(m, m);
-        }
-
-        cellData[j + offset] = vtkSmartPointer<vtkCellArray>::New();
-        cellData[j + offset]->InsertNextCell(pyramidSource[j]);
-
-        ugData[j + offset] = vtkSmartPointer<vtkUnstructuredGrid>::New();
-        ugData[j + offset]->SetPoints(pointData[j+offset]);
-        ugData[j + offset]->InsertNextCell(pyramidSource[j]->GetCellType(), pyramidSource[j]->GetPointIds());
-
-        mapperData[j + offset] = vtkSmartPointer<vtkDataSetMapper>::New();
-        mapperData[j + offset]->SetInputData(ugData[j + offset]);
-
-        primitiveShapeActor[j + offset]->SetMapper(mapperData[j + offset]);
-    }
-
-    for(k = 0; k < tetrData.size(); k++)
-    {
-        int offset = i + j;
-
-        tetrSource[k] = vtkSmartPointer<vtkTetra>::New();
-        pointData[k + offset] = vtkSmartPointer<vtkPoints>::New();
-        primitiveShapeActor[k + offset] = vtkSmartPointer<vtkActor>::New();
-
-        pointData[k + offset]->InsertNextPoint(tetrData[k].getVertex()[0].get_i(), tetrData[k].getVertex()[0].get_j(), tetrData[k].getVertex()[0].get_k());
-        pointData[k + offset]->InsertNextPoint(tetrData[k].getVertex()[1].get_i(), tetrData[k].getVertex()[1].get_j(), tetrData[k].getVertex()[1].get_k());
-        pointData[k + offset]->InsertNextPoint(tetrData[k].getVertex()[2].get_i(), tetrData[k].getVertex()[2].get_j(), tetrData[k].getVertex()[2].get_k());
-        pointData[k + offset]->InsertNextPoint(tetrData[k].getVertex()[3].get_i(), tetrData[k].getVertex()[3].get_j(), tetrData[k].getVertex()[3].get_k());
-
-        for(size_t m = 0; m < 4; m++)
-        {
-            tetrSource[k]->GetPointIds()->SetId(m, m);
-        }
-
-        cellData[k + offset] = vtkSmartPointer<vtkCellArray>::New();
-        cellData[k + offset]->InsertNextCell(tetrSource[k]);
-
-        ugData[k+ offset] = vtkSmartPointer<vtkUnstructuredGrid>::New();
-        ugData[k+ offset]->SetPoints(pointData[k + offset]);
-        ugData[k+ offset]->SetCells(VTK_TETRA, cellData[k + offset]);
-
-        mapperData[k + offset] = vtkSmartPointer<vtkDataSetMapper>::New();
-        mapperData[k + offset]->SetInputData(ugData[k + offset]);
-
-        primitiveShapeActor[k + offset]->SetMapper(mapperData[k + offset]);
-    }
-
-
-    for(size_t n = 0; n < primitiveShapeActor.size(); n++)
-    {
-        renderer->AddActor(primitiveShapeActor[n]);
-    }
-    ui->openGLWidget->GetRenderWindow()->Render();
-
-    // reset all other functions
-    ui->noShape->setChecked(true);
-    ui->noFilter->setChecked(true);
-    ui->edgeCheck->setChecked(false);
-
-    // disable some functions
-    ui->intensity->setEnabled(false);
-    ui->intensitySlider->setEnabled(false);
-    ui->removeLight->setEnabled(false);
-    ui->changeColorItor->setEnabled(false);
-    ui->changeLightColourButton->setEnabled(false);
-    ui->objectColor->setEnabled(false);
-    ui->edgeCheck->setEnabled(false);
-    ui->noFilter->setEnabled(false);
-    ui->clipfilter->setEnabled(false);
-    ui->shrinkfilter->setEnabled(false);
-    ui->resetCameraButton->setEnabled(true);
-}
-

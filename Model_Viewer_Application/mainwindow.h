@@ -105,16 +105,16 @@ public slots:
     void primitiveShape(int);
     // reset camera
     void resetCamera();
-
-    // open the mod file
-    void openMODFile();
-
     //adds orientation widget to the bottom left of the screen
     void displayOrientationWidget(bool);
     //adds widget that allows planes to be edited
     void displayPlaneWidget(bool);
     //adds box widget that allows model to be edited
     void displayBoxWidget(bool);
+
+    //Functions for opening different file types
+    void openMOD(QString);
+    void openSTL(QString);
 
 private:
     Ui::MainWindow *ui;
@@ -124,7 +124,7 @@ private:
     vtkSmartPointer<vtkActor> actor;
     vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
     vtkSmartPointer<vtkLight> light;
-	vtkSmartPointer<vtkNamedColors> color;
+    vtkSmartPointer<vtkNamedColors> color;
     vtkSmartPointer<vtkDataSetMapper> mapper;
     vtkSmartPointer<vtkActor> shapeActor;
     vtkSmartPointer<vtkCamera> camera;
