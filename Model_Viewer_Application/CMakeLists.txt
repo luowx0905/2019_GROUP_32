@@ -32,25 +32,34 @@ qt5_wrap_ui( UI_Srcs ${UIS} )
 find_package( VTK REQUIRED )
 include( ${VTK_USE_FILE} )
 
+
+
+# Create a container for all library sources TODO change this so instead it links with .lib files made by CMakeLists.txt in library directory
+set( INCLUDE_DIR ../Model_Loading_Library/include )
+set( SRC_DIR ../Model_Loading_Library/src )
+add_library( MODEL_LOADING_LIBRARY ${SRC_DIR}/model.cpp ${SRC_DIR}/cell.cpp ${SRC_DIR}/material.cpp ${SRC_DIR}/vector.cpp ${SRC_DIR}/hexahedron.cpp
+${SRC_DIR}/tetrahedron.cpp ${SRC_DIR}/pyramid.cpp ) 
+
+include_directories( ${INCLUDE_DIR} )
+# target_link_libraries(MODEL_LOADING_LIBRARY ${INCLUDE_DIR} )
+
 # Define the executable output and its sources
 add_executable( QtVTKExample MACOSX_BUNDLE
 		main.cpp mainwindow.cpp 
 		mainwindow.h 
 		dialogcolor.h dialogcolor.cpp
-		mainwindow.ui	
-		cell.h cell.cpp
-		hexahedron.h hexahedron.cpp
-		material.h material.cpp
-		model.h model.cpp
-		pyramid.h pyramid.cpp
-		tetrahedron.h tetrahedron.cpp
-		vector.h vector.cpp
+		mainwindow.ui
+		${MODEL_LOADING_LIBRARY}
 		${UI_Srcs}
 		${QRC_Srcs}
 		)
+
+target_link_libraries( QtVTKExample MODEL_LOADING_LIBRARY )
 
 # Tell CMake that the executable depends on the Qt::Widget libraries.
 target_link_libraries( QtVTKExample Qt5::Widgets )
 
 # Tell CMake that the executable depends on the VTK libraries
 target_link_libraries( QtVTKExample ${VTK_LIBRARIES} )
+
+
