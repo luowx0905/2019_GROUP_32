@@ -139,6 +139,9 @@ private:
     void loadModel();
     ///@brief Contains the location of the file to be read
     string sourceFilePath;
+    vector<Pyramid> pyramidList;
+    vector<Hexahedron> hexList;
+    vector<Tetrahedron> tetraList;
 };
 #endif // MODEL_H_INCLUDED
 

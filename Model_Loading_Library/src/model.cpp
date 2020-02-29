@@ -235,19 +235,28 @@ void Model::generateCellList(int cellListLength)
     {
         if(uninitCellList[0][i] == 72)
         {
-            listOfCells[i] = Hexahedron(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+             Hexahedron temp(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
                                   listOfVectors[uninitCellList[4][i]], listOfVectors[uninitCellList[5][i]], listOfVectors[uninitCellList[6][i]],
                                   listOfVectors[uninitCellList[7][i]], listOfVectors[uninitCellList[8][i]], listOfMaterials[uninitCellList[9][i]]);
+
+			 listOfCells[i] = temp;
+			 hexList.push_back(temp);
         }
         else if (uninitCellList[0][i] == 80)
         {
-            listOfCells[i] = Pyramid(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+             Pyramid temp(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
                                   listOfVectors[uninitCellList[4][i]], listOfVectors[uninitCellList[5][i]], listOfMaterials[uninitCellList[9][i]]);
+
+			 listOfCells[i] = temp;
+			 pyramidList.push_back(temp);
         }
         else if (uninitCellList[0][i] == 84)
         {
-            listOfCells[i] = Tetrahedron(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
+             Tetrahedron temp(listOfVectors[uninitCellList[1][i]], listOfVectors[uninitCellList[2][i]], listOfVectors[uninitCellList[3][i]],
                                   listOfVectors[uninitCellList[4][i]], listOfMaterials[uninitCellList[9][i]]);
+
+			 listOfCells[i] = temp;
+			 tetraList.push_back(temp);
         }
     }
 
