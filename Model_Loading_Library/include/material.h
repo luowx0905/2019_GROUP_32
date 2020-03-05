@@ -3,7 +3,7 @@
 #define MATERIAL_H_INCLUDED
 
 /** 
- * @file This file contains the declarations for the model class
+ * @file material.h This file contains the declarations for the model class
  */
 
 #include <string>

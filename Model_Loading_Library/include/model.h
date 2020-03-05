@@ -2,9 +2,9 @@
 #ifndef MODEL_H_INCLUDED
 #define MODEL_H_INCLUDED
 
-/** 
- * @file This file contains the declarations for the model class
- */
+
+ /// @file model.h This file contains the declarations for the model class
+ 
 
 #include <vector>
 #include <iostream>
@@ -19,11 +19,10 @@
 
 using namespace std;
 
-//For now, class only used to load a model, not create new.
 /** 
  * @brief Class for reading .mod file and providing details regarding its contents
  * @author Ewan Drever-Smith
- * @version 1.0
+ * @version 1.1
  * @date 05/12/2019
  */
 class Model
@@ -81,8 +80,14 @@ public:
     void saveModel(string saveDirectory)const;
     /// @brief stream insertion overload
     friend std::ostream& operator<<(std::ostream& out, const Model& m);
+    /// @brief gets all the pyramids in a model
+    /// @return returns a vector of Pyramid objects
     vector<Pyramid> getPyramid() const;
+    /// @brief gets all the hexahedrons in a model
+    /// @return returns a vector of hexahedron objects
     vector<Hexahedron> getHex() const;
+    /// @brief gets all the tetrahedons in a model
+    /// @return returns a vector of tetrahedron objects
     vector<Tetrahedron> getTetra() const;
 private:
     ///@brief Vector sequence containing all the vector objects in the model
@@ -139,8 +144,11 @@ private:
     void loadModel();
     ///@brief Contains the location of the file to be read
     string sourceFilePath;
+    ///@brief vector list that contains the all the pyramid cells in the model
     vector<Pyramid> pyramidList;
+    ///@brief vector list that contains the all the hexahedron cells in the model
     vector<Hexahedron> hexList;
+    ///@brief vector list that contains the all the tetrahedron cells in the model
     vector<Tetrahedron> tetraList;
 };
 #endif // MODEL_H_INCLUDED
