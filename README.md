@@ -1,7 +1,7 @@
 # 3D Model Viewer Project
 ## Model Loading Application  
 **CHECK JOB LIST IN NEWS.MD IF UNSURE OF WHAT TO DO**  
-## Model Loading Library
+## Model Loading Library [![Build Status](https://travis-ci.com/EDrever-Smith/2019_GROUP_32.svg?token=KfjpPmpzoQSKxZtRyAzE&branch=master)](https://travis-ci.com/EDrever-Smith/2019_GROUP_32)  
 ### Testing
 #### Test Setup (Windows)
 **1. Navigate to build directory**  
