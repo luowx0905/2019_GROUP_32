@@ -22,7 +22,7 @@
 |Create a function in mainwindow.cpp that resets all widgets to a default state e.g. whether they're checked, enabled etc...|NS|||
 |Write unit tests for each class in library|NS||These tests will be automated and so must return 0 if test succeeded - see autoTest1.cpp as an example|
 |Finish Doxygen documentation of library files|NS|||
-|Automate documentation upload using travis|NS|||
+|Automate documentation upload using travis|C|EDS||
 |Automate testing using travis|C|EDS|Be sure to add a badge to the readme showing the status of the most recent build|
 
 ## Status Legend
