@@ -536,7 +536,7 @@ void MainWindow::changModelColorItor()
     ui->openGLWidget->GetRenderWindow()->Render();
 }
 
-// this function could chang the object color to a user selected one
+// this function can change the object color to a user selected one
 void MainWindow::selectedObjectColor()
 {
     double redComponent, greenComponent, blueConponent;

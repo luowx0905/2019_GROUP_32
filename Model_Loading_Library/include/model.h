@@ -1,10 +1,7 @@
 // model.h
 #ifndef MODEL_H_INCLUDED
 #define MODEL_H_INCLUDED
-
-
- /// @file model.h This file contains the declarations for the model class
- 
+/// @file model.h This file contains the declarations for the model class
 
 #include <vector>
 #include <iostream>
