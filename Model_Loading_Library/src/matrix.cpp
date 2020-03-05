@@ -14,7 +14,7 @@ Matrix::Matrix()
 	data = nullptr;
 }
 
-// the size of generated matrix is row * col 
+// the size of generated matrix is row * col
 Matrix::Matrix(int row, int col)
 {
 	if (row > 0 && col > 0)
@@ -265,7 +265,7 @@ Matrix Matrix::transpose()
 }
 
 // obtain the determinant of the matrix
-// this function would first copy the original matrix and 
+// this function would first copy the original matrix and
 // then convert the copy to an upper triangle matrix
 // in the upper triangle matrix, the product of all the elements
 // on the diagonal is the determinant of the original matrix
@@ -336,8 +336,8 @@ double Matrix::det() const
 			}
 
 			// one of the properties of matrix is
-			// if two rows or columns are interchanged, then the sign of 
-			// the determinant changes, so if variable swap is an even number 
+			// if two rows or columns are interchanged, then the sign of
+			// the determinant changes, so if variable swap is an even number
 			// the determinant is the same, otherwise determinant is -result
 			if (swap % 2 == 0)
 			{
@@ -464,7 +464,7 @@ Matrix Matrix::subMat(int rowStart, int colStart, int rowEnd, int colEnd)
 }
 
 // obtain the minor of the specific element
-Matrix Matrix::minor(int row, int col)
+Matrix Matrix::minor_(int row, int col)
 {
 	Matrix temp(this->row - 1, this->col - 1);
 
@@ -493,7 +493,7 @@ Matrix Matrix::minor(int row, int col)
 // obtain the cofactor of the specific element
 Matrix Matrix::cofactor(int row, int col)
 {
-	Matrix temp = this->minor(row, col);
+	Matrix temp = this->minor_(row, col);
 
 	temp = temp.scale(pow(-1, row + col));
 
@@ -509,7 +509,7 @@ Matrix Matrix::adjugate()
 	{
 		for (size_t j = 0; j < col; j++)
 		{
-			Matrix temp = this->minor(i, j);
+			Matrix temp = this->minor_(i, j);
 			double determinant = temp.det() * pow(-1, i + j);
 			result.data[j][i] = determinant;
 		}
@@ -561,4 +561,3 @@ Vector Matrix::convertToVector()
 		throw runtime_error("Invalid matrix size to convert to vector");
 	}
 }
-

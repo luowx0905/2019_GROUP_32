@@ -1,15 +1,15 @@
 //matrix.h
 #ifndef MATRIX_H
-#define MATRIX_H 
+#define MATRIX_H
 
-/** 
+/**
  * @file This file contains the declarations for the matrix class
  */
 
 #include <iostream>
 #include <stdexcept>
 #include "vector.h"
-/** 
+/**
  * @brief Class for creating matrix object to use in matrix calculations
  * @author Wenxiang Luo
  * @author Ewan Drever-Smith
@@ -31,16 +31,16 @@ public:
 	///Copy constructor
 	Matrix(const Matrix& m);
 	///Default destructor
-	~Matrix(); 
+	~Matrix();
 	///operator= overload
 	Matrix& operator=(const Matrix& m);
 	///@brief overload matrix addition
 	///@note matricies must have the same dimensions for matrix addition
-	///@warning throws runtime error when there is a size mismatch 
+	///@warning throws runtime error when there is a size mismatch
 	Matrix operator+(const Matrix& m);
 	///@brief overload matrix subtraction
 	///@note matricies must have the same dimensions for matrix subtraction
-	///@warning throws runtime error when there is a size mismatch 
+	///@warning throws runtime error when there is a size mismatch
 	Matrix operator-(const Matrix& m);
 	///@brief overload matrix multiplication
 	///@note when multiplying matricies, the first matrix must have as many columns as the second has rows. i.e 3xN * Nx3
@@ -71,7 +71,7 @@ public:
 	///@warning if the matrix object is not square i.e NxN then a runtime error ('No inverse matrix') is thrown
 	///@warning if the matrix has no inverse (determinant = 0) then a runtime error ('No inverse matrix') is thrown
 	///@return inverse matrix as matrix object
-	Matrix inv(); 
+	Matrix inv();
 
 	///Overload stream insertion operator
 	friend std::ostream& operator<<(std::ostream& out, const Matrix& m);
@@ -96,13 +96,14 @@ public:
 	///@return The submatrix as matrix object
 	Matrix subMat(int rowStart, int colStart, int rowEnd = 0, int colEnd = 0);
 	///@brief obtain the minor of an element in the matrix
-	///@param row the row index of the element 
+	///@param row the row index of the element
 	///@param col the column index of the element
 	///@return the minor of the element as a matrix object
-	Matrix minor(int row, int col);
+	Matrix minor_(int row, int col);
 	///@brief obtain the cofactor matrix of an element in the matrix
 	///@param row the row index of the element
 	///@param col the column index of the element
+	///@note minor is the name of a sysmacro and so this function's name has been changed to add an underscore
 	///@return the cofactor of the element as a matrix object
 	Matrix cofactor(int row, int col);
 	///@brief obtain the adjugate matrix of the matrix
