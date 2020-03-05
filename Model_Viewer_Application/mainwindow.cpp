@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
     orientationMarker->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
     orientationMarker->SetViewport( 0.0, 0.0, 0.4, 0.4 );
 
-    // Set up plane widget
+    // Set up plane widget... could be used to aid with clip filter
     planeWidget = vtkSmartPointer<vtkPlaneWidget>::New();
     planeWidget->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
     ui->actionDisplayPlaneWidget->setEnabled(false); //TODO_1 Whilst not fully functional, widget is disabled.
@@ -230,7 +230,7 @@ void MainWindow::openSTL(QString filename)
     // render the actor
     renderer->AddActor(actor);
 
-    ui->openGLWidget->GetRenderWindow()->AddRenderer(renderer);
+    ui->openGLWidget->GetRenderWindow()->AddRenderer(renderer); //TODO check this.. Repeated?
     ui->openGLWidget->GetRenderWindow()->Render();
 
     // enable some of the meaningful operations after loading the file
