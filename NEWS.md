@@ -23,7 +23,7 @@
 |Write unit tests for each class in library|NS||These tests will be automated and so must return 0 if test succeeded - see autoTest1.cpp as an example|
 |Finish Doxygen documentation of library files|NS|||
 |Automate documentation upload using travis|NS|||
-|Automate testing using travis|NS||Be sure to add a badge to the readme showing the status of the most recent build|
+|Automate testing using travis|C|EDS|Be sure to add a badge to the readme showing the status of the most recent build|
 
 ## Status Legend
 - **C** - Completed  
