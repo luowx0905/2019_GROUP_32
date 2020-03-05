@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.12.0)
 
 project(Model_Loading_Library VERSION 0.1)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") #Makes sure compiler knows to use c++111
 include (CTest)
 #adds all the classes as libraries
 add_library(cell src/cell.cpp include/cell.h)
