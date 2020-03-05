@@ -16,7 +16,7 @@ include_directories(include)
 #identify mains of executables
 add_executable(modelTest test/modelTestMain.cpp)
 add_executable(matrixTest test/matrixTestMain.cpp)
-add_executable(vectorTest test/autoTest1.cpp)
+add_executable(vectorTest test/vectorTest.cpp)
 #test main includes
 target_include_directories(modelTest PUBLIC include)
 target_include_directories(matrixTest PUBLIC include)
