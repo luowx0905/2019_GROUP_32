@@ -8,11 +8,13 @@ foreach(p
   endif()
 endforeach()
 
-PROJECT( example )
+PROJECT( ModelViewerApp )
 
 # The CMake build process might generate some new files in the current
 # directory. This makes sure they can be found.
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
+
+
 
 
 # This allows CMake to run one of Qt's build tools called moc
@@ -44,7 +46,7 @@ include_directories( ${INCLUDE_DIR} )
 # target_link_libraries(MODEL_LOADING_LIBRARY ${INCLUDE_DIR} )
 
 # Define the executable output and its sources
-add_executable( QtVTKExample MACOSX_BUNDLE
+add_executable( ModelViewerApp MACOSX_BUNDLE
 		main.cpp mainwindow.cpp 
 		mainwindow.h 
 		dialogcolor.h dialogcolor.cpp
@@ -54,12 +56,16 @@ add_executable( QtVTKExample MACOSX_BUNDLE
 		${QRC_Srcs}
 		)
 
-target_link_libraries( QtVTKExample MODEL_LOADING_LIBRARY )
+target_link_libraries( ModelViewerApp MODEL_LOADING_LIBRARY )
 
 # Tell CMake that the executable depends on the Qt::Widget libraries.
-target_link_libraries( QtVTKExample Qt5::Widgets )
+target_link_libraries( ModelViewerApp Qt5::Widgets )
 
 # Tell CMake that the executable depends on the VTK libraries
-target_link_libraries( QtVTKExample ${VTK_LIBRARIES} )
+target_link_libraries( ModelViewerApp ${VTK_LIBRARIES} )
 
-
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	FILE(COPY Resources/splashscreen.png DESTINATION "${CMAKE_BINARY_DIR}/Debug")
+else ()
+	FILE(COPY Resources/splashscreen.png DESTINATION "${CMAKE_BINARY_DIR}")
+endif ()
