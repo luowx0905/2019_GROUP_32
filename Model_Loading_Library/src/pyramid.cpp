@@ -15,6 +15,7 @@ Pyramid::Pyramid(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Vector& v4, Mat
 {
 	cellType = "Pyramid";
 	this->density = m.getDensity();
+	color = m.getColour();
 
 	data.push_back(v0);
 	data.push_back(v1);
@@ -34,6 +35,7 @@ Pyramid& Pyramid::operator=(const Pyramid& p)
 	{
 		data = p.data;
 		cellType = p.cellType;
+		color = p.color;
 		gravityCenter = p.gravityCenter;
 		volume = p.volume;
 		weight = p.weight;

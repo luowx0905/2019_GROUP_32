@@ -1,6 +1,9 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <cmath>
+#include <stdexcept>
+#include <algorithm>
 #include "cell.h"
 #include "vector.h"
 #include "material.h"
@@ -10,6 +13,7 @@ using namespace std;
 Cell::Cell()
 {
 	cellType = "Invalid";
+	color = "000000";
 	density = 0;
 	volume = 0;
 	weight = 0;
@@ -23,6 +27,7 @@ Cell& Cell::operator=(const Cell& c)
 	{
 		data = c.data;
 		cellType = c.cellType;
+		color = c.color;
 		gravityCenter = c.gravityCenter;
 		volume = c.volume;
 		weight = c.weight;
@@ -121,4 +126,133 @@ ostream& operator<<(ostream& out, const Cell& c)
 vector<Vector> Cell::getVertex() const
 {
 	return data;
+}
+
+vector<int> Cell::getColorRGB() const
+{
+	string red = color.substr(0, 2);
+	string green = color.substr(2, 2);
+	string blue = color.substr(4, 2);
+
+	vector<int> color;
+	color.push_back(hexToDec(red));
+	color.push_back(hexToDec(green));
+	color.push_back(hexToDec(blue));
+
+	return color;
+}
+
+int Cell::hexToDec(string color) const
+{
+	transform(color.begin(), color.end(), color.begin(), ::tolower);
+	int decimal = 0;
+
+	size_t power = 0;
+	for (int i = 1; i >= 0; i--, power++)
+	{
+		switch (color[i])
+		{
+		case '0':
+		{
+			break;
+		}
+
+		case '1':
+		{
+			decimal += pow(16, power);
+			break;
+		}
+
+		case '2':
+		{
+			decimal += 2 * pow(16, power);
+			break;
+		}
+
+		case '3':
+		{
+			decimal += 3 * pow(16, power);
+			break;
+		}
+
+		case '4':
+		{
+			decimal += 4 * pow(16, power);
+			break;
+		}
+
+		case '5':
+		{
+			decimal += 5 * pow(16, power);
+			break;
+		}
+
+		case '6':
+		{
+			decimal += 6 * pow(16, power);
+			break;
+		}
+
+		case '7':
+		{
+			decimal += 7 * pow(16, power);
+			break;
+		}
+
+		case '8':
+		{
+			decimal += 8 * pow(16, power);
+			break;
+		}
+
+		case '9':
+		{
+			decimal += 9 * pow(16, power);
+			break;
+		}
+
+		case 'a':
+		{
+			decimal += 10 * pow(16, power);
+			break;
+		}
+
+		case 'b':
+		{
+			decimal += 11 * pow(16, power);
+			break;
+		}
+
+		case 'c':
+		{
+			decimal += 12 * pow(16, power);
+			break;
+		}
+
+		case 'd':
+		{
+			decimal += 13 * pow(16, power);
+			break;
+		}
+
+		case 'e':
+		{
+			decimal += 14 * pow(16, power);
+			break;
+		}
+
+		case 'f':
+		{
+			decimal += 15 * pow(16, power);
+			break;
+		}
+
+		default:
+		{
+			throw runtime_error("The color is invalid");
+		}
+		}
+	}
+
+	return decimal;
 }

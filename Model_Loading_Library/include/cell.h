@@ -24,6 +24,7 @@ public:
 	std::string getType() const; //get the type of the cell
 	const std::vector<double>& getGravityCenter() const; // get the gravity center of the cell
 	std::vector<Vector> getVertex() const;
+	std::vector<int> getColorRGB() const; // obtain the RGB value of the color
 
 	// overload stream insertion operator
 	friend std::ostream& operator<<(std::ostream& out, const Cell& c);
@@ -35,10 +36,12 @@ protected:
 	double volume; // the volume of the cell
 	double weight; // the weight of the cell
 	double density; // the density of the ell
+	std::string color; // the color of the cell
 
 	virtual void setVolume(); // determine the volume
 	void setWeight(); // determine the weight
 	void setGravityCenter(); // determine the gravity center
+	int hexToDec(string) const; // convert a hexadecimal to decimal
 };
 
 #endif //CELL_H
