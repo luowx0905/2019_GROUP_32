@@ -40,6 +40,9 @@ public:
 	/// @brief gets all the vertexes making up the cell
 	/// @return returns a vector list containing all the vector points making up this cell
 	std::vector<Vector> getVertex() const;
+  /// @brief gets the rgb colour of the cell
+  /// @return returns a vector of 3 ints.
+	std::vector<int> getColorRGB() const; 
 	/// @brief stream insertion overload
 	friend std::ostream& operator<<(std::ostream& out, const Cell& c);
 
@@ -67,6 +70,7 @@ protected:
 	/// @brief calculates the COG of the cell
 	/// @return void
 	void setGravityCenter(); // determine the gravity center
+	int hexToDec(string) const; // convert a hexadecimal to decimal
 };
 
 #endif //CELL_H

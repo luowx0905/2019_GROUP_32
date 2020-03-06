@@ -16,6 +16,7 @@ Tetrahedron::Tetrahedron(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Materia
 {
 	cellType = "Tetrahedron";
 	this->density = m.getDensity();
+	color = m.getColour();
 
 	data.push_back(v0);
 	data.push_back(v1);
@@ -34,6 +35,7 @@ Tetrahedron& Tetrahedron::operator=(const Tetrahedron& t)
 	{
 		data = t.data;
 		cellType = t.cellType;
+		color = t.color;
 		gravityCenter = t.gravityCenter;
 		volume = t.volume;
 		weight = t.weight;

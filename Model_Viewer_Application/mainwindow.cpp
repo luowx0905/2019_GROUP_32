@@ -252,6 +252,8 @@ void MainWindow::openMOD(QString filename)
     vector<Tetrahedron> tetrData = loadMOD.getTetra();
     vector<Pyramid> pyramidData = loadMOD.getPyramid();
     vector<Hexahedron> hexData = loadMOD.getHex();
+	// declare a vector to store the color of each cell
+	vector<int> shapeColor;
 
     // obtain the number of the primitive shapes
     int shapeNumber = hexData.size() + pyramidData.size() + tetrData.size();
@@ -279,7 +281,8 @@ void MainWindow::openMOD(QString filename)
     {
         hexSource[i] = vtkSmartPointer<vtkHexahedron>::New();
         pointData[i] = vtkSmartPointer<vtkPoints>::New();
-                primitiveShapeActor[i] = vtkSmartPointer<vtkActor>::New();
+        primitiveShapeActor[i] = vtkSmartPointer<vtkActor>::New();
+		shapeColor = hexData[i].getColorRGB();
 
         float p0[3] = {hexData[i].getVertex()[0].get_i(), hexData[i].getVertex()[0].get_j(), hexData[i].getVertex()[0].get_k()};
         float p1[3] = {hexData[i].getVertex()[1].get_i(), hexData[i].getVertex()[1].get_j(), hexData[i].getVertex()[1].get_k()};
@@ -309,6 +312,7 @@ void MainWindow::openMOD(QString filename)
         mapperData[i]->SetInputData(ugData[i]);
 
         primitiveShapeActor[i]->SetMapper(mapperData[i]);
+		primitiveShapeActor[i]->GetProperty()->SetColor(shapeColor[0] / 255.0, shapeColor[1] / 255.0, shapeColor[2] / 255.0);
     }
 
     for(j = 0; j < pyramidData.size(); j++)
@@ -318,6 +322,7 @@ void MainWindow::openMOD(QString filename)
         pyramidSource[j] = vtkSmartPointer<vtkPyramid>::New();
         pointData[j + offset] = vtkSmartPointer<vtkPoints>::New();
         primitiveShapeActor[j + offset] = vtkSmartPointer<vtkActor>::New();
+		shapeColor = pyramidData[j].getColorRGB();
 
         float p0[3] = {pyramidData[j].getVertex()[0].get_i(), pyramidData[j].getVertex()[0].get_j(), pyramidData[j].getVertex()[0].get_k()};
         float p1[3] = {pyramidData[j].getVertex()[1].get_i(), pyramidData[j].getVertex()[1].get_j(), pyramidData[j].getVertex()[1].get_k()};
@@ -343,6 +348,7 @@ void MainWindow::openMOD(QString filename)
         mapperData[j + offset]->SetInputData(ugData[j + offset]);
 
         primitiveShapeActor[j + offset]->SetMapper(mapperData[j + offset]);
+		primitiveShapeActor[j + offset]->GetProperty()->SetColor(shapeColor[0] / 255.0, shapeColor[1] / 255.0, shapeColor[2] / 255.0);
     }
 
     for(k = 0; k < tetrData.size(); k++)
@@ -352,6 +358,7 @@ void MainWindow::openMOD(QString filename)
         tetrSource[k] = vtkSmartPointer<vtkTetra>::New();
         pointData[k + offset] = vtkSmartPointer<vtkPoints>::New();
         primitiveShapeActor[k + offset] = vtkSmartPointer<vtkActor>::New();
+		shapeColor = tetrData[k].getColorRGB();
 
         pointData[k + offset]->InsertNextPoint(tetrData[k].getVertex()[0].get_i(), tetrData[k].getVertex()[0].get_j(), tetrData[k].getVertex()[0].get_k());
         pointData[k + offset]->InsertNextPoint(tetrData[k].getVertex()[1].get_i(), tetrData[k].getVertex()[1].get_j(), tetrData[k].getVertex()[1].get_k());
@@ -374,6 +381,7 @@ void MainWindow::openMOD(QString filename)
         mapperData[k + offset]->SetInputData(ugData[k + offset]);
 
         primitiveShapeActor[k + offset]->SetMapper(mapperData[k + offset]);
+		primitiveShapeActor[k + offset]->GetProperty()->SetColor(shapeColor[0] / 255.0, shapeColor[1] / 255.0, shapeColor[2] / 255.0);
     }
 
 

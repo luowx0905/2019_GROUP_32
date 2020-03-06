@@ -15,6 +15,7 @@ Hexahedron::Hexahedron(Vector& v0, Vector& v1, Vector& v2, Vector& v3, Vector& v
 {
 	cellType = "Hexahedron";
 	this->density = m.getDensity();
+	color = m.getColour();
 
 	data.push_back(v0);
 	data.push_back(v1);
@@ -37,6 +38,7 @@ Hexahedron& Hexahedron::operator=(const Hexahedron& h)
 	{
 		data = h.data;
 		cellType = h.cellType;
+		color = h.color;
 		gravityCenter = h.gravityCenter;
 		volume = h.volume;
 		weight = h.weight;
