@@ -26,6 +26,7 @@
 |Automate testing using travis|C|EDS|Be sure to add a badge to the readme showing the status of the most recent build|
 |Add install code to CMakeLists.txt --> must also package required vtk and qt dlls|NS|||
 |Make a better splash screen|NS|||
+|Change the name of qt window from mainwindow|NS|||
 
 ## Status Legend
 - **C** - Completed  
