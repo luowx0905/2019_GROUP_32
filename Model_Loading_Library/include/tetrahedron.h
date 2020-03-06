@@ -5,6 +5,8 @@
 #include "cell.h"
 #include "vector.h"
 #include  "material.h"
+#include <stdlib.h>
+#include <cmath>
 
 class Tetrahedron : public Cell
 {

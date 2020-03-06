@@ -1,8 +1,8 @@
 #ifndef Vector_H
 #define Vector_H
-/**
- * @file This file contains the declarations for the vector class
- */
+
+/// @file vector.h This file contains the declarations for the vector class
+
 #include <math.h>
 #include <iostream>
 

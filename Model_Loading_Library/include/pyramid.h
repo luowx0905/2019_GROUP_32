@@ -3,7 +3,8 @@
 
 #include "cell.h"
 #include "vector.h"
-#include  "material.h"
+#include "material.h"
+#include <cmath>
 
 class Pyramid : public Cell
 {
@@ -23,4 +24,3 @@ private:
 };
 
 #endif // !PYRAMID_H
-

@@ -4,7 +4,7 @@
 #include "cell.h"
 #include "vector.h"
 #include "material.h"
-
+#include <cmath>
 class Hexahedron : public Cell
 {
 public:
@@ -24,4 +24,3 @@ private:
 
 
 #endif // !HEXAHEDRON_H
-

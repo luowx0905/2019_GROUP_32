@@ -1,0 +1,28 @@
+# .travis.yml
+sudo: false
+language: c++
+branches:
+  except:
+    - gh-pages
+#Defines global variables
+env:
+  global:
+    - GH_REPO_NAME: "2019_GROUP_32"
+    - DOXYFILE: $TRAVIS_BUILD_DIR/Model_Loading_Library/Doxyfile
+    - GH_REPO_REF: github.com/EDrever-Smith/2019_GROUP_32.git
+#Installs selected addons using apt package tool
+addons:
+  apt:
+    packages:
+      - doxygen
+      - graphviz
+# Build your code
+script:
+  - cd Model_Loading_Library
+  - cmake .
+  - make
+  - make test
+after_success:
+  - cd $TRAVIS_BUILD_DIR
+  - chmod +x generateDocumentationAndDeploy.sh
+  - ./generateDocumentationAndDeploy.sh
