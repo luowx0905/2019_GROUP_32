@@ -227,6 +227,10 @@ void MainWindow::openSTL(QString filename)
     actor->SetMapper(mapper);
     actor->GetProperty()->SetColor(color->GetColor3d("Blue").GetData());
 
+    //update model statistics
+    ui->pointLabel->setText(QVariant(mapper->GetInput()->GetNumberOfPoints()).toString());
+    ui->cellLabel->setText(QVariant(mapper->GetInput()->GetNumberOfCells()).toString());
+
     // render the actor
     renderer->AddActor(actor);
 
@@ -249,6 +253,11 @@ void MainWindow::openMOD(QString filename)
 {
     // read the file and declare vectors to store the data
     Model loadMOD(filename.toStdString());
+
+    //update model statistics
+    ui->pointLabel->setText(QVariant(loadMOD.getNumberOfVertices()).toString());
+    ui->cellLabel->setText(QVariant(loadMOD.getNumberOfCells()).toString());
+
     vector<Tetrahedron> tetrData = loadMOD.getTetra();
     vector<Pyramid> pyramidData = loadMOD.getPyramid();
     vector<Hexahedron> hexData = loadMOD.getHex();
@@ -647,6 +656,8 @@ void MainWindow::applyFilter(int buttonID)
 // this function could add one of the primitive shapes
 void MainWindow::primitiveShape(int checked)
 {
+
+
     // remove all the actors
     renderer->RemoveActor(actor);
     for(shapeItor = primitiveShapeActor.begin(); shapeItor != primitiveShapeActor.end(); shapeItor++)
@@ -662,7 +673,9 @@ void MainWindow::primitiveShape(int checked)
     case 0:
     {
         renderer->RemoveActor(shapeActor);
-
+        //update model statistics
+        ui->pointLabel->setText(QString("-"));
+        ui->cellLabel->setText(QString("-"));
         break;
     }
     // render pyramid
@@ -695,6 +708,11 @@ void MainWindow::primitiveShape(int checked)
 
         shapeActor->SetMapper(pyramidMapper);
         renderer->AddActor(shapeActor);
+
+        //update model statistics
+        ui->pointLabel->setText(QVariant(pyramidMapper->GetInput()->GetNumberOfPoints()).toString());
+        ui->cellLabel->setText(QVariant(pyramidMapper->GetInput()->GetNumberOfCells()).toString());
+
         break;
     }
     // render tetrahedron
@@ -725,6 +743,10 @@ void MainWindow::primitiveShape(int checked)
 
         shapeActor->SetMapper(tetraMapper);
         renderer->AddActor(shapeActor);
+
+        //update model statistics
+        ui->pointLabel->setText(QVariant(tetraMapper->GetInput()->GetNumberOfPoints()).toString());
+        ui->cellLabel->setText(QVariant(tetraMapper->GetInput()->GetNumberOfCells()).toString());
 
         break;
     }
@@ -762,6 +784,10 @@ void MainWindow::primitiveShape(int checked)
         shapeActor->SetMapper(hexMapper);
         renderer->AddActor(shapeActor);
 
+        //update model statistics
+        ui->pointLabel->setText(QVariant(hexMapper->GetInput()->GetNumberOfPoints()).toString());
+        ui->cellLabel->setText(QVariant(hexMapper->GetInput()->GetNumberOfCells()).toString());
+
         break;
     }
     }
@@ -790,13 +816,18 @@ void MainWindow::primitiveShape(int checked)
 void MainWindow::resetCamera()
 {
     // set camera parameters
+    //renderer->ResetCameraClippingRange();
+    //renderer->ResetCamera();
+    //camera = renderer->GetActiveCamera();
     camera->SetPosition(10, 0, 0);
     camera->SetFocalPoint(0, 0, 0);
+
     camera->SetClippingRange(-10, 10);
     camera->SetViewUp(0, 0, 0);
 
     // set active camera for randerer
     renderer->SetActiveCamera(camera);
+
     ui->openGLWidget->GetRenderWindow()->Render();
 
 }

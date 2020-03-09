@@ -12,6 +12,7 @@
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QVariant>
 
 //VTK libaries
 #include <vtkActor.h>
