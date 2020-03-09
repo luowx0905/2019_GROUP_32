@@ -29,6 +29,8 @@
 |Change the name that displays at the top left of the qt application from mainwindow to something more reflective of the program (Model Viewer perhaps?)|NS|||
 |Make filter controls pop up in a separate dialog box|NS|||
 |Make camera reset function ensure that object is centered nicely|NS|||
+|Remove un-needed buttons and their functions |NS||i.e 'red->blue->red'|
+|Add a panel which displays information about the model|U|EDS|Currently displays number of cells and points could add more stats yet|
 
 ## Status Legend
 - **C** - Completed  
