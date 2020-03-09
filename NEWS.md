@@ -11,7 +11,7 @@
 |Change format of UI such that it can be resized|NS|||
 |Fix compile issues from sem1 feedback|NS||Ask Paul what these were|
 |Change CMakeLists.txt to include library|U|EDS|Will need to be looked at if more CMakeLists added|
-|Complete camera reset method so that both the camera's position and orientation are reset|U|EDS|Roll and 'zoom' is reset but azimuth and elevation are not yet|
+|Complete camera reset method so that both the camera's position and orientation are reset|C|EDS||
 |Change name of vtkWindow from openGLWidget to something more accurate|NS|||
 |Implement a orientation widget|C|EDS|Widget accessible through view menu|
 |Implement a box widget|C|EDS|Widget works but there are some issues when a new model is loaded|
