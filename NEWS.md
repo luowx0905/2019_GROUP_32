@@ -28,6 +28,7 @@
 |Make a better splash screen|NS|||
 |Change the name that displays at the top left of the qt application from mainwindow to something more reflective of the program (Model Viewer perhaps?)|NS|||
 |Make filter controls pop up in a separate dialog box|NS|||
+|Make camera reset function ensure that object is centered nicely|NS|||
 
 ## Status Legend
 - **C** - Completed  
