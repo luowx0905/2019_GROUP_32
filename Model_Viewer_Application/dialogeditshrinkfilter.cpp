@@ -1,0 +1,45 @@
+#include "dialogeditshrinkfilter.h"
+#include "ui_dialogeditshrinkfilter.h"
+
+using namespace::std;
+
+dialogEditShrinkFilter::dialogEditShrinkFilter(QWidget *parent, double startingValue) :
+    QDialog(parent),
+    ui(new Ui::dialogEditShrinkFilter)
+{
+    ui->setupUi(this);
+
+    ui->shrinkFactorSlider->setMinimum(0);
+    ui->shrinkFactorSlider->setMaximum(100);
+    ui->shrinkFactorSpinBox->setRange(0,1);
+    ui->shrinkFactorSpinBox->setSingleStep(0.01);
+    ui->shrinkFactorSlider->setValue(int(startingValue*100));
+    ui->shrinkFactorSpinBox->setValue(startingValue);
+
+
+    connect(ui->shrinkFactorSlider, SIGNAL(valueChanged(int)),this, SLOT(handleShrinkFactorSlider(int)));
+    connect(ui->shrinkFactorSpinBox, SIGNAL(valueChanged(double)), this, SLOT(handleShrinkFactorSpinBox(double)));
+
+}
+
+dialogEditShrinkFilter::~dialogEditShrinkFilter()
+{
+    delete ui;
+}
+
+
+
+//handler function for the slider
+void dialogEditShrinkFilter::handleShrinkFactorSlider(int value)
+{
+    shrinkFactor = value / 100.0; //TODO set up slider to have limits of 0 and 100
+    ui->shrinkFactorSpinBox->setValue(shrinkFactor); //ensure that the slider and spin box are in sync
+    emit shrinkFactorChanged(shrinkFactor);
+}
+
+void dialogEditShrinkFilter::handleShrinkFactorSpinBox(double value)
+{
+    shrinkFactor = value; //TODO set up spin box to have limits of 0.00 and 1.00
+    ui->shrinkFactorSlider->setValue(int(shrinkFactor * 100));
+    emit shrinkFactorChanged(shrinkFactor);
+}

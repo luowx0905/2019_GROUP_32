@@ -59,7 +59,11 @@
 #include "hexahedron.h"
 #include "tetrahedron.h"
 
+//Dialog Boxes
+#include "dialogeditshrinkfilter.h"
+
 using std::vector;
+using std::unique_ptr;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -110,10 +114,12 @@ public slots:
     void displayPlaneWidget(bool);
     //adds box widget that allows model to be edited
     void displayBoxWidget(bool);
-
+    //This function will allow the shrink filter's properties to be changed
+    void editShrinkFilter(double);
     //Functions for opening different file types
     void openMOD(QString);
     void openSTL(QString);
+    void loadShrinkFilterDialog();
 
 private:
     Ui::MainWindow *ui;
@@ -132,6 +138,10 @@ private:
     vtkSmartPointer<vtkPlaneWidget> planeWidget;
     vtkSmartPointer<vtkBoxWidget2> boxWidget;
     vtkSmartPointer<vtkBoxWidgetCallback> boxWidgetCallback;
+    vtkSmartPointer<vtkShrinkFilter> shrinkFilter;
+
+    //unique_ptr<dialogEditShrinkFilter> shrinkFilterDialog;
+    dialogEditShrinkFilter *shrinkFilterDialog;
 
     vector<double> value; // store the RGB value of light
     double intensity; // store the intensity of light

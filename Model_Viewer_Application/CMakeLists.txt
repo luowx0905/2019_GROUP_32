@@ -40,16 +40,17 @@ include( ${VTK_USE_FILE} )
 set( INCLUDE_DIR ../Model_Loading_Library/include )
 set( SRC_DIR ../Model_Loading_Library/src )
 add_library( MODEL_LOADING_LIBRARY ${SRC_DIR}/model.cpp ${SRC_DIR}/cell.cpp ${SRC_DIR}/material.cpp ${SRC_DIR}/vector.cpp ${SRC_DIR}/hexahedron.cpp
-${SRC_DIR}/tetrahedron.cpp ${SRC_DIR}/pyramid.cpp ) 
+${SRC_DIR}/tetrahedron.cpp ${SRC_DIR}/pyramid.cpp )
 
 include_directories( ${INCLUDE_DIR} )
 # target_link_libraries(MODEL_LOADING_LIBRARY ${INCLUDE_DIR} )
 
 # Define the executable output and its sources
 add_executable( ModelViewerApp MACOSX_BUNDLE
-		main.cpp mainwindow.cpp 
-		mainwindow.h 
-		dialogcolor.h dialogcolor.cpp
+		main.cpp mainwindow.cpp
+		mainwindow.h
+		#dialogcolor.h dialogcolor.cpp
+    dialogeditshrinkfilter.h dialogeditshrinkfilter.cpp
 		mainwindow.ui
 		${MODEL_LOADING_LIBRARY}
 		${UI_Srcs}

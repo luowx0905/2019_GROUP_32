@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dialogcolor.h"
+#include "dialogeditshrinkfilter.h"
 
 using std::map;
 using std::vector;
@@ -165,13 +166,31 @@ MainWindow::MainWindow(QWidget *parent)
     connect(shapeButton, SIGNAL(buttonClicked(int)), this, SLOT(primitiveShape(int)));
     //connect(shapeButton, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &MainWindow::primitiveShape);
     connect(ui->resetCameraButton, SIGNAL(clicked()), this, SLOT(resetCamera()));
+    //temporary... this button should link to a mediator function to select which filter to edit
+    connect(ui->editFilterButton, SIGNAL(clicked()), this, SLOT(loadShrinkFilterDialog()));
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
+//function to load dialog widget and link its signal to a function which edits the shrink filter
+void MainWindow::loadShrinkFilterDialog()
+{
+    dialogEditShrinkFilter *shrinkFilterDialog(new dialogEditShrinkFilter(this,shrinkFilter->GetShrinkFactor()));
+    connect(shrinkFilterDialog, SIGNAL(shrinkFactorChanged(double)), this, SLOT(editShrinkFilter(double)));
+    shrinkFilterDialog->exec();
+    return;
+}
+//This function allows the properties of the shrink filter to be changed.
+void MainWindow::editShrinkFilter(double shrinkFactor)
+{
+    shrinkFilter->SetShrinkFactor(shrinkFactor);
+    shrinkFilter->Update();
+    ui->openGLWidget->GetRenderWindow()->Render();
+    return;
+}
 // this function would load the STL file
 void MainWindow::open()
 {
@@ -609,11 +628,11 @@ void MainWindow::applyFilter(int buttonID)
     // apply shrink filter
     case 2:
     {
-        vtkSmartPointer<vtkShrinkFilter> filter = vtkSmartPointer<vtkShrinkFilter>::New();
-        filter->SetInputConnection(STLReader->GetOutputPort());
-        filter->SetShrinkFactor(0.8);
-        filter->Update();
-        mapper->SetInputConnection(filter->GetOutputPort());
+        shrinkFilter = vtkSmartPointer<vtkShrinkFilter>::New();
+        shrinkFilter->SetInputConnection(STLReader->GetOutputPort());
+        shrinkFilter->SetShrinkFactor(1);
+        shrinkFilter->Update();
+        mapper->SetInputConnection(shrinkFilter->GetOutputPort());
         actor->SetMapper(mapper);
         break;
     }
