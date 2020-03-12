@@ -453,25 +453,29 @@ void MainWindow::displayBoxWidget(bool checked)
 // this function would set color of the light
 void MainWindow::setLightColor()
 {
-    // create a map, the key is bool and value is vector<double>
-    map<bool, vector<double>> result;
-    // obtain the return value from the dialog
-    result = DialogColor::getValue();
 
-    // if the input of the dialog is accepted then change the parameters of the light
-    if(result.find(QDialog::Accepted) != result.end())
+    double redComponent, greenComponent, blueConponent;
+    // obtain the color selected by user
+    QColor selectedColor = QColorDialog::getColor(Qt::white, this,
+                                           "Select the object color", QColorDialog::ShowAlphaChannel);
+    // check the validity of the selected color
+    if(!selectedColor.isValid())
     {
-        // obtain RGB value of new color
-        value = result[QDialog::Accepted];
-        // set light color
-        light->SetColor(value[0], value[1], value[2]);
+        return ;
+    }
+
+    // calculate the RGB conponents
+    redComponent = selectedColor.red() / 255.0;
+    greenComponent = selectedColor.green() / 255.0;
+    blueConponent = selectedColor.blue() / 255.0;
+
+        light->SetColor(redComponent,greenComponent,blueConponent);
         // add the light to the renderer
         renderer->AddLight(light);
         ui->openGLWidget->GetRenderWindow()->Render();
 
         // enable reset light operation
         ui->removeLight->setEnabled(true);
-    }
 }
 
 // this function would set intensity of the light
