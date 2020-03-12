@@ -92,8 +92,6 @@ public slots:
     void setLightIntensitySlider();
     // reset the light
     void resetLight();
-    // change the color of the object in a specfic sequence
-    void changModelColorItor();
     // chang color of the object to a user selected color
     void selectedObjectColor();
     // set the edge visibility

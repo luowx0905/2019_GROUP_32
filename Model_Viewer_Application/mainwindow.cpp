@@ -94,7 +94,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // set short cut for some operations
     ui->actionOpen->setShortcut(tr("Ctrl+O"));
-    ui->changeColorItor->setShortcut(tr("Ctrl+I"));
     ui->changeLightColourButton->setShortcut(tr("Alt+C"));
     ui->objectColor->setShortcut(tr("Shift+C"));
     ui->resetCameraButton->setShortcut(tr("Ctrl+R"));
@@ -118,7 +117,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->intensity->setEnabled(false);
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
-    ui->changeColorItor->setEnabled(false);
     ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);
@@ -160,7 +158,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->intensity, SIGNAL(valueChanged(double)), this, SLOT(setLightIntensitySpinBox()));
     connect(ui->intensitySlider, SIGNAL(valueChanged(int)), this, SLOT(setLightIntensitySlider()));
     connect(ui->removeLight, SIGNAL(clicked()), this, SLOT(resetLight()));
-    connect(ui->changeColorItor, SIGNAL(clicked()), this, SLOT(changModelColorItor()));
     connect(ui->objectColor, SIGNAL(clicked()), this, SLOT(selectedObjectColor()));
     connect(ui->edgeCheck, SIGNAL(stateChanged(int)), this, SLOT(visableEdge(int)));
     connect(ui->backgroundColor, SIGNAL(clicked()), this, SLOT(setBackgroundColor()));
@@ -241,7 +238,6 @@ void MainWindow::openSTL(QString filename)
     ui->changeLightColourButton->setEnabled(true);
     ui->intensity->setEnabled(true);
     ui->intensitySlider->setEnabled(true);
-    ui->changeColorItor->setEnabled(true);
     ui->objectColor->setEnabled(true);
     ui->edgeCheck->setEnabled(true);
     ui->noFilter->setEnabled(true);
@@ -404,7 +400,6 @@ void MainWindow::openMOD(QString filename)
     ui->intensity->setEnabled(false);
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
-    ui->changeColorItor->setEnabled(false);
     ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);
@@ -521,36 +516,6 @@ void MainWindow::resetLight()
 
     // disable reset light operation
     ui->removeLight->setEnabled(false);
-}
-
-// this function could change the object color in sequence red->blue->red
-// if color is neither red nor blue, the color would set to blue
-void MainWindow::changModelColorItor()
-{
-    // allocate momory for store current object color
-    double temp[3];
-    // obtain the current object color
-    for(size_t i = 0; i < 3; i++)
-    {
-        temp[i] = actor->GetProperty()->GetColor()[i];
-    }
-
-    // if current color is red
-    if(temp[0] == 1 && temp[1] == 0 && temp[2] == 0)
-    {
-        // change color to blue
-        actor->GetProperty()->SetColor(color->GetColor3d("Blue").GetData());
-    }
-    // if current color is not red
-    else
-    {
-        // change color to blue
-        actor->GetProperty()->SetColor(color->GetColor3d("Red").GetData());
-    }
-
-    // render the object
-    renderer->AddActor(actor);
-    ui->openGLWidget->GetRenderWindow()->Render();
 }
 
 // this function can change the object color to a user selected one
@@ -798,7 +763,6 @@ void MainWindow::primitiveShape(int checked)
     ui->intensity->setEnabled(false);
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
-    ui->changeColorItor->setEnabled(false);
     ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);

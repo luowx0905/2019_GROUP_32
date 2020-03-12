@@ -37,13 +37,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="changeColorItor">
-          <property name="text">
-           <string>red-&gt;blue-&gt;red</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="objectColor">
           <property name="text">
            <string>Color</string>
