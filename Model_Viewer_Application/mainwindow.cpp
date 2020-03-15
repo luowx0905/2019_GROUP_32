@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dialogcolor.h"
+#include "dialogeditshrinkfilter.h"
 
 using std::map;
 using std::vector;
@@ -94,7 +95,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // set short cut for some operations
     ui->actionOpen->setShortcut(tr("Ctrl+O"));
-    ui->changeColorItor->setShortcut(tr("Ctrl+I"));
     ui->changeLightColourButton->setShortcut(tr("Alt+C"));
     ui->objectColor->setShortcut(tr("Shift+C"));
     ui->resetCameraButton->setShortcut(tr("Ctrl+R"));
@@ -118,7 +118,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->intensity->setEnabled(false);
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
-    ui->changeColorItor->setEnabled(false);
     ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);
@@ -160,7 +159,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->intensity, SIGNAL(valueChanged(double)), this, SLOT(setLightIntensitySpinBox()));
     connect(ui->intensitySlider, SIGNAL(valueChanged(int)), this, SLOT(setLightIntensitySlider()));
     connect(ui->removeLight, SIGNAL(clicked()), this, SLOT(resetLight()));
-    connect(ui->changeColorItor, SIGNAL(clicked()), this, SLOT(changModelColorItor()));
     connect(ui->objectColor, SIGNAL(clicked()), this, SLOT(selectedObjectColor()));
     connect(ui->edgeCheck, SIGNAL(stateChanged(int)), this, SLOT(visableEdge(int)));
     connect(ui->backgroundColor, SIGNAL(clicked()), this, SLOT(setBackgroundColor()));
@@ -168,13 +166,31 @@ MainWindow::MainWindow(QWidget *parent)
     connect(shapeButton, SIGNAL(buttonClicked(int)), this, SLOT(primitiveShape(int)));
     //connect(shapeButton, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &MainWindow::primitiveShape);
     connect(ui->resetCameraButton, SIGNAL(clicked()), this, SLOT(resetCamera()));
+    //temporary... this button should link to a mediator function to select which filter to edit
+    connect(ui->editFilterButton, SIGNAL(clicked()), this, SLOT(loadShrinkFilterDialog()));
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
+//function to load dialog widget and link its signal to a function which edits the shrink filter
+void MainWindow::loadShrinkFilterDialog()
+{
+    dialogEditShrinkFilter *shrinkFilterDialog(new dialogEditShrinkFilter(this,shrinkFilter->GetShrinkFactor()));
+    connect(shrinkFilterDialog, SIGNAL(shrinkFactorChanged(double)), this, SLOT(editShrinkFilter(double)));
+    shrinkFilterDialog->exec();
+    return;
+}
+//This function allows the properties of the shrink filter to be changed.
+void MainWindow::editShrinkFilter(double shrinkFactor)
+{
+    shrinkFilter->SetShrinkFactor(shrinkFactor);
+    shrinkFilter->Update();
+    ui->openGLWidget->GetRenderWindow()->Render();
+    return;
+}
 // this function would load the STL file
 void MainWindow::open()
 {
@@ -241,7 +257,6 @@ void MainWindow::openSTL(QString filename)
     ui->changeLightColourButton->setEnabled(true);
     ui->intensity->setEnabled(true);
     ui->intensitySlider->setEnabled(true);
-    ui->changeColorItor->setEnabled(true);
     ui->objectColor->setEnabled(true);
     ui->edgeCheck->setEnabled(true);
     ui->noFilter->setEnabled(true);
@@ -404,7 +419,6 @@ void MainWindow::openMOD(QString filename)
     ui->intensity->setEnabled(false);
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
-    ui->changeColorItor->setEnabled(false);
     ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);
@@ -458,25 +472,29 @@ void MainWindow::displayBoxWidget(bool checked)
 // this function would set color of the light
 void MainWindow::setLightColor()
 {
-    // create a map, the key is bool and value is vector<double>
-    map<bool, vector<double>> result;
-    // obtain the return value from the dialog
-    result = DialogColor::getValue();
 
-    // if the input of the dialog is accepted then change the parameters of the light
-    if(result.find(QDialog::Accepted) != result.end())
+    double redComponent, greenComponent, blueConponent;
+    // obtain the color selected by user
+    QColor selectedColor = QColorDialog::getColor(Qt::white, this,
+                                           "Select the object color", QColorDialog::ShowAlphaChannel);
+    // check the validity of the selected color
+    if(!selectedColor.isValid())
     {
-        // obtain RGB value of new color
-        value = result[QDialog::Accepted];
-        // set light color
-        light->SetColor(value[0], value[1], value[2]);
+        return ;
+    }
+
+    // calculate the RGB conponents
+    redComponent = selectedColor.red() / 255.0;
+    greenComponent = selectedColor.green() / 255.0;
+    blueConponent = selectedColor.blue() / 255.0;
+
+        light->SetColor(redComponent,greenComponent,blueConponent);
         // add the light to the renderer
         renderer->AddLight(light);
         ui->openGLWidget->GetRenderWindow()->Render();
 
         // enable reset light operation
         ui->removeLight->setEnabled(true);
-    }
 }
 
 // this function would set intensity of the light
@@ -521,36 +539,6 @@ void MainWindow::resetLight()
 
     // disable reset light operation
     ui->removeLight->setEnabled(false);
-}
-
-// this function could change the object color in sequence red->blue->red
-// if color is neither red nor blue, the color would set to blue
-void MainWindow::changModelColorItor()
-{
-    // allocate momory for store current object color
-    double temp[3];
-    // obtain the current object color
-    for(size_t i = 0; i < 3; i++)
-    {
-        temp[i] = actor->GetProperty()->GetColor()[i];
-    }
-
-    // if current color is red
-    if(temp[0] == 1 && temp[1] == 0 && temp[2] == 0)
-    {
-        // change color to blue
-        actor->GetProperty()->SetColor(color->GetColor3d("Blue").GetData());
-    }
-    // if current color is not red
-    else
-    {
-        // change color to blue
-        actor->GetProperty()->SetColor(color->GetColor3d("Red").GetData());
-    }
-
-    // render the object
-    renderer->AddActor(actor);
-    ui->openGLWidget->GetRenderWindow()->Render();
 }
 
 // this function can change the object color to a user selected one
@@ -640,11 +628,11 @@ void MainWindow::applyFilter(int buttonID)
     // apply shrink filter
     case 2:
     {
-        vtkSmartPointer<vtkShrinkFilter> filter = vtkSmartPointer<vtkShrinkFilter>::New();
-        filter->SetInputConnection(STLReader->GetOutputPort());
-        filter->SetShrinkFactor(0.8);
-        filter->Update();
-        mapper->SetInputConnection(filter->GetOutputPort());
+        shrinkFilter = vtkSmartPointer<vtkShrinkFilter>::New();
+        shrinkFilter->SetInputConnection(STLReader->GetOutputPort());
+        shrinkFilter->SetShrinkFactor(1);
+        shrinkFilter->Update();
+        mapper->SetInputConnection(shrinkFilter->GetOutputPort());
         actor->SetMapper(mapper);
         break;
     }
@@ -798,7 +786,6 @@ void MainWindow::primitiveShape(int checked)
     ui->intensity->setEnabled(false);
     ui->intensitySlider->setEnabled(false);
     ui->removeLight->setEnabled(false);
-    ui->changeColorItor->setEnabled(false);
     ui->changeLightColourButton->setEnabled(false);
     ui->objectColor->setEnabled(false);
     ui->edgeCheck->setEnabled(false);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1107</width>
-    <height>828</height>
+    <width>1097</width>
+    <height>784</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,13 +33,6 @@
          <widget class="QLabel" name="objectColorLabel">
           <property name="text">
            <string>Object</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="changeColorItor">
-          <property name="text">
-           <string>red-&gt;blue-&gt;red</string>
           </property>
          </widget>
         </item>
@@ -171,6 +164,13 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QPushButton" name="editFilterButton">
+          <property name="text">
+           <string>Edit Selected Filter</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>
@@ -254,7 +254,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1107</width>
+     <width>1097</width>
      <height>21</height>
     </rect>
    </property>
