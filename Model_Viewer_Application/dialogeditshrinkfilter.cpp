@@ -32,14 +32,14 @@ dialogEditShrinkFilter::~dialogEditShrinkFilter()
 //handler function for the slider
 void dialogEditShrinkFilter::handleShrinkFactorSlider(int value)
 {
-    shrinkFactor = value / 100.0; //TODO set up slider to have limits of 0 and 100
+    shrinkFactor = value / 100.0;
     ui->shrinkFactorSpinBox->setValue(shrinkFactor); //ensure that the slider and spin box are in sync
     emit shrinkFactorChanged(shrinkFactor);
 }
 
 void dialogEditShrinkFilter::handleShrinkFactorSpinBox(double value)
 {
-    shrinkFactor = value; //TODO set up spin box to have limits of 0.00 and 1.00
+    shrinkFactor = value;
     ui->shrinkFactorSlider->setValue(int(shrinkFactor * 100));
     emit shrinkFactorChanged(shrinkFactor);
 }

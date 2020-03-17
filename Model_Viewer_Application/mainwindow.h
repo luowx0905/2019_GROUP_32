@@ -119,7 +119,10 @@ public slots:
     //Functions for opening different file types
     void openMOD(QString);
     void openSTL(QString);
+    //function to open the filter editor dialog box
     void loadShrinkFilterDialog();
+    //function to select which filter editor dialog to open
+    void loadFilterEditor();
 
 private:
     Ui::MainWindow *ui;
@@ -147,5 +150,6 @@ private:
     double intensity; // store the intensity of light
     vector<vtkSmartPointer<vtkActor>> primitiveShapeActor; // store all the actor for primitive shape
     vector<vtkSmartPointer<vtkActor>>::const_iterator shapeItor; // iterator for primitive shape
+    QButtonGroup* filterButton; //button group to link radio buttons for the filter
 };
 #endif // MAINWINDOW_H

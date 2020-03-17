@@ -2,7 +2,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "dialogcolor.h"
 #include "dialogeditshrinkfilter.h"
 
 using std::map;
@@ -84,7 +83,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Set up plane widget... could be used to aid with clip filter
     planeWidget = vtkSmartPointer<vtkPlaneWidget>::New();
     planeWidget->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
-    ui->actionDisplayPlaneWidget->setEnabled(false); //TODO_1 Whilst not fully functional, widget is disabled.
+    ui->actionDisplayPlaneWidget->setEnabled(true); //TODO_1 Whilst not fully functional, widget is disabled.
 
     //Set up box widget
     boxWidget = vtkSmartPointer<vtkBoxWidget2>::New();
@@ -125,6 +124,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->clipfilter->setEnabled(false);
     ui->shrinkfilter->setEnabled(false);
     ui->resetCameraButton->setEnabled(false);
+    ui->editFilterButton->setEnabled(false);
 
     // set initial state of check box and radio buttons
     ui->edgeCheck->setChecked(false);
@@ -132,7 +132,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->noShape->setChecked(true);
 
     // create a button group for radio buttons (filter)
-    QButtonGroup* filterButton = new QButtonGroup(this);
+    filterButton = new QButtonGroup(this);
     filterButton->addButton(ui->noFilter, 0);
     filterButton->addButton(ui->clipfilter, 1);
     filterButton->addButton(ui->shrinkfilter, 2);
@@ -167,7 +167,7 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(shapeButton, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &MainWindow::primitiveShape);
     connect(ui->resetCameraButton, SIGNAL(clicked()), this, SLOT(resetCamera()));
     //temporary... this button should link to a mediator function to select which filter to edit
-    connect(ui->editFilterButton, SIGNAL(clicked()), this, SLOT(loadShrinkFilterDialog()));
+    connect(ui->editFilterButton, SIGNAL(clicked()), this, SLOT(loadFilterEditor()));
 
 }
 
@@ -175,12 +175,26 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+//function to select which filter editing dialog box to load based off of which filter is currently selected
+void MainWindow::loadFilterEditor()
+{
+    switch(filterButton->checkedId())
+    {
+    case 0 :
+        break;
+    case 1 :
+        break;
+    case 2 :
+        loadShrinkFilterDialog();
+        break;
+    }
+}
 //function to load dialog widget and link its signal to a function which edits the shrink filter
 void MainWindow::loadShrinkFilterDialog()
 {
     dialogEditShrinkFilter *shrinkFilterDialog(new dialogEditShrinkFilter(this,shrinkFilter->GetShrinkFactor()));
     connect(shrinkFilterDialog, SIGNAL(shrinkFactorChanged(double)), this, SLOT(editShrinkFilter(double)));
-    shrinkFilterDialog->exec();
+    shrinkFilterDialog->show();
     return;
 }
 //This function allows the properties of the shrink filter to be changed.
@@ -446,7 +460,9 @@ void MainWindow::displayPlaneWidget(bool checked)
     if(checked)
     {
         planeWidget->On();
-        planeWidget->PlaceWidget();
+        planeWidget->SetPlaceFactor(1);
+        planeWidget->PlaceWidget(actor->GetBounds());
+
     }
     else
         planeWidget->Off();
@@ -604,12 +620,14 @@ void MainWindow::setBackgroundColor()
 // this function could apply filter settings
 void MainWindow::applyFilter(int buttonID)
 {
+    ui->editFilterButton->setEnabled(true);
     switch(buttonID)
     {
     case 0:
     {
         mapper->SetInputConnection(STLReader->GetOutputPort());
         actor->SetMapper(mapper);
+        ui->editFilterButton->setEnabled(false);
         break;
     }
     // apply clip filter
@@ -630,7 +648,7 @@ void MainWindow::applyFilter(int buttonID)
     {
         shrinkFilter = vtkSmartPointer<vtkShrinkFilter>::New();
         shrinkFilter->SetInputConnection(STLReader->GetOutputPort());
-        shrinkFilter->SetShrinkFactor(1);
+        shrinkFilter->SetShrinkFactor(0.9);
         shrinkFilter->Update();
         mapper->SetInputConnection(shrinkFilter->GetOutputPort());
         actor->SetMapper(mapper);
