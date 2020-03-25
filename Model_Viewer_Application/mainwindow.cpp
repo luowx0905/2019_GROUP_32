@@ -17,7 +17,7 @@ void vtkBoxWidgetCallback::SetActor( vtkSmartPointer<vtkActor> actor )
     m_actor = actor;
 }
 
-void vtkBoxWidgetCallback::Execute( vtkObject *caller, unsigned long, void* )
+void vtkBoxWidgetCallback::Execute(vtkObject *caller, unsigned long, void*)
 {
     vtkSmartPointer<vtkBoxWidget2> boxWidget =
     vtkBoxWidget2::SafeDownCast(caller);
@@ -29,7 +29,17 @@ void vtkBoxWidgetCallback::Execute( vtkObject *caller, unsigned long, void* )
     this->m_actor->SetUserTransform( t );
 }
 
-//vtkBoxWidgetCallback(){}
+vtkPlaneWidgetCallback* vtkPlaneWidgetCallback::New()
+{
+    return new vtkPlaneWidgetCallback;
+}
+
+void vtkPlaneWidgetCallback::Execute(vtkObject *caller, unsigned long, void*)
+{
+    vtkImplicitPlaneWidget2 *iPlaneWidget = reinterpret_cast<vtkImplicitPlaneWidget2*>(caller);
+    vtkImplicitPlaneRepresentation *rep = reinterpret_cast<vtkImplicitPlaneRepresentation*>(iPlaneWidget->GetRepresentation());
+    rep->GetPlane(this->Plane);
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -57,6 +67,8 @@ MainWindow::MainWindow(QWidget *parent)
     axes = vtkSmartPointer<vtkAxesActor>::New();
     // creates interactable orientation widget object
     orientationMarker = vtkSmartPointer<vtkOrientationMarkerWidget>::New();
+    //
+    plane = vtkSmartPointer<vtkPlane>::New();
 
     // set the background color of the render window
     renderer->SetBackground(0.1, 0.7, 0.1);
@@ -81,8 +93,11 @@ MainWindow::MainWindow(QWidget *parent)
     orientationMarker->SetViewport( 0.0, 0.0, 0.4, 0.4 );
 
     // Set up plane widget... could be used to aid with clip filter
-    planeWidget = vtkSmartPointer<vtkPlaneWidget>::New();
+    rep = vtkSmartPointer<vtkImplicitPlaneRepresentation>::New();
+    planeWidget = vtkSmartPointer<vtkImplicitPlaneWidget2>::New();
     planeWidget->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
+    planeWidgetCallback = vtkSmartPointer<vtkPlaneWidgetCallback>::New();
+    //planeWidget->HandlesOff();
     ui->actionDisplayPlaneWidget->setEnabled(true); //TODO_1 Whilst not fully functional, widget is disabled.
 
     //Set up box widget
@@ -166,7 +181,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(shapeButton, SIGNAL(buttonClicked(int)), this, SLOT(primitiveShape(int)));
     //connect(shapeButton, QOverload<int>::of(&QButtonGroup::buttonClicked), this, &MainWindow::primitiveShape);
     connect(ui->resetCameraButton, SIGNAL(clicked()), this, SLOT(resetCamera()));
-    //temporary... this button should link to a mediator function to select which filter to edit
     connect(ui->editFilterButton, SIGNAL(clicked()), this, SLOT(loadFilterEditor()));
 
 }
@@ -459,10 +473,14 @@ void MainWindow::displayPlaneWidget(bool checked)
 {
     if(checked)
     {
+        rep->SetPlaceFactor(1.25);
+        rep->PlaceWidget(actor->GetBounds());
+        rep->SetNormal(plane->GetNormal());
+        planeWidgetCallback->Plane = plane;
+        planeWidgetCallback->Actor = actor;
+        planeWidget->SetRepresentation(rep);
+        planeWidget->AddObserver(vtkCommand::InteractionEvent,planeWidgetCallback);
         planeWidget->On();
-        planeWidget->SetPlaceFactor(1);
-        planeWidget->PlaceWidget(actor->GetBounds());
-
     }
     else
         planeWidget->Off();
@@ -633,7 +651,7 @@ void MainWindow::applyFilter(int buttonID)
     // apply clip filter
     case 1:
     {
-        vtkSmartPointer<vtkPlane> plane = vtkSmartPointer<vtkPlane>::New();
+        plane = vtkSmartPointer<vtkPlane>::New();
         plane->SetOrigin(0, 0, 0);
         plane->SetNormal(-1, 0, 0);
         vtkSmartPointer<vtkClipDataSet> filter = vtkSmartPointer<vtkClipDataSet>::New();

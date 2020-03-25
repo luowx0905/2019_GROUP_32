@@ -26,6 +26,8 @@
 #include <vtkDataSetMapper.h>
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkHexahedron.h>
+#include <vtkImplicitPlaneWidget2.h>
+#include <vtkImplicitPlaneRepresentation.h>
 #include <vtkLight.h>
 #include <vtkNamedColors.h>
 #include <vtkNew.h>
@@ -69,6 +71,9 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+
+//Callback functions
+
 class vtkBoxWidgetCallback : public vtkCommand
 {
 public:
@@ -76,6 +81,16 @@ public:
   void SetActor( vtkSmartPointer<vtkActor> actor );
   virtual void Execute( vtkObject *caller, unsigned long, void* );
   vtkSmartPointer<vtkActor> m_actor;
+};
+
+class vtkPlaneWidgetCallback : public vtkCommand
+{
+public:
+    static vtkPlaneWidgetCallback *New();
+    virtual void Execute( vtkObject *caller, unsigned long, void* );
+    vtkPlaneWidgetCallback():Plane(0),Actor(0){}
+    vtkPlane *Plane;
+    vtkActor *Actor;
 };
 
 class MainWindow : public QMainWindow
@@ -138,9 +153,13 @@ private:
     vtkSmartPointer<vtkCamera> camera;
     vtkSmartPointer<vtkAxesActor> axes;
     vtkSmartPointer<vtkOrientationMarkerWidget> orientationMarker;
-    vtkSmartPointer<vtkPlaneWidget> planeWidget;
+    vtkSmartPointer<vtkPlane> plane;
+    //vtkSmartPointer<vtkPlaneWidget> planeWidget;
+    vtkSmartPointer<vtkImplicitPlaneWidget2> planeWidget;
     vtkSmartPointer<vtkBoxWidget2> boxWidget;
     vtkSmartPointer<vtkBoxWidgetCallback> boxWidgetCallback;
+    vtkSmartPointer<vtkPlaneWidgetCallback> planeWidgetCallback;
+    vtkSmartPointer<vtkImplicitPlaneRepresentation> rep;
     vtkSmartPointer<vtkShrinkFilter> shrinkFilter;
 
     //unique_ptr<dialogEditShrinkFilter> shrinkFilterDialog;
