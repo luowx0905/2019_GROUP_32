@@ -98,7 +98,7 @@ MainWindow::MainWindow(QWidget *parent)
     planeWidget->SetInteractor( ui->openGLWidget->GetRenderWindow()->GetInteractor() );
     planeWidgetCallback = vtkSmartPointer<vtkPlaneWidgetCallback>::New();
     //planeWidget->HandlesOff();
-    ui->actionDisplayPlaneWidget->setEnabled(true); //TODO_1 Whilst not fully functional, widget is disabled.
+    ui->actionDisplayPlaneWidget->setEnabled(false); //widget disabled unless clip filter is on
 
     //Set up box widget
     boxWidget = vtkSmartPointer<vtkBoxWidget2>::New();
@@ -112,6 +112,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->changeLightColourButton->setShortcut(tr("Alt+C"));
     ui->objectColor->setShortcut(tr("Shift+C"));
     ui->resetCameraButton->setShortcut(tr("Ctrl+R"));
+
+    ui->actionOpen->setIcon(QIcon("openIcon.png"));
+    ui->actionScreenshot->setIcon(QIcon("screenshotIcon.png"));
 
     // set the position of the text on the label
     ui->lightLabel->setAlignment(Qt::AlignCenter);
@@ -170,6 +173,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionDisplayOrientationWidget, SIGNAL(toggled(bool)), this, SLOT(displayOrientationWidget(bool)));
     connect(ui->actionDisplayPlaneWidget, SIGNAL(toggled(bool)), this, SLOT(displayPlaneWidget(bool)));
     connect(ui->actionDisplayBoxWidget, SIGNAL(toggled(bool)), this, SLOT(displayBoxWidget(bool)));
+    connect(ui->actionScreenshot, SIGNAL(triggered()), this, SLOT(handleScreenshot()));
     connect(ui->changeLightColourButton, SIGNAL(clicked()), this, SLOT(setLightColor()));
     connect(ui->intensity, SIGNAL(valueChanged(double)), this, SLOT(setLightIntensitySpinBox()));
     connect(ui->intensitySlider, SIGNAL(valueChanged(int)), this, SLOT(setLightIntensitySlider()));
@@ -189,16 +193,43 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+//function to convert the current vtk window to a png and save it
+void MainWindow::handleScreenshot()
+{
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save Screenshot"),"./",tr("*.png"));
+
+    if (filename.isEmpty()) //if no user exits file dialog rest of function is skipped
+        return;
+
+    vtkSmartPointer<vtkWindowToImageFilter> windowToImageFilter = vtkSmartPointer<vtkWindowToImageFilter>::New();
+    windowToImageFilter->SetInput(renderWindow);
+    windowToImageFilter->SetInputBufferTypeToRGBA(); //also record the alpha channel
+    windowToImageFilter->ReadFrontBufferOff(); // read from the back buffer
+    windowToImageFilter->Update();
+
+    vtkSmartPointer<vtkPNGWriter> writer = vtkSmartPointer<vtkPNGWriter>::New();
+    writer->SetFileName(filename.toLatin1().data());
+    writer->SetInputConnection(windowToImageFilter->GetOutputPort());
+    writer->Write();
+
+}
 //function to select which filter editing dialog box to load based off of which filter is currently selected
 void MainWindow::loadFilterEditor()
 {
     switch(filterButton->checkedId())
     {
     case 0 :
+        ui->actionDisplayPlaneWidget->setChecked(false);
         break;
     case 1 :
+        if(ui->actionDisplayPlaneWidget->isChecked())
+            ui->actionDisplayPlaneWidget->setChecked(false);
+        else
+            ui->actionDisplayPlaneWidget->setChecked(true);
         break;
     case 2 :
+        ui->actionDisplayPlaneWidget->setChecked(false);
         loadShrinkFilterDialog();
         break;
     }
@@ -473,9 +504,6 @@ void MainWindow::displayPlaneWidget(bool checked)
 {
     if(checked)
     {
-        rep->SetPlaceFactor(1.25);
-        rep->PlaceWidget(actor->GetBounds());
-        rep->SetNormal(plane->GetNormal());
         planeWidgetCallback->Plane = plane;
         planeWidgetCallback->Actor = actor;
         planeWidget->SetRepresentation(rep);
@@ -639,6 +667,7 @@ void MainWindow::setBackgroundColor()
 void MainWindow::applyFilter(int buttonID)
 {
     ui->editFilterButton->setEnabled(true);
+    ui->actionDisplayPlaneWidget->setEnabled(false);
     switch(buttonID)
     {
     case 0:
@@ -651,9 +680,10 @@ void MainWindow::applyFilter(int buttonID)
     // apply clip filter
     case 1:
     {
-        plane = vtkSmartPointer<vtkPlane>::New();
-        plane->SetOrigin(0, 0, 0);
-        plane->SetNormal(-1, 0, 0);
+        ui->actionDisplayPlaneWidget->setEnabled(true);
+        rep->SetPlaceFactor(1.25);
+        rep->PlaceWidget(actor->GetBounds());
+        rep->SetNormal(plane->GetNormal());
         vtkSmartPointer<vtkClipDataSet> filter = vtkSmartPointer<vtkClipDataSet>::New();
         filter->SetInputConnection(STLReader->GetOutputPort());
         filter->SetClipFunction(plane.Get());

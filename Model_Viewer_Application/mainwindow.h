@@ -34,6 +34,7 @@
 #include <vtkOrientationMarkerWidget.h>
 #include <vtkPlane.h>
 #include <vtkPlaneWidget.h>
+#include <vtkPNGWriter.h>
 #include <vtkPoints.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataMapper.h>
@@ -47,6 +48,7 @@
 #include <vtkTetra.h>
 #include <vtkTransform.h>
 #include <vtkUnstructuredGrid.h>
+#include <vtkWindowToImageFilter.h>
 
 //C++ libaries
 #include <map>
@@ -138,6 +140,8 @@ public slots:
     void loadShrinkFilterDialog();
     //function to select which filter editor dialog to open
     void loadFilterEditor();
+    //function to allow the user to save a screenshot
+    void handleScreenshot();
 
 private:
     Ui::MainWindow *ui;
