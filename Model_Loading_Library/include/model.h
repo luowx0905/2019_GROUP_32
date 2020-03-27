@@ -16,7 +16,7 @@
 
 using namespace std;
 
-/** 
+/**
  * @brief Class for reading .mod file and providing details regarding its contents
  * @author Ewan Drever-Smith
  * @version 1.1
@@ -33,9 +33,9 @@ public:
     /// @brief Deallocates memory associated with vector lists
     ~Model();
     /// Copy constructor
-    Model(const Model&); 
+    Model(const Model&);
     /// Operator= overload
-    const Model& operator=(const Model&); 
+    const Model& operator=(const Model&);
     /// @brief Outputs the coordinates of each vertice in the model to the console
     /// @return Void
     void displayVertices()const;//outputs to the console each vertice and its coordinate vector (x,y,z)
@@ -86,23 +86,27 @@ public:
     /// @brief gets all the tetrahedons in a model
     /// @return returns a vector of tetrahedron objects
     vector<Tetrahedron> getTetra() const;
+    /// @brief gets all the vectors in a model
+    /// @return a vector of Vector objects
+    vector<Vector> getVector() const;
+
 private:
     ///@brief Vector sequence containing all the vector objects in the model
-    ///@note Each object in the object list is stored at the index of its ID - This was done for speed in locating the object needed. 
+    ///@note Each object in the object list is stored at the index of its ID - This was done for speed in locating the object needed.
     ///However this does have consequences - every ID in the file must be consecutive, or else the object will attempted to be added to a point outside the range of the std::vector.
     ///In the future, if this is no longer acceptable, then store ID as a parameter of the object itself. This would mean that each object could be stored at any point in the list, but would take longer to search for the object with a particular ID.
     vector<Vector> listOfVectors;
     ///@brief Vector sequence containing all the cell objects in the model
-    ///@note Each object in the object list is stored at the index of its ID - This was done for speed in locating the object needed. 
+    ///@note Each object in the object list is stored at the index of its ID - This was done for speed in locating the object needed.
     ///However this does have consequences - every ID in the file must be consecutive, or else the object will attempted to be added to a point outside the range of the std::vector.
     ///In the future, if this is no longer acceptable, then store ID as a parameter of the object itself. This would mean that each object could be stored at any point in the list, but would take longer to search for the object with a particular ID.
     vector<Cell> listOfCells;
     ///@brief Vector sequence containing all the material objects in the model
-    ///@note Each object in the object list is stored at the index of its ID - This was done for speed in locating the object needed. 
+    ///@note Each object in the object list is stored at the index of its ID - This was done for speed in locating the object needed.
     ///However this does have consequences - every ID in the file must be consecutive, or else the object will attempted to be added to a point outside the range of the std::vector.
     ///In the future, if this is no longer acceptable, then store ID as a parameter of the object itself. This would mean that each object could be stored at any point in the list, but would take longer to search for the object with a particular ID.
     vector<Material> listOfMaterials;
-    ///@brief stores a 'recipe' to generate Cell objects from 
+    ///@brief stores a 'recipe' to generate Cell objects from
     /**
      * @note Table shows how vector and material IDs are stored
      * Cell ID       | [0]:0 | [1]:1 | [n]:n |
@@ -118,7 +122,7 @@ private:
      * [8]: Vector 8 |[8][0] |[8][1] |[8][n] |
      * [9]: Material |[9][0] |[9][1] |[9][n] |
      */
-    vector<vector<int>> uninitCellList; 
+    vector<vector<int>> uninitCellList;
     ///@brief Populates listOfCells from uninitCellList
     ///@param cellListLength Size of the uninitCellList (how many cells are in the model)
     ///@return void
