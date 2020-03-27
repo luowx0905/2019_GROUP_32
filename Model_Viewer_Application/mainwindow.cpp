@@ -2,7 +2,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "dialogcolor.h"
 #include "dialogeditshrinkfilter.h"
 
 using std::map;
@@ -58,6 +57,9 @@ MainWindow::MainWindow(QWidget *parent)
     axes = vtkSmartPointer<vtkAxesActor>::New();
     // creates interactable orientation widget object
     orientationMarker = vtkSmartPointer<vtkOrientationMarkerWidget>::New();
+	cell = vtkSmartPointer<vtkCellArray>::New();
+	// store all the vector in MOd file
+	pointData = vtkSmartPointer<vtkPoints>::New();
 
     // set the background color of the render window
     renderer->SetBackground(0.1, 0.7, 0.1);
@@ -414,6 +416,13 @@ void MainWindow::openMOD(QString filename)
         renderer->AddActor(primitiveShapeActor[n]);
     }
     ui->openGLWidget->GetRenderWindow()->Render();
+
+	QMessageBox::StandardButton result = QMessageBox::question(this, "Conversion", "Convert this MOD file to STL file",
+		QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+	if (result == QMessageBox::Yes)
+	{
+		conversion(&loadMOD);
+	}
 
     // disable some functions
     ui->intensity->setEnabled(false);
@@ -817,4 +826,200 @@ void MainWindow::resetCamera()
 
     ui->openGLWidget->GetRenderWindow()->Render();
 
+}
+
+void MainWindow::conversion(Model* loadMOD)
+{
+	QString filename = QFileDialog::getSaveFileName(this, "Save file", "./", "STL file (*.stl)");
+
+	vtkSmartPointer<vtkSTLWriter> write = vtkSmartPointer<vtkSTLWriter>::New();
+	write->SetFileName(filename.toStdString().c_str());
+
+	vector < vtkSmartPointer<vtkTriangle>> triangleVector;
+	size_t cellNum = loadMOD->getHex().size() + loadMOD->getPyramid().size() + loadMOD->getTetra().size();
+	int triangleNum = 0;
+	vector<Tetrahedron> tetrData = loadMOD->getTetra();
+	vector<Pyramid> pyramidData = loadMOD->getPyramid();
+	vector<Hexahedron> hexData = loadMOD->getHex();
+	vector<Vector> vectorData = loadMOD->getVector();
+
+	pointData->Initialize();
+
+	for (size_t i = 0; i < loadMOD->getVector().size(); i++)
+	{
+		double vertex[3] = { loadMOD->getVector()[i].get_i(), loadMOD->getVector()[i].get_j(), loadMOD->getVector()[i].get_k() };
+		pointData->InsertNextPoint(vertex);
+	}
+
+	for (size_t i = 0; i < loadMOD->getTetra().size(); i++)
+	{
+		vtkSmartPointer<vtkTriangle> triangle0 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle0);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, tetrData[i].getVectorNumber(vectorData, 0));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, tetrData[i].getVectorNumber(vectorData, 1));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, tetrData[i].getVectorNumber(vectorData, 2));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle1 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle1);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, tetrData[i].getVectorNumber(vectorData, 0));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, tetrData[i].getVectorNumber(vectorData, 2));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, tetrData[i].getVectorNumber(vectorData, 3));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle2 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle2);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, tetrData[i].getVectorNumber(vectorData, 0));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, tetrData[i].getVectorNumber(vectorData, 1));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, tetrData[i].getVectorNumber(vectorData, 3));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle3 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle3);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, tetrData[i].getVectorNumber(vectorData, 1));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, tetrData[i].getVectorNumber(vectorData, 2));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, tetrData[i].getVectorNumber(vectorData, 3));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+	}
+
+	for (size_t i = 0; i < loadMOD->getPyramid().size(); i++)
+	{
+		vtkSmartPointer<vtkTriangle> triangle0 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle0);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, pyramidData[i].getVectorNumber(vectorData, 0));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, pyramidData[i].getVectorNumber(vectorData, 1));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, pyramidData[i].getVectorNumber(vectorData, 4));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle1 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle1);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, pyramidData[i].getVectorNumber(vectorData, 1));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, pyramidData[i].getVectorNumber(vectorData, 2));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, pyramidData[i].getVectorNumber(vectorData, 4));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle2 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle2);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, pyramidData[i].getVectorNumber(vectorData, 2));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, pyramidData[i].getVectorNumber(vectorData, 3));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, pyramidData[i].getVectorNumber(vectorData, 4));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle3 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle3);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, pyramidData[i].getVectorNumber(vectorData, 3));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, pyramidData[i].getVectorNumber(vectorData, 0));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, pyramidData[i].getVectorNumber(vectorData, 4));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle4 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle4);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, pyramidData[i].getVectorNumber(vectorData, 0));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, pyramidData[i].getVectorNumber(vectorData, 1));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, pyramidData[i].getVectorNumber(vectorData, 3));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle5 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle5);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, pyramidData[i].getVectorNumber(vectorData, 1));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, pyramidData[i].getVectorNumber(vectorData, 2));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, pyramidData[i].getVectorNumber(vectorData, 3));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+	}
+
+	for (size_t i = 0; i < loadMOD->getHex().size(); i++)
+	{
+		vtkSmartPointer<vtkTriangle> triangle0 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle0);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 0));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 1));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 5));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle1 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle1);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 0));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 4));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 5));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle2 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle2);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 1));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 2));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 6));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle3 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle3);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 1));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 5));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 6));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle4 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle4);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 2));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 3));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 7));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle5 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle5);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 2));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 6));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 7));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle6 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle6);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 3));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 0));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 4));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle7 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle7);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 3));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 7));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 4));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle8 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle8);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 0));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 1));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 2));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle9 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle9);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 0));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 3));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 2));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle10 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle10);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 4));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 5));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 6));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+
+		vtkSmartPointer<vtkTriangle> triangle11 = vtkSmartPointer<vtkTriangle>::New();
+		triangleVector.push_back(triangle11);
+		triangleVector[triangleNum]->GetPointIds()->SetId(0, hexData[i].getVectorNumber(vectorData, 4));
+		triangleVector[triangleNum]->GetPointIds()->SetId(1, hexData[i].getVectorNumber(vectorData, 7));
+		triangleVector[triangleNum]->GetPointIds()->SetId(2, hexData[i].getVectorNumber(vectorData, 6));
+		cell->InsertNextCell(triangleVector[triangleNum++]);
+	}
+
+	vtkSmartPointer<vtkPolyData> polyData = vtkSmartPointer<vtkPolyData>::New();
+	polyData->Initialize();
+	polyData->SetPolys(cell);
+	polyData->SetPoints(pointData);
+
+	write->SetInputData(polyData);
+	write->Update();
+	write->Write();
 }

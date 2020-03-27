@@ -45,6 +45,12 @@
 #include <vtkTetra.h>
 #include <vtkTransform.h>
 #include <vtkUnstructuredGrid.h>
+#include <vtkSTLWriter.h>
+#include <vtkAppendPolyData.h>
+#include <vtkCellArray.h>
+#include <vtkTriangleFilter.h>
+#include <vtkTriangle.h>
+#include <vtkPoints.h>
 
 //C++ libaries
 #include <map>
@@ -120,6 +126,8 @@ public slots:
     void openMOD(QString);
     void openSTL(QString);
     void loadShrinkFilterDialog();
+	// convert MOD to STL
+	void conversion(Model*);
 
 private:
     Ui::MainWindow *ui;
@@ -147,5 +155,8 @@ private:
     double intensity; // store the intensity of light
     vector<vtkSmartPointer<vtkActor>> primitiveShapeActor; // store all the actor for primitive shape
     vector<vtkSmartPointer<vtkActor>>::const_iterator shapeItor; // iterator for primitive shape
+
+	vtkSmartPointer<vtkCellArray> cell;
+	vtkSmartPointer<vtkPoints> pointData;
 };
 #endif // MAINWINDOW_H
