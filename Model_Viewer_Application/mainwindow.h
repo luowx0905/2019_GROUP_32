@@ -16,6 +16,7 @@
 
 //VTK libaries
 #include <vtkActor.h>
+#include <vtkAppendPolyData.h>
 #include <vtkAxesActor.h>
 #include <vtkBoxRepresentation.h>
 #include <vtkBoxWidget2.h>
@@ -26,12 +27,15 @@
 #include <vtkDataSetMapper.h>
 #include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkHexahedron.h>
+#include <vtkImplicitPlaneWidget2.h>
+#include <vtkImplicitPlaneRepresentation.h>
 #include <vtkLight.h>
 #include <vtkNamedColors.h>
 #include <vtkNew.h>
 #include <vtkOrientationMarkerWidget.h>
 #include <vtkPlane.h>
 #include <vtkPlaneWidget.h>
+#include <vtkPNGWriter.h>
 #include <vtkPoints.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataMapper.h>
@@ -40,17 +44,15 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkSTLReader.h>
+#include <vtkSTLWriter.h>
 #include <vtkShrinkFilter.h>
 #include <vtkSmartPointer.h>
 #include <vtkTetra.h>
 #include <vtkTransform.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkSTLWriter.h>
-#include <vtkAppendPolyData.h>
-#include <vtkCellArray.h>
-#include <vtkTriangleFilter.h>
 #include <vtkTriangle.h>
-#include <vtkPoints.h>
+#include <vtkTriangleFilter.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkWindowToImageFilter.h>
 
 //C++ libaries
 #include <map>
@@ -75,6 +77,9 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+
+//Callback functions
+
 class vtkBoxWidgetCallback : public vtkCommand
 {
 public:
@@ -82,6 +87,16 @@ public:
   void SetActor( vtkSmartPointer<vtkActor> actor );
   virtual void Execute( vtkObject *caller, unsigned long, void* );
   vtkSmartPointer<vtkActor> m_actor;
+};
+
+class vtkPlaneWidgetCallback : public vtkCommand
+{
+public:
+    static vtkPlaneWidgetCallback *New();
+    virtual void Execute( vtkObject *caller, unsigned long, void* );
+    vtkPlaneWidgetCallback():Plane(0),Actor(0){}
+    vtkPlane *Plane;
+    vtkActor *Actor;
 };
 
 class MainWindow : public QMainWindow
@@ -125,9 +140,14 @@ public slots:
     //Functions for opening different file types
     void openMOD(QString);
     void openSTL(QString);
+    //function to open the filter editor dialog box
     void loadShrinkFilterDialog();
-	// convert MOD to STL
-	void conversion(Model*);
+	  // convert MOD to STL
+	  void conversion(Model*);
+    //function to select which filter editor dialog to open
+    void loadFilterEditor();
+    //function to allow the user to save a screenshot
+    void handleScreenshot();
 
 private:
     Ui::MainWindow *ui;
@@ -143,12 +163,16 @@ private:
     vtkSmartPointer<vtkCamera> camera;
     vtkSmartPointer<vtkAxesActor> axes;
     vtkSmartPointer<vtkOrientationMarkerWidget> orientationMarker;
-    vtkSmartPointer<vtkPlaneWidget> planeWidget;
+    vtkSmartPointer<vtkPlane> plane;
+    vtkSmartPointer<vtkImplicitPlaneWidget2> planeWidget;
     vtkSmartPointer<vtkBoxWidget2> boxWidget;
     vtkSmartPointer<vtkBoxWidgetCallback> boxWidgetCallback;
+    vtkSmartPointer<vtkPlaneWidgetCallback> planeWidgetCallback;
+    vtkSmartPointer<vtkImplicitPlaneRepresentation> rep;
     vtkSmartPointer<vtkShrinkFilter> shrinkFilter;
-
-    //unique_ptr<dialogEditShrinkFilter> shrinkFilterDialog;
+  	vtkSmartPointer<vtkCellArray> cell;
+	  vtkSmartPointer<vtkPoints> pointData;
+    
     dialogEditShrinkFilter *shrinkFilterDialog;
 
     vector<double> value; // store the RGB value of light
@@ -156,7 +180,6 @@ private:
     vector<vtkSmartPointer<vtkActor>> primitiveShapeActor; // store all the actor for primitive shape
     vector<vtkSmartPointer<vtkActor>>::const_iterator shapeItor; // iterator for primitive shape
 
-	vtkSmartPointer<vtkCellArray> cell;
-	vtkSmartPointer<vtkPoints> pointData;
+    QButtonGroup* filterButton; //button group to link radio buttons for the filter
 };
 #endif // MAINWINDOW_H

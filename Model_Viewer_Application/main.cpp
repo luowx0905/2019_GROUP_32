@@ -1,12 +1,14 @@
 #include "mainwindow.h"
 #include <QSplashScreen>
 #include <QApplication>
+#include <QProgressBar>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QPixmap pixmap("splashscreen.png");
     QSplashScreen splash(pixmap);
+
     splash.show();
     a.processEvents();
     MainWindow w;
