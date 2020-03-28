@@ -142,8 +142,8 @@ public slots:
     void openSTL(QString);
     //function to open the filter editor dialog box
     void loadShrinkFilterDialog();
-	  // convert MOD to STL
-	  void conversion(Model*);
+    // convert MOD to STL
+    void conversion(Model*);
     //function to select which filter editor dialog to open
     void loadFilterEditor();
     //function to allow the user to save a screenshot

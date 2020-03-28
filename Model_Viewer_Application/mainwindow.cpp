@@ -67,10 +67,10 @@ MainWindow::MainWindow(QWidget *parent)
     axes = vtkSmartPointer<vtkAxesActor>::New();
     // creates interactable orientation widget object
     orientationMarker = vtkSmartPointer<vtkOrientationMarkerWidget>::New();
-      
-	  cell = vtkSmartPointer<vtkCellArray>::New();
-	  // store all the vector in MOd file
-	  pointData = vtkSmartPointer<vtkPoints>::New();
+    // stores all the cells in the mod files
+    cell = vtkSmartPointer<vtkCellArray>::New();
+    // store all the vector in Mod file
+    pointData = vtkSmartPointer<vtkPoints>::New();
 
     //Creates a plane object which can be used by the clip filter
     plane = vtkSmartPointer<vtkPlane>::New();
@@ -904,7 +904,7 @@ void MainWindow::conversion(Model* loadMOD)
 	vtkSmartPointer<vtkSTLWriter> write = vtkSmartPointer<vtkSTLWriter>::New();
 	write->SetFileName(filename.toStdString().c_str());
 
-	vector < vtkSmartPointer<vtkTriangle>> triangleVector;
+        vector < vtkSmartPointer<vtkTriangle>> triangleVector;
 	size_t cellNum = loadMOD->getHex().size() + loadMOD->getPyramid().size() + loadMOD->getTetra().size();
 	int triangleNum = 0;
 	vector<Tetrahedron> tetrData = loadMOD->getTetra();
