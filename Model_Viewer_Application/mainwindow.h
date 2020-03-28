@@ -16,6 +16,7 @@
 
 //VTK libaries
 #include <vtkActor.h>
+#include <vtkAppendPolyData.h>
 #include <vtkAxesActor.h>
 #include <vtkBoxRepresentation.h>
 #include <vtkBoxWidget2.h>
@@ -43,10 +44,13 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkSTLReader.h>
+#include <vtkSTLWriter.h>
 #include <vtkShrinkFilter.h>
 #include <vtkSmartPointer.h>
 #include <vtkTetra.h>
 #include <vtkTransform.h>
+#include <vtkTriangle.h>
+#include <vtkTriangleFilter.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkWindowToImageFilter.h>
 
@@ -138,6 +142,8 @@ public slots:
     void openSTL(QString);
     //function to open the filter editor dialog box
     void loadShrinkFilterDialog();
+	  // convert MOD to STL
+	  void conversion(Model*);
     //function to select which filter editor dialog to open
     void loadFilterEditor();
     //function to allow the user to save a screenshot
@@ -158,21 +164,22 @@ private:
     vtkSmartPointer<vtkAxesActor> axes;
     vtkSmartPointer<vtkOrientationMarkerWidget> orientationMarker;
     vtkSmartPointer<vtkPlane> plane;
-    //vtkSmartPointer<vtkPlaneWidget> planeWidget;
     vtkSmartPointer<vtkImplicitPlaneWidget2> planeWidget;
     vtkSmartPointer<vtkBoxWidget2> boxWidget;
     vtkSmartPointer<vtkBoxWidgetCallback> boxWidgetCallback;
     vtkSmartPointer<vtkPlaneWidgetCallback> planeWidgetCallback;
     vtkSmartPointer<vtkImplicitPlaneRepresentation> rep;
     vtkSmartPointer<vtkShrinkFilter> shrinkFilter;
-
-    //unique_ptr<dialogEditShrinkFilter> shrinkFilterDialog;
+  	vtkSmartPointer<vtkCellArray> cell;
+	  vtkSmartPointer<vtkPoints> pointData;
+    
     dialogEditShrinkFilter *shrinkFilterDialog;
 
     vector<double> value; // store the RGB value of light
     double intensity; // store the intensity of light
     vector<vtkSmartPointer<vtkActor>> primitiveShapeActor; // store all the actor for primitive shape
     vector<vtkSmartPointer<vtkActor>>::const_iterator shapeItor; // iterator for primitive shape
+
     QButtonGroup* filterButton; //button group to link radio buttons for the filter
 };
 #endif // MAINWINDOW_H

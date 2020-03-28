@@ -39,6 +39,9 @@ public:
     float get_k() const;
     float get_mag() const;
 
+    double operator[](int) const;
+    bool operator==(const Vector&) const;
+
 
     void calc_mag(float _i,float _j,float _k); //calculates the magnitude of the vector to store in the class.
 

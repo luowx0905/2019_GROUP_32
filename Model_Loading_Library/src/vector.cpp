@@ -207,3 +207,35 @@ ostream& operator<<(ostream& out, const Vector& v)
 
     return out;
 }
+
+double Vector::operator[](int index) const
+{
+	if (index == 0)
+	{
+		return i;
+	}
+	else if(index == 1)
+	{
+		return j;
+	}
+	else if (index == 2)
+	{
+		return k;
+	}
+	else
+	{
+		throw runtime_error("Invalid index");
+	}
+}
+
+bool Vector::operator==(const Vector& v) const
+{
+	if (i == v.i && j == v.j && k == v.k)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}

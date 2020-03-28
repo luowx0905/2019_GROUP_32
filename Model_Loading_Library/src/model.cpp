@@ -10,7 +10,7 @@ Model::~Model()
     vector<Vector> listOfVectors;
     vector<Cell> listOfCells;
     vector<Material> listOfMaterials;
-    vector<vector<int>> uninitCellList; 
+    vector<vector<int>> uninitCellList;
 }
 const Model& Model::operator=(const Model& m)
 {
@@ -112,14 +112,14 @@ void Model::loadModel()
     string line;
     while(!fileStream.eof()) //loops till end of file reached
     {
-        getline(fileStream,line); //read each line into a string 
+        getline(fileStream,line); //read each line into a string
         if(line.length() != 0) //checks whether line is empty
         {
             if(line.at(0) != '#') //checks if line is a comment first for efficiency
             {
                 if(line.at(0) == 'v') //check first character to see if line represents a vector
                 {
-                    vectorListLength ++; 
+                    vectorListLength ++;
                     listOfVectors.resize(vectorListLength); //increases the size of the vector list by one to make space for new addition
                     readVector(line);
                 }
@@ -141,7 +141,7 @@ void Model::loadModel()
                     cerr << "Error in reading line - Object Identifier not recognised";
                     exit(1);
                 }
-                
+
             }
         }
     }
@@ -161,7 +161,7 @@ void Model::readVector(string line)
     linestream >> xcoord;
     linestream >> ycoord;
     linestream >> zcoord;
-    listOfVectors.at(vectorID) = Vector(xcoord,ycoord,zcoord); 
+    listOfVectors.at(vectorID) = Vector(xcoord,ycoord,zcoord);
     //Storing the vector at the ID of its index may cause issues in future if any are added or removed or simply if the IDs are not consecutive and starting from 0.
     //If this becomes an issue then a solution would be to make the ID a parameter of the vector object itself.
     return;
@@ -211,7 +211,7 @@ void Model::readCell(string line)
     }
     //Storing the cell in the list at the ID of its index may cause issues in future if any are added or removed or simply if the IDs are not consecutive and starting from 0.
     //If this becomes an issue then a solution would be to make the ID a parameter of the cell object itself.
-}   
+}
 void Model::readMaterial(string line)
 {
     istringstream linestream(line); //m 0 8940 b87333 cu
@@ -227,7 +227,7 @@ void Model::readMaterial(string line)
     listOfMaterials.at(materialID) = Material(density,colour,name,materialID);
     return;
 }
-//Constructs cells from uninitCellList and adds them to listOfCells 
+//Constructs cells from uninitCellList and adds them to listOfCells
 void Model::generateCellList(int cellListLength)
 {
     listOfCells.resize(cellListLength);
@@ -288,7 +288,7 @@ void Model::saveModel(string saveDirectory)const
             }
             else if (listOfCells[i].getType().compare("Pyramid") == 0)
             {
-                fileStream << "c " << i << " p " << uninitCellList[9][i]; 
+                fileStream << "c " << i << " p " << uninitCellList[9][i];
                 for (int j = 1; j <= 5; j++)
                     fileStream << " " << uninitCellList[j][i];
                 fileStream << endl;
@@ -365,4 +365,8 @@ vector<Tetrahedron> Model::getTetra() const
 	return tetraList;
 }
 
+vector<Vector> Model::getVector() const
+{
+	return listOfVectors;
+}
 //TODO Replace cellList appending with insert/pushback to remove need to manually resize array at each line in file

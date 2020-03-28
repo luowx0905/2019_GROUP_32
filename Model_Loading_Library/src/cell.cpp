@@ -115,7 +115,7 @@ ostream& operator<<(ostream& out, const Cell& c)
 		cout << " The vector:" << endl;
 		for (citor = c.data.begin(); citor != c.data.end(); citor++)
 		{
-			cout << " " << citor->get_i() << "\t" << citor->get_j() 
+			cout << " " << citor->get_i() << "\t" << citor->get_j()
 				<< "\t" << citor->get_k() << "\t" << endl;
 		}
 	}
@@ -255,4 +255,18 @@ int Cell::hexToDec(string color) const
 	}
 
 	return decimal;
+}
+
+size_t Cell::getVectorNumber(vector<Vector>& vertex, int index) const
+{
+	size_t i;
+	for (i = 0; i < vertex.size(); i++)
+	{
+		if (vertex[i] == data[index])
+		{
+			break;
+		}
+	}
+
+	return i;
 }
