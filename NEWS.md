@@ -31,7 +31,7 @@
 |Make camera reset function ensure that object is centered nicely|NS|||
 |Remove un-needed buttons and their functions |NS||i.e 'red->blue->red'|
 |Add a panel which displays information about the model|U|EDS|Currently displays number of cells and points could add more stats yet|
-|Find or create icons of a (fairly) consistent them to use for actions on the toolbar|NS||E.g. Open, Save Screenshot, display orientation widget, help etc.|
+|Find or create icons of a (fairly) consistent theme to use for actions on the toolbar|NS||E.g. Open, Save Screenshot, display orientation widget, help etc.|
 
 ## Status Legend
 - **C** - Completed  
