@@ -230,7 +230,8 @@ double Vector::operator[](int index) const
 
 bool Vector::operator==(const Vector& v) const
 {
-	if (i == v.i && j == v.j && k == v.k)
+    float epsilon = 0.001; //error margin for float comparisons
+	if (abs(i - v.i) < epsilon && abs(j - v.j) < epsilon && abs(k - v.k) < epsilon)
 	{
 		return true;
 	}

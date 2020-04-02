@@ -13,16 +13,28 @@ add_library(hexa src/hexahedron.cpp include/hexahedron.h)
 add_library(pyramid src/pyramid.cpp include/pyramid.h)
 add_library(tetra src/tetrahedron.cpp include/tetrahedron.h)
 include_directories(include)
+
 #identify mains of executables
-add_executable(modelTest test/modelTestMain.cpp)
-add_executable(matrixTest test/matrixTestMain.cpp)
+add_executable(modelTest test/modelTest.cpp)
+add_executable(matrixTest test/matrixTest.cpp)
 add_executable(vectorTest test/vectorTest.cpp)
-#test main includes
-target_include_directories(modelTest PUBLIC include)
-target_include_directories(matrixTest PUBLIC include)
+
 #links required libraries
 target_link_libraries(modelTest model cell material matrix vector hexa pyramid tetra)
 target_link_libraries(matrixTest matrix vector)
 target_link_libraries(vectorTest vector)
 
 add_test(vectorTest vectorTest)
+add_test(matrixTest matrixTest)
+add_test(modelTest modelTest)
+
+#Copies the testfiles into the binary directory.
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	FILE(COPY test/ExampleModel1.mod DESTINATION "${CMAKE_BINARY_DIR}/Debug")
+	FILE(COPY test/ExampleModel2.mod DESTINATION "${CMAKE_BINARY_DIR}/Debug")
+	FILE(COPY test/ExampleModel3.mod DESTINATION "${CMAKE_BINARY_DIR}/Debug")
+else ()
+	FILE(COPY test/ExampleModel1.mod DESTINATION "${CMAKE_BINARY_DIR}")
+	FILE(COPY test/ExampleModel2.mod DESTINATION "${CMAKE_BINARY_DIR}")
+	FILE(COPY test/ExampleModel3.mod DESTINATION "${CMAKE_BINARY_DIR}")
+endif ()
